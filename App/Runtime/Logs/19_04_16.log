@@ -1,0 +1,63 @@
+[ 2019-04-16T11:07:55+08:00 ] 127.0.0.1 /admin.php/Login/login
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCache [ RunTime:0.000709s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.001467s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplace [ RunTime:0.000017s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000041s ]
+INFO: Run Behavior\ParseTemplate [ RunTime:0.007627s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.007670s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCache [ RunTime:0.000597s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000634s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTrace [ RunTime:0.000880s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000897s ]
+
+[ 2019-04-16T11:07:55+08:00 ] 127.0.0.1 /admin.php/Login/verify.html?time=617
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCache [ RunTime:0.000194s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000372s ]
+NOTIC: [8] ob_clean(): failed to delete buffer. No buffer to delete /Users/liyishi/Work/project/web/movie/App/Rzsys/Controller/LoginController.class.php 第 75 行.
+ERR: Call to undefined function Think\imagettftext()
+
+[ 2019-04-16T11:09:08+08:00 ] 127.0.0.1 /admin.php?m=home&c=login&a=verify&time=0.4160974482340136
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCache [ RunTime:0.000572s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.001246s ]
+NOTIC: [8] ob_clean(): failed to delete buffer. No buffer to delete /Users/liyishi/Work/project/web/movie/App/Rzsys/Controller/LoginController.class.php 第 75 行.
+ERR: Call to undefined function Think\imagettftext()
+
+[ 2019-04-16T11:09:10+08:00 ] 127.0.0.1 /admin.php?m=home&c=login&a=verify&time=0.21291922413452058
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCache [ RunTime:0.000229s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000415s ]
+NOTIC: [8] ob_clean(): failed to delete buffer. No buffer to delete /Users/liyishi/Work/project/web/movie/App/Rzsys/Controller/LoginController.class.php 第 75 行.
+ERR: Call to undefined function Think\imagettftext()
+
+[ 2019-04-16T11:14:31+08:00 ] 127.0.0.1 /admin.php/Login/login
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCache [ RunTime:0.002607s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.004649s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplace [ RunTime:0.000038s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000166s ]
+INFO: Run Behavior\ParseTemplate [ RunTime:0.007314s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.007373s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCache [ RunTime:0.000367s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000419s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTrace [ RunTime:0.000579s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000643s ]
+
+[ 2019-04-16T11:14:31+08:00 ] 127.0.0.1 /admin.php/Login/verify.html?time=582
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCache [ RunTime:0.000337s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000663s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTrace [ RunTime:0.000400s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000497s ]
+

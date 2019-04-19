@@ -1,0 +1,256 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,initial-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<link rel="stylesheet" href="/css/mui.min.css">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" type="text/css" href="/css/iconfont.css" />
+    <script src="/js/phone.js"></script>
+<title>视频评论</title>
+<style type="text/css">
+    .mui-bar{background:linear-gradient(to right,#4f4f4f,#3c3c3c);}
+    .mui-action-back,.mui-title{color:#fff;}
+    .mui-bar-nav~.mui-content .mui-pull-top-pocket{top:0px;}
+    .mui-popover{height:200px;position:fixed; top:40%;width:80%;left:10%;background:#fff;}
+    .mui-popover .mui-popover-arrow:after {width: 0px;}
+    .mui-popover .popvcont{padding:10px;}
+    .comment-item{padding:0 2%;}
+    .txtare{height:80px;width:100%;padding:5px;border:0px;background:#f6f6f6;font-size:15px;color:#333;margin-top:10px;margin-bottom:0px;}
+    .num-desc{display:flex;justify-content:flex-end;color:#A0A0A0;font-size:12px;}
+    .btnpl{width:50%;margin:0 auto;text-align:center;font-size:15px;color:#fff;background:#333;padding:5px;border-radius:20px;border:0px;left:25%;}
+</style>
+</head>
+<body>
+    <header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">评论列表</h1>
+    </header>
+   <div class="mui-content" style="margin-bottom:20px;">
+      <div class="comment-box" style="border-top:0px;">
+      <div class="c-title">全部评论<span v-on:click="xiepinglun" style="float:right;color:#333;">写评论</span></div>
+       <div id="popover" class="mui-popover">
+			<div class="mui-popover-arrow"></div>
+			<div class="popvcont">
+               <div class="star" v-if="stars===1">
+               <i class="iconfont icon-wodeshoucang pf" @click="pf(1)"></i><i class="iconfont icon-wodeshoucang" @click="pf(2)"></i><i class="iconfont icon-wodeshoucang" @click="pf(3)"></i><i class="iconfont icon-wodeshoucang" @click="pf(4)"></i><i class="iconfont icon-wodeshoucang" @click="pf(5)"></i></div>
+            <div class="star" v-else-if="stars==2">
+               <i class="iconfont icon-wodeshoucang pf" @click="pf(1)"></i><i class="iconfont icon-wodeshoucang pf" @click="pf(2)"></i><i class="iconfont icon-wodeshoucang" @click="pf(3)"></i><i class="iconfont icon-wodeshoucang" @click="pf(4)"></i><i class="iconfont icon-wodeshoucang" @click="pf(5)"></i></div>
+            <div class="star" v-else-if="stars===3">
+               <i class="iconfont icon-wodeshoucang pf" @click="pf(1)"></i><i class="iconfont icon-wodeshoucang pf" @click="pf(2)"></i><i class="iconfont icon-wodeshoucang pf" @click="pf(3)"></i><i class="iconfont icon-wodeshoucang" @click="pf(4)"></i><i class="iconfont icon-wodeshoucang" @click="pf(5)"></i></div>
+             <div class="star" v-else-if="stars==4">
+               <i class="iconfont icon-wodeshoucang pf" @click="pf(1)"></i><i class="iconfont icon-wodeshoucang pf" @click="pf(2)"></i><i class="iconfont icon-wodeshoucang pf" @click="pf(3)"></i><i class="iconfont icon-wodeshoucang pf" @click="pf(4)"></i><i class="iconfont icon-wodeshoucang" @click="pf(5)"></i></div>
+            <div class="star" v-else-if="stars==5">
+               <i class="iconfont icon-wodeshoucang pf" @click="pf(1)"></i><i class="iconfont icon-wodeshoucang pf" @click="pf(2)"></i><i class="iconfont icon-wodeshoucang pf" @click="pf(3)"></i><i class="iconfont icon-wodeshoucang pf" @click="pf(4)"></i><i class="iconfont icon-wodeshoucang pf" @click="pf(5)"></i></div>
+                <textarea id="txtpinglun" name="txtpinglun" v-bind:maxlength="100" @input="descArea" v-model="introduct"  class="txtare" placeholder="在这里可以发布自己的评论"></textarea>
+                <span class="num-desc">{{Surplus}}/100</span>
+                <button class="btnpl" @click="tijiaopinglun" :disabled="isDisabled">提交评论</button>
+            </div>
+		</div>
+         <div id="refreshContainer" class="mui-scroll-wrapper" style="margin-top:90px;">
+            <div class="mui-scroll">
+               <div v-if="loading" class="loading">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                  <span></span>
+               </div>
+               <div v-else>
+                  <div class="comment-item" v-for="(item,index) of listData" :key="index">
+                      <div class="hd">
+                        <div class="u-info">
+                            <div class="headpic"><img :src="siteadd+item.CM_HEADIMG"/></div>
+                            <div class="nicheng"><div class="name">{{item.CM_USERNAME}}</div><div class="time">{{item.GMT_CREATE}}</div></div>
+                        </div>
+                        <div class="star" v-if="item.CM_STAR==1">
+                           <i class="iconfont icon-wodeshoucang pf"></i><i class="iconfont icon-wodeshoucang"></i><i class="iconfont icon-wodeshoucang"></i><i class="iconfont icon-wodeshoucang"></i><i class="iconfont icon-wodeshoucang"></i></div>
+                        <div class="star" v-else-if="item.CM_STAR==2">
+                           <i class="iconfont icon-wodeshoucang pf"></i><i class="iconfont icon-wodeshoucang pf"></i><i class="iconfont icon-wodeshoucang"></i><i class="iconfont icon-wodeshoucang"></i><i class="iconfont icon-wodeshoucang"></i></div>
+                        <div class="star" v-else-if="item.CM_STAR==3">
+                           <i class="iconfont icon-wodeshoucang pf"></i><i class="iconfont icon-wodeshoucang pf"></i><i class="iconfont icon-wodeshoucang pf"></i><i class="iconfont icon-wodeshoucang"></i><i class="iconfont icon-wodeshoucang"></i></div>
+                         <div class="star" v-else-if="item.CM_STAR==4">
+                           <i class="iconfont icon-wodeshoucang pf"></i><i class="iconfont icon-wodeshoucang pf"></i><i class="iconfont icon-wodeshoucang pf"></i><i class="iconfont icon-wodeshoucang pf"></i><i class="iconfont icon-wodeshoucang"></i></div>
+                        <div class="star" v-else-if="item.CM_STAR==5">
+                           <i class="iconfont icon-wodeshoucang pf"></i><i class="iconfont icon-wodeshoucang pf"></i><i class="iconfont icon-wodeshoucang pf"></i><i class="iconfont icon-wodeshoucang pf"></i><i class="iconfont icon-wodeshoucang pf"></i></div>
+                      </div>
+                      <div class="bd">
+                          <span>{{item.CM_CONTENT}}</span>
+                      </div>
+                  </div>
+                   <div v-if="jlNum==0" style="text-align:center;margin-top:50px;font-size:15px;color:#666;">暂无评论！</div>
+             </div>
+          </div>
+       </div>
+   </div>
+ </div>
+<script src="/js/vue.js"></script>
+<script src="/js/api.js"></script>
+<script src="/js/axios.js"></script>
+<script src="/js/mui.min.js"></script>
+<script type="text/javascript" charset="utf-8">
+   mui.init({
+        pullRefresh: {
+            container: "#refreshContainer",
+            down: {
+                     style:"circle",
+                     callback :function(){ 
+                         window.setTimeout(function () {
+                            vm.getData();
+                        },500);
+                    }
+                },
+            　　up: {
+                　　contentrefresh : "正在加载...",
+                    contentnomore:'没 有 更 多 数 据 了',
+                    callback:function(){
+                        window.setTimeout(function () {
+                            vm.getmore();
+                        },500);
+                    }
+            　　}
+        }
+    });
+    var vm=new Vue({
+        el: '.mui-content',
+        data: {
+            loading: true,
+            sp_id: 0,//视频ID
+            listData: '',
+            stars: 1,//星星评分
+            Surplus: 100,//评论字数
+            introduct: '',//评论内容,
+			siteadd:'',
+            isDisabled: false,
+            jlNum:1,
+            pagesize:10,
+            pageindex: 0,
+            isNum: false//用于判断是否还有数据
+        },
+        created: function () {
+            this.siteadd = globalData.siteadd;//站点地址
+            this.sp_id = getQueryString("id");//视频ID
+            this.getData();//获取数据
+        },
+        methods: {
+             //获取数据
+            getData: function () {
+                var self = this;
+                var spid = self.sp_id;
+                var pgsize = self.pagesize;
+                var pgidx = 0;//当前页
+                self.pageindex = 0;//重置为0
+                self.isNum = false;//重置为false
+                if (spid != 0 && spid != 'undefined' && spid != null && spid != '') {
+                    axget('/commentlist', { id: spid, pagesize: pgsize, pageindex: pgidx, type:1 }).then((res) => {
+                        //console.log(res);
+                        if (res.code == 0) {
+                            self.listData = res.data;
+                            if (res.data.length > 0) {
+                                self.jlNum = res.data.length;
+                            } else {
+                                self.jlNum = 0;
+                            }
+                        } else {
+                            mui.toast(res.msg);
+                        }
+                        mui('#refreshContainer').pullRefresh().endPulldownToRefresh();
+                        mui('#refreshContainer').pullRefresh().refresh(true);
+                        self.loading = false;
+                     })
+                } else {
+                    location.href="/shipin.html"
+                }
+            },//加载更多
+            getmore: function () {
+                var self = this;
+                var spid = self.sp_id;
+                var pgsize = self.pagesize;
+                var pgidx = self.pageindex + 1;
+                self.pageindex = pgidx;
+                mui('#refreshContainer').pullRefresh().endPullupToRefresh(self.isNum); 
+                if (spid != 0 && spid != 'undefined' && spid != null && spid != '') {
+                    axget('/commentlist', { id: mhid, pagesize: pgsize, pageindex: pgidx, type:1}).then((res) => {
+                        //console.log(res);
+                        if (res.code == 0) {
+                            if (res.data.length > 0) {
+                                var data = self.listData;
+                                data = data.concat(res.data)
+                                self.listData = data;
+                                mui('#refreshContainer').pullRefresh().refresh(true);
+                            } else {
+                                self.isNum = true;
+                            }
+                        } else {
+                            mui.toast(res.msg);
+                        }
+                    })
+                }
+            },
+            xiepinglun() {//弹出评论框
+               var hyid = localStorage.getItem("hyid");//获取用户ID
+                if (hyid != 0 && hyid != 'undefined' && hyid != null && hyid != '') {
+                    mui("#popover").popover('toggle', document.getElementById("div"));
+                } else {
+                    location.href="/login.html"
+                }
+            },
+            pf(index) {//星星评分
+                var that = this;
+                that.stars =index;
+            },
+            descArea() {
+                var that = this;
+                var textVal = that.introduct.length;
+                that.Surplus = 100 - textVal;
+            },
+            tijiaopinglun() {//提交评论
+                var that = this;
+                var plcount = that.introduct;
+                var star = that.stars;
+                var spid = that.sp_id;
+                var pgsize = that.pagesize;
+                var pgidx = 0;//当前页
+                that.pageindex = 0;//重置为0
+                that.isNum = false;//重置为false
+                var hyid = localStorage.getItem("hyid");//获取用户ID
+                var token = localStorage.getItem("token");
+                if (isNull(plcount)) {
+                    mui.toast("请输入评论内容");
+                    return;
+                }
+                if (hyid != 0 && hyid != 'undefined' && hyid != null && hyid != '') {
+                    that.isDisabled = true;
+                    axget('/addcomment', { uid:hyid,token:token,xing:star,content:plcount,id:spid,type:1}).then((res) => {
+                        //console.log(res);
+                        if (res.code == 0) {
+                            mui.toast(res.msg);
+                            axget('/commentlist', { id: spid, pagesize: pgsize, pageindex: 0, type: 1 }).then((res) => {
+                                if (res.code == 0) {
+                                    that.listData = res.data;
+                                    mui("#popover").popover("hide");
+                                }
+                         })
+                        } else if (res.code == "2") {
+                            mui.alert('账号在别处登录,您已被迫下线！', ' ', function() {
+					           localStorage.clear();
+                               location.href="/login.html"
+				              });
+                        }  else {
+                            mui.toast(res.msg);
+                        }
+                        that.isDisabled = false;
+
+                    })
+                } else {
+                    location.href="/login.html"
+                }
+            }
+        }
+    })
+</script>
+</body>
+</html>
+

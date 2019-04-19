@@ -1,0 +1,124 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,initial-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<link rel="stylesheet" href="/css/mui.min.css">
+<link rel="stylesheet" href="/css/style.css">
+<script src="/js/jquery-1.11.2.min.js"></script>
+    <script src="/js/phone.js"></script>
+<title>用户注册</title>
+<style type="text/css">
+     body {background: #F8F8F8;}
+    .mui-bar{background:linear-gradient(to right,#4f4f4f,#3c3c3c);}
+    .mui-action-back,.mui-title{color:#fff;}
+    .mui-content{background: #F8F8F8;}
+    .mui-input-group {margin-top: 10px;}
+	.mui-input-group:first-child {margin-top: 20px;}
+	.mui-input-group label {width: 30%;font-size:15px;text-align:right;}
+    .mui-input-group .mui-input-row{height:50px;}
+    .mui-input-row label{padding:16px 5px;}
+	.mui-input-row label~input{width: 70%;height:50px;padding:5px;font-size:15px;}
+	.mui-content-padded {text-align:center;margin-top: 25px;}
+	.btn-login {background:linear-gradient(to right,#4f4f4f,#3c3c3c);border:0px;height:45px;border-radius:30px;width:90%; color:#fff;font-size:15px;}
+    .link-area {display: block;margin-top: 25px;text-align: center;}
+    .link-area a{font-size:15px}
+</style>
+</head>
+<body>
+  <header class="mui-bar mui-bar-nav">
+	<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	<h1 class="mui-title">注册</h1>
+  </header>
+   <div class="mui-content">
+       <form id='login-form' class="mui-input-group">
+				<div class="mui-input-row">
+					<label>账号：</label>
+					<input id='username' type="text" class="mui-input" placeholder="请输入账号">
+				</div>
+				<div class="mui-input-row">
+					<label>密码：</label>
+					<input id='password' type="password" class="mui-input" placeholder="请输入密码">
+				</div>
+                <div class="mui-input-row">
+					<label>确认密码：</label>
+					<input id='rpassword' type="password" class="mui-input" placeholder="请输入确认密码">
+				</div>
+			</form>
+			<div class="mui-content-padded">
+				<button id='register' class="btn-login">立即注册</button>
+				<div class="link-area"><a href="/login.html">去登录</a></div>
+			</div>
+   </div>
+<script src="/js/mui.min.js"></script>
+<script src="/js/api.js"></script>
+<script src="/js/axios.js"></script>
+<script type="text/javascript" charset="utf-8">
+    (function ($, doc, $$) {
+      $.init();
+        //判断是否为空
+    function isNull(str) {
+        if (str == null || str == "" || str == undefined || str == "null") {
+            return true;
+        } else {
+            return false;
+        }
+    };
+    $$("#register").on("click", function () {
+        var pid= localStorage.getItem("pid");//推广ID
+        if (pid == 0 && pid == 'undefined' && pid == null && pid == '') {
+            pid = 0;
+        }
+       var username = document.querySelector("#username").value;
+       var pass = document.querySelector("#password").value;
+       var rpassword = document.querySelector("#rpassword").value;
+       if (isNull(username)) {
+            mui.toast("请输入用户名!");
+            return false;
+       }
+       if (isNull(pass)) {
+            mui.toast("请输入密码!");
+            return false;
+       }
+       if (isNull(rpassword)) {
+            mui.toast("请输入确认密码!");
+            return false;
+       }
+       if (pass != rpassword) {
+            mui.toast("两次密码不一致!");
+            return false;
+        }
+        var regUser=/^[a-zA-Z][a-zA-Z0-9]{3,15}$/;
+        var regPass=/^[a-zA-Z0-9]{4,10}$/;
+        if(!regUser.test(username)){
+          mui.toast("用户名由英文字母和数字组成的4-16位字符，以字母开头!");
+          return false;
+        }
+        if(!regPass.test(pass)){
+            mui.toast("密码由英文字母和数字组成的4-10位字符!");
+            return false;
+        }
+        var btn='';
+        btn=document.getElementById("register");
+        //ajax提交
+        btn.disabled = true;
+        btn.innerText = "正在提交，请稍候...";
+        axget('/register', { name: username,password:pass,pid:pid}).then((res) => {
+            //console.log(res);
+            if (res.code == "0") {
+                localStorage.setItem("zcid", res.data.uid);
+                window.location.href = '/register2.html';
+            } else {
+                btn.disabled = false;
+                btn.innerText = "立即注册";
+                mui.toast(res.msg);
+            }
+        })
+      })
+    })(mui, document, jQuery);
+</script>
+</body>
+</html>
+

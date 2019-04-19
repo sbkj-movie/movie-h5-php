@@ -1,0 +1,280 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,initial-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<link rel="stylesheet" href="/css/mui.min.css">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" type="text/css" href="/css/icons-extra.css" />
+<link rel="stylesheet" type="text/css" href="/css/iconfont.css" />
+<script src="/js/phone.js"></script>
+<title>视频</title>
+<style type="text/css">
+    body{ background:#f8f8f8;}
+    .mui-content{background:#f8f8f8;margin-top:90px }
+    .items{margin:10px 0%;background:#fff;padding:0 0 8px 0px;position:relative;}
+    .items img{width:100%;height:200px;/*border-radius:10px 10px 0 0px;*/}
+    .items .bd{display:flex;justify-content:space-between;align-items:center;color:#333;font-size:15px;padding:2px 10px;}
+    .items .l{width:70%;}
+    .items .r{display:flex;align-items:center;}
+    .items .r .iconfont{font-size:23px;}
+    .items .r .fx{margin-left:15px;margin-top:2px;}
+    .mfsk{display:inline;position:absolute;top:20px; background:linear-gradient(to right,#4f4f4f,#3c3c3c);font-size:15px; color:#fff;padding:3px 10px;border-radius:0 15px 15px 0px;}
+    .vico{display:inline;position:absolute;top:70px;left:43%;background-image:url(/images/vico.png);width:50px;height:50px;background-repeat:no-repeat;background-size:cover;}
+    .mui-scroll-wrapper{margin-top:80px;margin-bottom:60px;}
+    .mgtop50{margin-top:40px;}
+
+</style>
+</head>
+<body>
+  <div id="shipin">
+   <div style="margin-bottom:60px;">
+      <div class="down" :class="{'downs':app}">
+           <div class="d-logo"><span class="mui-icon mui-icon-close" v-on:click="closeAPP"></span>&nbsp;<img src="/images/logo.png" /></div>
+           <div class="d-app"><a href="/download.html">下载APP</a></div>
+       </div>
+       <div class="header" :class="{'headers':app}">
+          <div class="hnav">
+           <div class="logo-box">
+               <!--<a :href="'/users/qiehuanxianlu.html'"><img src="/images/logo.png" /></a>-->
+               <a :href="'/users/qiehuanxianlu.html'">地址列表</a>
+           </div>
+           <ul class="menu">
+               <li><a href="/index.html">精选</a></li>
+               <li><a href="/shipin.html"  class="act">视频</a></li>
+               <li><a href="/yingpian.html">影片</a></li>
+               <li><a href="/manhua.html">漫画</a></li>
+           </ul>
+          <div class="search"><a :href="'/search.html'"><span class="mui-icon mui-icon-search"></span></a></div>
+          </div>
+       </div>
+   </div>
+    <div id="refreshContainer" class="mui-scroll-wrapper" :class="{'mgtop50':app}">
+        <div class="mui-scroll">
+            <div v-if="loading" class="loading">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+           <div v-else>
+             <div class="items" v-for="(item,index) in listData" :key="item.ID">
+              <img :src="item.MV_PHOTO_URL" class="img" @tap="show(item.ID)"/>
+               <div class="bd">
+                  <div class="l">{{item.MV_NAME}}</div>
+                  <div class="r">
+                   <span v-if="item.shoucang==0" class="iconfont icon-shoucang" @tap="shoucang(item.ID,index)"></span>
+                   <span v-else class="iconfont icon-wodeshoucang" style="color:#d41717;" @tap="shoucang(item.ID,index)"></span>
+                   <span class="iconfont icon-fenxiang2 fx" @tap="fenxiang(item.ID,index)"></span>
+                  </div>
+               </div>
+               <div class="mfsk" v-if="item.MV_TYPE==1">免费试看</div>
+               <div class="mfsk" v-else>VIP视频</div>
+               <div class="vico" @tap="show(item.ID)"></div>
+            </div>
+               <div v-if="jlNum==0" style="text-align:center;margin-top:50px;font-size:15px;color:#666;">暂无内容！</div>
+            </div>
+        </div>
+     </div>
+      <div id="fxpopover" class="mui-popover fx">
+		<div class="mui-popover-arrow"></div>
+		 <div class="fx-popvcont">
+             <div class="fx-title">分享</div>
+             <div id="copyUrl" class="fx-cont" data-clipboard-action="copy" data-clipboard-text="">
+                 <div class="url-icon"><img src="/images/copyurl.png" /></div>
+                 <div class="i-tit">复制链接</div>
+             </div>
+         </div>
+	 </div>
+     <nav class="mui-bar mui-bar-tab">
+			<a @tap="foot_bar(1)" class="mui-tab-item mui-active" href="#tabbar">
+				<span class="mui-icon mui-icon-home"></span>
+				<span class="mui-tab-label">首页</span>
+			</a>
+			<a @tap="foot_bar(2)" class="mui-tab-item" href="#tabbar-with-chat">
+				<span class="mui-icon mui-icon-extra mui-icon-extra-class"></span>
+				<span class="mui-tab-label">分类</span>
+			</a>
+			<a @tap="foot_bar(3)" class="mui-tab-item" href="#usercenter">
+				<span class="mui-icon mui-icon-contact"></span>
+				<span class="mui-tab-label">个人中心</span>
+			</a>
+	</nav>
+ </div>
+<script src="/js/vue.js"></script>
+<script src="/js/mui.min.js"></script>
+<script src="/js/api.js"></script>
+<script src="/js/axios.js"></script>
+<script src="/js/clipboard.js"></script>
+<script type="text/javascript" charset="utf-8">
+    var clipboard = new ClipboardJS('.fx-cont');
+		clipboard.on('success', function(e) {
+            alert("复制成功");
+        });
+        clipboard.on('error', function(e) {
+           alert("复制失败,请手动复制");
+		});
+    mui.init({
+        pullRefresh: {
+            container: "#refreshContainer",
+            down: {
+                  style:"circle",
+                     callback :function(){ 
+                         window.setTimeout(function () {
+                            vm.getListData();
+                        },500);
+                    }
+                },
+            　　up: {
+                　　contentrefresh : "正在加载...",
+                    contentnomore:'没 有 更 多 数 据 了',
+                    callback:function(){
+                        window.setTimeout(function(){
+                            vm.getmore();
+                        },500);
+                    }
+            　　}
+        }
+    });
+    var vm=new Vue({
+        el: '#shipin',
+        data: {
+            loading: true,
+            app:false,
+            listData: '',
+            jlNum: 1,
+            pagesize: 10,
+            pageindex: 0,
+            isNum: false,//用于判断是否还有数据
+        },
+        created: function () {
+            this.getListData();//获取数据
+        },
+         methods: {
+             //获取数据
+            getListData: function () {
+                var self = this;
+                var pgsize = self.pagesize;
+                self.pageindex=0;
+                var hyid = localStorage.getItem("hyid");//获取用户ID
+                var token = localStorage.getItem("token");
+                if (hyid == 0 && hyid == 'undefined' && hyid == null && hyid == '') {
+                    hyid = 0;
+                    token = 0;
+                }
+                axget('/jingmovie', {uid:hyid,token:token,pagesize:pgsize,pageindex:0}).then((res) => {
+                    //console.log(res);
+                    if (res.code == 0) {
+                        if (res.data.length > 0) {
+                            self.jlNum = res.data.length;
+                        } else {
+                            self.jlNum = 0;
+                        }
+                        self.listData = res.data;
+                        self.loading = false;
+                    } else if (res.code == 2) {
+                        self.loading = false;
+                        localStorage.clear();
+                        mui.alert(res.msg, ' ', function() {
+					          location.href="/index.html"
+				        });
+                    } else {
+                        self.loading = false;
+                        mui.toast(res.msg);
+                    }
+                    mui('#refreshContainer').pullRefresh().endPulldownToRefresh();
+                    mui('#refreshContainer').pullRefresh().refresh(true);
+                })
+             },//加载更多
+            getmore: function () {
+                var self = this;
+                var pgsize = self.pagesize;
+                var pgidx = self.pageindex + 1;
+                self.pageindex = pgidx;
+                var hyid = localStorage.getItem("hyid");//获取用户ID
+                var token = localStorage.getItem("token");
+                if (hyid == 0 && hyid == 'undefined' && hyid == null && hyid == '') {
+                    hyid = 0;
+                    token = 0;
+                }
+                mui('#refreshContainer').pullRefresh().endPullupToRefresh(self.isNum); 
+                axget('/jingmovie', {uid:hyid,token:token,pagesize: pgsize, pageindex: pgidx}).then((res) => {
+                        if (res.code == 0) {
+                            if (res.data.length > 0) {
+                                var data = self.listData;
+                                data = data.concat(res.data)
+                                self.listData = data;
+                                mui('#refreshContainer').pullRefresh().refresh(true);
+                            } else {
+                                self.isNum = true;
+                            }
+                        } else {
+                            mui.toast(res.msg);
+                        }
+                    })
+             },
+             show(ids) {
+                 if (ids != 0 && ids != 'undefined' && ids != null && ids != '') {
+                     window.location.href = "shipin_show.html?id=" + ids;
+                 }
+             },
+             shoucang(ids, idx) {
+                var that = this;
+                var hyid = localStorage.getItem("hyid");//获取用户ID
+                var token = localStorage.getItem("token");
+                 if (hyid!= 0 && hyid != 'undefined' && hyid != null && hyid!= '') {
+                     if (ids != 0 && ids != 'undefined' && ids != null && ids != '') {
+                         axget('/shoucang', {uid:hyid,token:token,id:ids,type:1}).then((res) => {
+                             if (res.code == 0) {
+                                  mui.toast(res.msg);
+                                 if(that.listData[idx].shoucang==0){
+                                    that.listData[idx].shoucang=1;
+                                 }else {
+                                    that.listData[idx].shoucang=0;
+                                 }
+                             } else if (res.code == 2) {
+                                 mui.toast("账号在别处登录,您已被迫下线！");
+                             } else {
+                                 mui.toast(res.msg);
+                             }
+                         })
+                     } else {
+                         mui.toast("未获取到视频数据！");
+                     }
+                 } else {
+                     mui.toast("您还没有登陆！");
+                 }
+             },
+             fenxiang(ids, idx) {
+                 mui("#fxpopover").popover('toggle', document.getElementById("div"));
+                 var u = document.getElementById("copyUrl");
+                 var ym = document.domain;//当前域名
+                 var hyid = localStorage.getItem("hyid");//获取用户ID
+                 if (hyid != 0 && hyid != 'undefined' && hyid != null && hyid != '') {
+                      u = u.attributes["data-clipboard-text"].value ="http://"+ym+"/shipin_show.html?id="+ids+"&pid="+hyid;
+                 } else {
+                     u = u.attributes["data-clipboard-text"].value ="http://"+ym+"/shipin_show.html?id="+ids;
+                 }
+             },
+             foot_bar(i) {
+                switch (i)
+                {
+                    case 1: location.href = "/index.html";break;
+                    case 2: location.href = "/fenlei.html";break;
+                    case 3: location.href = "/users/index.html"; break;
+                    default:
+                        location.href = "/index.html";
+                        break;
+                }
+            },closeAPP() {
+                this.app = true;
+            }
+        }
+    })
+</script>
+</body>
+</html>
+

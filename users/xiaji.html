@@ -1,0 +1,202 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,initial-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<link rel="stylesheet" href="/css/mui.min.css">
+<link rel="stylesheet" href="/css/style.css">
+    <script src="/js/phone.js"></script>
+<title>我的下级</title>
+<style type="text/css">
+    .search-box{margin:20px 30px 0px 30px;}
+    .input-box{border-radius:10px;background:linear-gradient(to right,#3c3c3c,#4f4f4f);height:40px;line-height:40px;display:flex;align-items:center;}
+    .input-box .input{background:none;border:0px;color:#fff;width:90%;font-size:15px;margin-bottom:0px;}
+    .input-box .input::-webkit-input-placeholder{color:#fff;}/* 使用webkit内核的浏览器 */
+    .input-box .input:-moz-placeholder{color:#fff;}/* Firefox版本4-18 */
+    .input-box .input::-moz-placeholder{color:#fff;} /* Firefox版本19+ */
+    .input-box .input:-ms-input-placeholder{color:#fff;}
+    .mui-icon-search{color:#fff;font-size:20px;}
+   .box{width:20%;margin-left:4%;margin-top:30px;text-align:center;}
+   .box .headpic{width:60px;height:60px;overflow:hidden;border-radius:60%;margin:0 auto;}
+   .box .headpic img{width:60px;height:60px;}
+   .box .name{font-size:13px;width:100%;text-align:center;color:#474747;margin-top:5px;overflow: hidden; /*自动隐藏文字*/text-overflow: ellipsis;/*文字隐藏后添加省略号*/white-space: nowrap;/*强制不换行*/}
+   .mui-bar-nav~.mui-content .mui-pull-top-pocket{top:0px;}
+</style>
+</head>
+<body>
+    <header class="mui-bar mui-bar-nav">
+	<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	<h1 class="mui-title">我的下级</h1>
+  </header>
+  <div class="mui-content">
+      <div class="search-box">
+          <div class="input-box">
+              <input type="text" class="input" v-model="txtkeyword" placeholder="请输入"/><span class="mui-icon mui-icon-search" v-on:click="submitkey"></span>
+          </div>
+      </div>
+      <div id="refreshContainer" class="mui-scroll-wrapper" style="margin-top:100px;">
+        <div class="mui-scroll">
+            <div v-if="loading" class="loading">
+                   <span></span>
+                   <span></span>
+                   <span></span>
+                   <span></span>
+                   <span></span>
+            </div>
+            <div v-else style="display:flex;flex-wrap:wrap;">
+                <div class="box" v-for="(item,index) of listData" :key="index">
+                    <div class="headpic"><img :src="siteadd+item.USERIMG" /></div>
+                    <div class="name">{{item.USERNAME}}</div>
+                </div>
+                <div v-if="jlNum==0" style="text-align:center;margin-top:20px;font-size:15px;color:#666;">暂无记录！</div>
+            </div>
+        </div>
+      </div>
+  </div>
+<script src="/js/mui.min.js"></script>
+<script src="/js/vue.js"></script>
+<script src="/js/api.js"></script>
+<script src="/js/axios.js"></script>
+<script type="text/javascript" charset="utf-8">
+    mui.init({
+        pullRefresh: {
+            container: "#refreshContainer",
+            down: {
+                  style:"circle",
+                     callback :function(){ 
+                         window.setTimeout(function () {
+                            vm.getList();
+                        },500);
+                    }
+                },
+            　　up: {
+                　　contentrefresh : "正在加载...",
+                    contentnomore:'没 有 更 多 数 据 了',
+                    callback:function(){
+                        window.setTimeout(function(){
+                            vm.getmore();
+                        },500);
+                    }
+            　　}
+        }
+    });
+    var vm=new Vue({
+        el: '.mui-content',
+        data: {
+            loading: true,
+            listData: '',
+            siteadd: '',
+            txtkeyword: '',
+            jlNum:1,
+            pagesize:10,
+            pageindex: 0,
+            isNum: false,//用于判断是否还有数据
+        },
+         created: function () {
+            this.siteadd = globalData.siteadd;//站点地址
+            this.getList()
+        },
+        methods: {
+            getList() {
+                var that = this;
+                var pgsize = that.pagesize;
+                var pgidx = 0;//当前页
+                that.pageindex = 0;//重置为0
+                that.isNum = false;//重置为false
+                var hyid = localStorage.getItem("hyid");
+                var token = localStorage.getItem("token");
+                if (hyid != 0 && hyid != 'undefined' && hyid != null && hyid != '') {
+                    that.hyid = hyid;
+                    that.token = token;
+                    axget('/xiaji', { uid: hyid, token: token, pagesize: pgsize, pageindex: pgidx }).then((res) => {
+                        //console.log(res);
+                        if (res.code == "0") {
+                            that.listData = res.data;
+                            if (res.data.length > 0) {
+                                that.jlNum = res.data.length
+                            } else {
+                                that.jlNum = 0;
+                            }
+                         } else if (res.code == "2") {
+                           mui.alert('账号在别处登录,您已被迫下线！', ' ', function() {
+					          localStorage.clear();
+                             location.href="/login.html"
+				            });
+                        } else {
+                          mui.toast(res.msg);
+                        }
+                       mui('#refreshContainer').pullRefresh().endPulldownToRefresh();
+                       mui('#refreshContainer').pullRefresh().refresh(true);
+                       that.loading = false;
+                    })
+                } else {
+                    location.href = "/login.html";
+                }
+            },//加载更多
+            getmore: function () {
+                var self = this;
+                var pgsize = self.pagesize;
+                var pgidx = self.pageindex + 1;
+                var hyid = self.hyid;
+                var token = self.token;
+                self.pageindex = pgidx;
+                mui('#refreshContainer').pullRefresh().endPullupToRefresh(self.isNum); 
+                if (hyid != 0 && hyid != 'undefined' && hyid != null && hyid != '') {
+                    axget('/xiaji', {uid: hyid, token: token, pagesize: pgsize, pageindex: pgidx}).then((res) => {
+                        //console.log(res);
+                        if (res.code == 0) {
+                            if (res.data.length > 0) {
+                                var data = self.listData;
+                                data = data.concat(res.data)
+                                self.listData = data;
+                                mui('#refreshContainer').pullRefresh().refresh(true);
+                            } else {
+                                self.isNum = true;
+                            }
+                        } else {
+                            mui.toast(res.msg);
+                        }
+                    })
+                }
+            },
+            submitkey() {
+                var that = this;
+                var key = that.txtkeyword;
+                if (isNull(key)) {
+                    mui.toast("请输入要搜索的名称");
+                    return;
+                }
+                that.loading = true;
+                var hyid = localStorage.getItem("hyid");
+                var token = localStorage.getItem("token");
+                if (hyid != 0 && hyid != 'undefined' && hyid != null && hyid != '') {
+                    axget('/xiaji', { uid: hyid, token: token, pagesize: 20, pageindex: 0, keywords: key }).then((res) => {
+                        //console.log(res);
+                        if (res.code == "0") {
+                            that.listData = res.data;
+                            if (res.data.length > 0) {
+                                that.jlNum = res.data.length
+                            } else {
+                                that.jlNum = 0;
+                            }
+                         } else if (res.code == "2") {
+                           mui.alert('账号在别处登录,您已被迫下线！', ' ', function() {
+					          localStorage.clear();
+                              location.href="/login.html"
+				            });
+                        } else {
+                          mui.toast(res.msg);
+                         }
+                       that.loading = false;
+                    })
+                } else {
+                    location.href = "/login.html";
+                }
+            }
+        }
+    })
+</script>
+</body>
+</html>

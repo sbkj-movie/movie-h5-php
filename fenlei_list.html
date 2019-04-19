@@ -1,0 +1,235 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,initial-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<link rel="stylesheet" href="/css/mui.min.css">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" type="text/css" href="/css/icons-extra.css" />
+<link rel="stylesheet" type="text/css" href="/css/iconfont.css" />
+<script src="/js/phone.js"></script>
+<title>分类列表</title>
+<style type="text/css">
+    body{ background:#f8f8f8;}
+    .mui-content{background:#f8f8f8;border:1px solid #f8f8f8;margin-top:90px;}
+    .mui-bar-nav~.mui-content .mui-pull-top-pocket{top:0px;}
+    .list{display:flex;justify-content:space-between;flex-wrap:wrap;}
+    .listbox{display:flex;justify-content:space-between;padding:15px 5px;height:130px;position:relative;border-bottom:1px solid #f2f2f2;}
+    .listbox .imgbox{width:40%;overflow:hidden;}
+    .listbox .imgbox img{width:100%;height:100%}
+    .listbox .infobox{width:58%;overflow:hidden;margin-left:2%;}
+    .listbox .infobox .name{font-size:15px;color:#333;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}
+    .listbox .infobox .name a{color:#333;}
+    .listbox .infobox .status{margin-top:10px;font-size:13px;}
+    .listbox .infobox .status .vip{background:#d41717;color:#fff;border-radius:20px;padding:3px 10px;}
+    .listbox .infobox .status .mian{background:linear-gradient(to right,#4f4f4f,#3c3c3c);color:#fff;border-radius:20px;padding:3px 10px;}
+    .listbox .infobox .notes{font-size:13px;color:#bbb;margin-top:8px;max-height:60px;overflow:hidden;}
+    .mui-scroll-wrapper{margin-top:90px;margin-bottom:60px;}
+    .mgtop50{margin-top:50px;}
+</style>
+</head>
+<body>
+  <div id="fenlei_list">
+    <div class="down" :class="{'downs':app}">
+           <div class="d-logo"><span class="mui-icon mui-icon-close" v-on:click="closeAPP"></span>&nbsp;<img src="/images/logo.png" style="width:100px;" /></div>
+           <div class="d-app"><a href="/download.html">下载APP</a></div>
+     </div>
+     <div class="header" :class="{'headers':app}">
+          <div class="hnav">
+           <div class="logo-box">
+               <a :href="'/users/qiehuanxianlu.html'">地址列表</a>
+           </div>
+           <ul class="menu">
+               <li><a href="/index.html">精选</a></li>
+               <li><a href="/shipin.html">视频</a></li>
+               <li><a href="/yingpian.html">影片</a></li>
+               <li><a href="/manhua.html">漫画</a></li>
+           </ul>
+           <div class="search"><a :href="'/search.html'"><span class="mui-icon mui-icon-search"></span></a></div>
+          </div>
+     </div>
+   <div class="mui-content">
+        <div id="refreshContainer" class="mui-scroll-wrapper" :class="{'mgtop50':app}">
+         <div class="mui-scroll">
+              <div v-if="loading" class="loading">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+              <div v-else>
+                 <div v-if="type==1">
+                    <div class="listbox" v-for="item in listData" :key="item.ID">
+                         <div class="imgbox" @tap="fnhref(item.ID,1)">
+                           <img :src="item.pic" />
+                         </div>
+                         <div class="infobox">
+                             <div class="name" @tap="fnhref(item.ID,1)">{{item.name}}</div>
+                             <div class="status"><span class="vip" v-if="item.type==2">VIP视频</span><span class="mian" v-else>免费观看</span></div>
+                             <div class="notes">{{item.content}}</div>
+                         </div>
+                     </div>
+                 </div>
+                 <div class="list" v-else>
+                      <div class="item" v-for="item in listData" :key="item.ID" @tap="fnhref(item.ID,2)">
+                        <img :src="item.pic" class="img"/>
+                        <div class="bd"><span class="title">{{item.name}}</span></div>
+                      </div>
+                 </div>
+                  <div v-if="jlNum==0" style="text-align:center;margin-top:50px;font-size:15px;color:#666;">暂无内容！</div>
+              </div>
+         </div>
+        </div>
+     </div>
+      <nav class="mui-bar mui-bar-tab">
+			<a @tap="foot_bar(1)" class="mui-tab-item" href="#tabbar">
+				<span class="mui-icon mui-icon-home"></span>
+				<span class="mui-tab-label">首页</span>
+			</a>
+			<a @tap="foot_bar(2)" class="mui-tab-item  mui-active" href="#tabbar-with-chat">
+				<span class="mui-icon mui-icon-extra mui-icon-extra-class"></span>
+				<span class="mui-tab-label">分类</span>
+			</a>
+			<a @tap="foot_bar(3)" class="mui-tab-item" href="#usercenter">
+				<span class="mui-icon mui-icon-contact"></span>
+				<span class="mui-tab-label">个人中心</span>
+			</a>
+		</nav>
+   </div>
+<script src="/js/vue.js"></script>
+<script src="/js/mui.min.js"></script>
+<script src="/js/api.js"></script>
+<script src="/js/axios.js"></script>
+<script type="text/javascript" charset="utf-8">
+    mui.init({
+        pullRefresh: {
+            container: "#refreshContainer",
+            down: {
+                  style:"circle",
+                     callback :function(){ 
+                         window.setTimeout(function () {
+                            vm.getListData();
+                        },500);
+                    }
+                },
+            　　up: {
+                　　contentrefresh : "正在加载...",
+                    contentnomore:'没 有 更 多 数 据 了',
+                    callback:function(){
+                        window.setTimeout(function(){
+                            vm.getmore();
+                        },500);
+                    }
+            　　}
+        }
+    });
+  var vm=new Vue({
+        el: '#fenlei_list',
+        data: {
+            loading: true,
+            app:false,
+            listData: '',
+            jlNum: 1,
+            typeid: 0,
+            pageSize: 20,
+            pageIndex:0,
+            type: 1,//类型1视频2漫画
+            isNum: false,//用于判断是否还有数据
+        },
+        created: function () {
+            this.getListData();//获取数据
+        },
+         methods: {
+             //获取数据
+            getListData: function () {
+                var self = this;
+                var typeid = getQueryString("id");//分类ID
+                var t = getQueryString("t");//类型ID
+                var pages = self.pageSize;
+                self.pageIndex = 0;
+                self.isNum = false;//重置为false
+                if (typeid != 0 && typeid != 'undefined' && typeid != null && typeid != '') {
+                    self.typeid = typeid;
+                    if (t != 0 && t != 'undefined' && t != null && t != '') {
+                        self.type = t;
+                    } else {
+                        t = 1;
+                    }
+                    axget('/classcont', { pagesize: pages, pageindex: 0, type: t, cid: typeid }).then((res) => {
+                        //console.log(res);
+                        if (res.code == 0) {
+                            document.title =res.classname;
+                        if (res.data.length > 0) {
+                            self.jlNum = res.data.length;
+                        } else {
+                            self.jlNum = 0;
+                        }
+                        self.listData = res.data;
+						self.loading = false;
+                     } else {
+                        self.loading = false;
+                        mui.toast(res.msg);
+                        }
+                       mui('#refreshContainer').pullRefresh().endPulldownToRefresh();
+                       mui('#refreshContainer').pullRefresh().refresh(true);
+                   })
+                } else {
+                   self.loading = false;
+                   mui.alert("未获取到分类ID", ' ', function() {
+					   location.href="/fenlei.html"
+				   });
+                }
+             },//加载更多
+            getmore: function () {
+                var self = this;
+                var pgsize = self.pageSize;
+                var pgidx = self.pageIndex + 1;
+                var t = self.type;
+                var typeid = self.typeid;
+                self.pageIndex = pgidx;
+                mui('#refreshContainer').pullRefresh().endPullupToRefresh(self.isNum); 
+                if (typeid != 0 && typeid != 'undefined' && typeid != null && typeid != '') {
+                    axget('/classcont', {pagesize: pgsize, pageindex: pgidx, type: t, cid: typeid}).then((res) => {
+                        if (res.code == 0) {
+                            if (res.data.length > 0) {
+                                var data = self.listData;
+                                data = data.concat(res.data)
+                                self.listData = data;
+                                mui('#refreshContainer').pullRefresh().refresh(true);
+                            } else {
+                                self.isNum = true;
+                            }
+                        } else {
+                            mui.toast(res.msg);
+                        }
+                    })
+                }
+             }, fnhref: function (ids,t) {
+                if (t == 1) {
+                    location.href = "shipin_show.html?id=" + ids;
+                } else if (t == 2) {
+                    location.href ="manhua_list.html?id="+ids;
+                }
+             },closeAPP() {
+                this.app = true;
+             },
+             foot_bar(i) {
+                switch (i)
+                {
+                    case 1: location.href = "/index.html";break;
+                    case 2: location.href = "/fenlei.html";break;
+                    case 3: location.href = "/users/index.html"; break;
+                    default:
+                        location.href = "/index.html";
+                        break;
+                }
+            }
+        }
+    })
+</script>
+</body>
+</html>
+

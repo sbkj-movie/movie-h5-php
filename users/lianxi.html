@@ -1,0 +1,77 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,initial-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<link rel="stylesheet" href="/css/mui.min.css">
+<link rel="stylesheet" href="/css/style.css">
+    <script src="/js/phone.js"></script>
+<title>联系我们</title>
+<style type="text/css">
+    .content{padding:10px 3%;}
+    .content .cont{width:100%;}
+    .content .kefu{margin-top:20px;font-size:15px;padding:10px;border-radius:10px; background:linear-gradient(to right,#4f4f4f,#3c3c3c);color:#fff;display:flex;justify-content:space-around;align-items:center;}
+</style>
+</head>
+<body>
+    <header class="mui-bar mui-bar-nav">
+	<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	<h1 class="mui-title">联系我们</h1>
+  </header>
+  <div class="mui-content">
+       <div v-if="loading" class="loading">
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+          </div>
+      <div v-else class="content">
+          <div class="cont" v-html="content"></div>
+          <div class="kefu">
+            <div style="width:50%;text-align:right;">加微信或QQ独享优惠：</div>
+            <div style="width:50%;text-align:left;margin-left:10px; display:flex;flex-direction:column;">
+               <div v-for="(item,index) of kefuData" :key="index">
+                <span>{{item.CS_TYPE}}：{{item.CS_NUMBER}}</span>
+               </div>
+             </div>
+          </div>
+      </div>
+  </div>
+<script src="/js/mui.min.js"></script>
+<script src="/js/vue.js"></script>
+<script src="/js/api.js"></script>
+<script src="/js/axios.js"></script>
+<script type="text/javascript" charset="utf-8">
+    mui.init();
+     new Vue({
+        el: '.mui-content',
+        data: {
+            loading: true,
+            content: '',//内容
+            kefuData:''//客服信息
+        },
+        created: function () {
+           this.getData();//获取数据
+        },
+        methods: {
+            getData() {
+                var that = this;
+                axget('/yindao', {type:"about"}).then((res) => {
+                    //console.log(res);
+                    if (res.code == "0") {
+                        that.content = res.data.ad.CONTENT;
+                        that.kefuData = res.data.kefu;
+                    } else {
+                        mui.toast(res.msg);
+                    }
+                  that.loading = false;
+                })
+            }
+        }
+    })
+</script>
+</body>
+</html>

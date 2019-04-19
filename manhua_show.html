@@ -1,0 +1,224 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,initial-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<link rel="stylesheet" href="/css/mui.min.css">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" type="text/css" href="/css/iconfont.css" />
+<script src="/js/phone.js"></script>
+<title>漫画详情</title>
+<style type="text/css">
+    body{line-height:0px;}
+    .mui-bar{background:linear-gradient(to right,#4f4f4f,#3c3c3c);}
+    .mui-action-back,.mui-title{color:#fff;}
+     .cont{
+         padding:10px 2%;
+         font-size:15px;color:#333;
+     }
+     .cont span p{margin:0px;padding:0px;line-height:0px;}
+     .cont img{width:100%;height:100%;pointer-events: none; 
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -webkit-user-select:none;  
+        -o-user-select:none;  
+        user-select:none;}
+    .bottom{position:fixed;bottom:0px;width:100%;height:50px;background:#fff;display:flex;justify-content:space-around;align-items:center;}
+    .bottom span{color:#333;}
+    .bottom span.n{color:#A9A7A8;}
+</style>
+</head>
+<body>
+<div id="mhxq">
+    <header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">{{title}}</h1>
+    </header>
+   <div class="mui-content" style="margin-bottom:50px;">
+    <div v-if="loading" class="loading">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+     </div>
+    <div v-else class="cont">
+        <span v-for="(item,index) in infoData" :key="index"><img :src="item" /></span>
+    </div>
+   </div>
+   <div class="bottom">
+       <div><span v-on:click="shangpian">上一篇</span></div>
+       <div><span v-on:click="xiapian">下一篇</span></div>
+   </div>
+</div>
+<script src="/js/vue.js"></script>
+<script src="/js/api.js"></script>
+<script src="/js/axios.js"></script>
+<script src="/js/mui.min.js"></script>
+<script type="text/javascript" charset="utf-8">
+    mui.init();
+     new Vue({
+        el: '#mhxq',
+        data: {
+            loading: true,
+            hyid: 0,
+            token:0,
+            mh_id: 0,//漫画ID
+            zj_id: 0,//章节ID
+            infoData: '',
+            title:"加载中..."
+          },
+        created: function () {
+            this.getData();//获取数据
+        },
+        methods: {
+             //获取数据
+            getData: function () {
+                var self = this;
+                var zjid = getQueryString("id");//章节ID
+                var mhid = getQueryString("mhid");//漫画ID
+
+                if (zjid != 0 && zjid != 'undefined' && zjid != null && zjid != '') {
+                    self.zj_id = zjid;
+                    if (mhid != 0 && mhid != 'undefined' && mhid != null && mhid != '') {
+                        self.mh_id = mhid;
+                        var hyid = localStorage.getItem("hyid");//获取用户ID
+                        var token = localStorage.getItem("token");//获取token
+                        if (hyid == 0 && hyid == 'undefined' && hyid == null && hyid == '') {
+                            hyid = 0;
+                            token = 0;
+                        } else {
+                            self.hyid = hyid;
+                            self.token = token;
+                        }
+                        axget('/zhangdesc', { cid: mhid, id: zjid, uid: hyid, token: token, next: 0, last: 0 }).then((res) => {
+                            //console.log(res);
+                           if (res.code == "0") {
+                                self.infoData = res.data.CTD_PHOTO_LIST;
+                                self.zj_id = res.data.ID;
+                                self.title = res.data.CTD_TITLE;
+                                self.loading = false;
+                            } else if (res.code == "2") {
+								self.loading = false;
+                                mui.alert('账号在别处登录,您已被迫下线！', ' ', function() {
+					            localStorage.clear();
+                                location.href="/login.html"
+				                });
+                           } else if (res.code == 3) {
+								self.loading = false;
+                                var btnArray = ['否', '是'];
+                                mui.confirm('观看本章节需付费，是否进行充值？', '', btnArray, function (e) {
+                                if (e.index == 1) {
+                                    location.href = "/users/taocan.html"
+                                }else {
+                                        window.history.go(-1)
+                                    }
+                               })
+                            } else {
+                                mui.toast(res.msg);
+                                self.loading = false;
+                            }
+                      })
+                    } else {
+                        location.href="/manhua.html"
+                    }
+                } else {
+                    location.href="/manhua.html"
+                }
+            },
+            shangpian() {
+                var self = this;
+                self.loading = true;
+                var zjid = self.zj_id;
+                var mhid = self.mh_id;
+                var hyid = self.hyid;
+                var token = self.token;
+                if (zjid != 0 && zjid != 'undefined' && zjid != null && zjid != '') {
+                    if (mhid != 0 && mhid != 'undefined' && mhid != null && mhid != '') {
+                        axget('/zhangdesc', {cid: mhid,id: zjid,uid:hyid,token:token,next:0,last:1}).then((res) => {
+                            if (res.code == "0") {
+                              self.infoData = res.data.CTD_PHOTO_LIST;
+                              self.zj_id = res.data.ID;
+                              self.title = res.data.CTD_TITLE;
+                              self.num++;
+                              self.loading = false;
+                            } else if (res.code == "2") {
+								self.loading = false;
+                                mui.alert('账号在别处登录,您已被迫下线！', ' ', function() {
+					                localStorage.clear();
+                                    location.href="/login.html"
+				                });
+                            } else if (res.code == 3) {
+								self.loading = false;
+                                var btnArray = ['否', '是'];
+                                mui.confirm('观看本章节需付费，是否进行充值？', '', btnArray, function (e) {
+                                    if (e.index == 1) {
+                                        location.href = "/users/taocan.html"
+                                    } else {
+                                        window.history.go(-1)
+                                    }
+                               })
+                            }else {
+								self.loading = false;
+                                mui.toast(res.msg);
+                            }
+                        })
+                    } else {
+                         mui.toast("出错了！");
+                    }
+                } else {
+                   mui.toast("出错了！");
+                }
+            },
+            xiapian() {
+                var self = this;
+                self.loading = true;
+                var zjid = self.zj_id;
+                var mhid = self.mh_id;
+                var hyid = self.hyid;
+                var token = self.token;
+                if (zjid != 0 && zjid != 'undefined' && zjid != null && zjid != '') {
+                    if (mhid != 0 && mhid != 'undefined' && mhid != null && mhid != '') {
+                        axget('/zhangdesc', {cid: mhid,id: zjid,uid:hyid,token:token,next:1,last:0}).then((res) => {
+                            if (res.code == "0") {
+                                self.infoData = res.data.CTD_PHOTO_LIST;
+                                self.zj_id = res.data.ID;
+                                self.title = res.data.CTD_TITLE;
+                                self.num--;
+                                self.loading = false;
+                            } else if (res.code == "2") {
+								self.loading = false;
+                                mui.alert('账号在别处登录,您已被迫下线！', ' ', function() {
+					            localStorage.clear();
+                                location.href="/login.html"
+				                });
+                            } else if (res.code == 3) {
+								self.loading = false;
+                                var btnArray = ['否', '是'];
+                                mui.confirm('观看本章节需付费，是否进行充值？', '', btnArray, function (e) {
+                                if (e.index == 1) {
+                                    location.href = "/users/taocan.html"
+                                }else {
+                                        window.history.go(-1)
+                                    }
+                               })
+                            }else {
+								self.loading = false;
+                                mui.toast(res.msg);
+                            }
+                        })
+                    } else {
+                         mui.toast("出错了！");
+                    }
+                } else {
+                   mui.toast("出错了！");
+                }
+            }
+        }
+    })
+</script>
+</body>
+</html>
+

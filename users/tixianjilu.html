@@ -1,0 +1,160 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,initial-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<link rel="stylesheet" href="/css/mui.min.css">
+<link rel="stylesheet" href="/css/style.css">
+    <script src="/js/phone.js"></script>
+<title>提现记录</title>
+<style type="text/css">
+    .list-item{width:100%;font-size:15px;color:#333;border-bottom:1px solid #E4E3F3;padding:10px;}
+    .list-item .hd,.list-item .bd{display:flex;justify-content:space-between;}
+    .list-item .bd .time{color:#B1B1B1;}
+    .list-item .bd .status1{color:#7FC95A;}
+    .list-item .bd .status2{color:#7DD7FC;}
+    .list-item .bd .status3{color:#FD4164;}
+    .mui-bar-nav~.mui-content .mui-pull-top-pocket{top:0px;}
+</style>
+</head>
+<body>
+    <header class="mui-bar mui-bar-nav">
+	<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	<h1 class="mui-title">提现记录</h1>
+  </header>
+  <div class="mui-content">
+      <div id="refreshContainer" class="mui-scroll-wrapper" style="margin-top:50px;">
+         <div class="mui-scroll">
+            <div v-if="loading" class="loading">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <div v-else>
+               <div class="list-item" v-for="(item,index) of listData" :key="index">
+                   <div class="hd"><span>提现申请</span><span>{{item.PF_PRICE}}&nbsp;元</span></div>
+                   <div class="bd"><span class="time">{{item.GMT_CREATE}}</span>
+                     <span class="status1" v-if="item.PF_STATUS==0">处理中</span>
+                     <span class="status2" v-else-if="item.PF_STATUS==1">已打款</span>
+                     <span class="status3" v-else-if="item.PF_STATUS==2">被驳回</span>
+                   </div>
+               </div>
+                <div v-if="jlNum==0" style="text-align:center;margin-top:50px;font-size:15px;color:#666;">暂无数据！</div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/js/vue.js"></script>
+<script src="/js/mui.min.js"></script>
+<script src="/js/api.js"></script>
+<script src="/js/axios.js"></script>
+<script type="text/javascript" charset="utf-8">
+     mui.init({
+        pullRefresh: {
+            container: "#refreshContainer",
+            down: {
+                  style:"circle",
+                     callback :function(){ 
+                         window.setTimeout(function () {
+                            vm.getData();
+                        },500);
+                    }
+                },
+            　　up: {
+                　　contentrefresh : "正在加载...",
+                    contentnomore:'没 有 更 多 数 据 了',
+                    callback:function(){
+                        window.setTimeout(function(){
+                            vm.getmore();
+                        },500);
+                    }
+            　　}
+        }
+    });
+   var vm=new Vue({
+        el: '.mui-content',
+        data: {
+            loading: true,
+            listData: '',
+            hyid: 0,
+            token: 0,
+            jlNum:1,
+            pagesize:10,
+            pageindex: 0,
+            isNum: false,//用于判断是否还有数据
+        },
+        created: function () {
+           this.getData();//获取数据
+        },
+        methods: {
+            getData() {
+                var that = this;
+                var pgsize = that.pagesize;
+                var pgidx = 0;//当前页
+                that.pageindex = 0;//重置为0
+                that.isNum = false;//重置为false
+                var hyid = localStorage.getItem("hyid");
+                var token = localStorage.getItem("token");
+                if (hyid != 0 && hyid != 'undefined' && hyid != null && hyid != '') {
+                    that.hyid = hyid;
+                    that.token = token;
+                    axget('/tixianlist', { uid: hyid, token: token, pagesize: pgsize, pageindex: pgidx }).then((res) => {
+                       //console.log(res);
+                        if (res.code == "0") {
+                            that.listData = res.data
+                            if (res.data.length > 0) {
+                                that.jlNum = res.data.length
+                            } else {
+                                that.jlNum = 0;
+                            }
+                        } else if (res.code == "2") {
+                           mui.alert('账号在别处登录,您已被迫下线！', ' ', function() {
+					          localStorage.clear();
+                              location.href="/login.html"
+				            });
+                        }  else {
+                            mui.toast(res.msg);
+                        }
+                        mui('#refreshContainer').pullRefresh().endPulldownToRefresh();
+                        mui('#refreshContainer').pullRefresh().refresh(true);
+                        that.loading = false;
+                    })
+                } else {
+                   location.href = "/login.html";
+                }
+            },//加载更多
+            getmore: function () {
+                var self = this;
+                var pgsize = self.pagesize;
+                var pgidx = self.pageindex + 1;
+                var hyid = self.hyid;
+                var token = self.token;
+                self.pageindex = pgidx;
+                mui('#refreshContainer').pullRefresh().endPullupToRefresh(self.isNum); 
+                if (hyid != 0 && hyid != 'undefined' && hyid != null && hyid != '') {
+                    axget('/tixianlist', {uid: hyid, token: token, pagesize: pgsize, pageindex: pgidx}).then((res) => {
+                        //console.log(res);
+                        if (res.code == 0) {
+                            if (res.data.length > 0) {
+                                var data = self.listData;
+                                data = data.concat(res.data)
+                                self.listData = data;
+                                mui('#refreshContainer').pullRefresh().refresh(true);
+                            } else {
+                                self.isNum = true;
+                            }
+                        } else {
+                            mui.toast(res.msg);
+                        }
+                    })
+                }
+            }
+        }
+    })
+</script>
+</body>
+</html>

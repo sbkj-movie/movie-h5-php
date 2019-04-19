@@ -1,0 +1,98 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,initial-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<link rel="stylesheet" href="/css/mui.min.css">
+<link rel="stylesheet" href="/css/style.css">
+    <script src="/js/phone.js"></script>
+<title>购买记录</title>
+<style type="text/css">
+    //.mui-content{margin-top:100px;}
+    .list-item{display:flex;width:100%;height:50px;justify-content:space-around;align-items:center;font-size:15px;color:#333;border-bottom:1px solid #E4E3F3;}
+    .list-item .time{font-size:13px;color:#B5B5B5;width:50%;text-align:left;}
+    .list-item .price{font-size:13px;color:#d41717;width:20%;text-align:right;}
+    .mgtop50{margin-top:60px;}
+</style>
+</head>
+<body>
+  <div id="gm">
+    <header class="mui-bar mui-bar-nav">
+	<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	<h1 class="mui-title">购买记录</h1>
+  </header>
+  <div class="mui-content" :class="{'mgtop50':app}">
+        <div v-if="loading" class="loading">
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+          </div>
+          <div v-else>
+            <div class="list-item" v-for="(item,index) of listData" :key="index">
+                <span class="time">{{item.GMT_CREATE}}</span>
+                <span>{{item.SH_NAME}}</span>
+                <span class="price">{{item.SH_PAY}}元</span>
+            </div>
+              <div v-if="gmNum==0" style="text-align:center;margin-top:150px;font-size:15px;color:#666;">暂无数据！</div>
+          </div>
+  </div>
+</div>
+<script src="/js/vue.js"></script>
+<script src="/js/mui.min.js"></script>
+<script src="/js/api.js"></script>
+<script src="/js/axios.js"></script>
+<script type="text/javascript" charset="utf-8">
+     mui.init();
+   var vm=new Vue({
+        el: '#gm',
+        data: {
+            loading: true,
+            app:false,
+            listData: '',
+            gmNum:1
+        },
+        created: function () {
+           this.getData();//获取数据
+        },
+        methods: {
+            getData() {
+                var that = this;
+                var hyid = localStorage.getItem("hyid");
+                var token = localStorage.getItem("token");
+                if (hyid != 0 && hyid != 'undefined' && hyid != null && hyid != '') {
+                    that.hyid = hyid;
+                    that.token = token;
+                     axget('/shop_buy', { uid: hyid, token: token}).then((res) => {
+                       //console.log(res);
+                        if (res.code == "0") {
+                            that.listData = res.data;
+                            if (res.data.length > 0) {
+                                that.gmNum = res.data.length;
+                            } else {
+                                that.gmNum = 0;
+                            }
+                        } else if (res.code == "2") {
+                          mui.alert('账号在别处登录,您已被迫下线！', ' ', function() {
+					          localStorage.clear();
+                              location.href="/login.html"
+				            });
+                        }  else {
+                            mui.toast(res.msg);
+                        }
+                        that.loading = false;
+                    })
+                } else {
+                   location.href = "/login.html";
+                }
+            },closeAPP() {
+                this.app = true;
+            }
+        }
+    })
+</script>
+</body>
+</html>

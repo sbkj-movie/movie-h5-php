@@ -1,0 +1,138 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,initial-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<link rel="stylesheet" href="/css/mui.min.css">
+<link rel="stylesheet" href="/css/style.css">
+<script src="/js/jquery-1.11.2.min.js"></script>
+    <script src="/js/phone.js"></script>
+<title>找回密码</title>
+<style type="text/css">
+     body {background: #F8F8F8;}
+    .mui-bar{background:linear-gradient(to right,#4f4f4f,#3c3c3c);}
+    .mui-action-back,.mui-title{color:#fff;}
+    .mui-content{background: #F8F8F8;}
+    .mui-input-group {margin-top: 10px;}
+	.mui-input-group:first-child {margin-top: 20px;}
+	.mui-input-group label {width:20%;font-size:15px;text-align:right;}
+    .mui-input-group .mui-input-row{height:50px;}
+    .mui-input-row label{padding:17px 5px;}
+	.mui-input-row label~input{width: 80%;height:50px;padding:5px;font-size:15px;}
+	.mui-content-padded {text-align:center;margin-top: 25px;}
+	.btn-login {background:linear-gradient(to right,#4f4f4f,#3c3c3c);border:0px;height:45px;border-radius:30px;width:90%; color:#fff;font-size:15px;}
+
+    .mui-input-group input{height:50px;font-size:15px;}
+</style>
+</head>
+<body>
+  <header class="mui-bar mui-bar-nav">
+	<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	<h1 class="mui-title">找回密码(2/3)</h1>
+  </header>
+   <div id="zhaohui" class="mui-content">
+       <form id='login-form' class="mui-input-group">
+				<div class="mui-input-row">
+					<input id='question1' type="text" class="mui-input" disabled="disabled">
+				</div>
+				<div class="mui-input-row">
+					<input id='answer1' type="text" class="mui-input inp" placeholder="请输入答案">
+				</div>
+                <div class="mui-input-row">
+					<input id='question2' type="text" class="mui-input" disabled="disabled">
+				</div>
+                <div class="mui-input-row">
+					<input id='answer2' type="text" class="mui-input inp" placeholder="请输入答案">
+				</div>
+                <div class="mui-input-row">
+					<input id='question3' type="text" class="mui-input" disabled="disabled">
+				</div>
+                <div class="mui-input-row">
+					<input id='answer3' type="text" class="mui-input inp" placeholder="请输入答案">
+				</div>
+			</form>
+			<div class="mui-content-padded">
+				<button id='next' class="btn-login">验证</button>
+			</div>
+   </div>
+<script src="/js/mui.min.js"></script>
+<script src="/js/api.js"></script>
+<script src="/js/axios.js"></script>
+<script type="text/javascript" charset="utf-8">
+    (function ($, doc, $$) {
+        $.init();
+      
+     //判断是否为空
+    function isNull(str) {
+    if (str == null || str == "" || str == undefined||str=="null") {
+        return true;
+    } else {
+        return false;
+    }
+   };
+    $$(doc).ready(function () {
+       var zhid = localStorage.getItem("zhid");
+        if (zhid != 0 && zhid != 'undefined' && zhid != null && zhid != '') {
+            axget('/pwdwenti', {uid:zhid }).then((res) => {
+                 //console.log(res);
+                if (res.code == "0") {
+                    $$("#question1").val(res.data[0]);
+                    $$("#question2").val(res.data[1]);
+                    $$("#question3").val(res.data[2]);
+                 } else {
+                     mui.toast(res.msg);
+                 }
+             })
+        } else {
+            window.location.href = "/zhaohui.html";
+        }
+    })
+    $$("#next").on("click", function () {
+       var ans1 = document.querySelector("#answer1").value;
+       var ans2 = document.querySelector("#answer2").value;
+       var ans3 = document.querySelector("#answer3").value;
+       
+       if (isNull(ans1)) {
+            mui.toast("请输入问题1的答案!");
+            return false;
+       }
+       if (isNull(ans2)) {
+            mui.toast("请输入问题2的答案!");
+            return false;
+       }
+       if (isNull(ans3)) {
+            mui.toast("请输入问题3的答案!");
+            return false;
+       }
+        var btn='';
+        btn = document.getElementById("next");
+        var zhid = localStorage.getItem("zhid");
+        if (zhid != 0 && zhid != 'undefined' && zhid != null && zhid != '') {
+            btn.disabled = true;
+            btn.innerText = "请稍候...";
+            axget('/pwdanswer', {uid:zhid,answer1:ans1,answer2:ans2,answer3:ans3}).then((res) => {
+                 //console.log(res);
+                 if (res.code == "0") {
+                    mui.toast(res.msg);
+                    btn.disabled = false;
+                     btn.innerText = "验证";
+                     localStorage.setItem("yzquestion","1");
+                    window.location.href = '/zhaohui3.html';
+                 } else {
+                     btn.disabled = false;
+                     btn.innerText = "验证";
+                     mui.toast(res.msg);
+                 }
+             })
+        } else {
+            mui.toast("出错了！");
+            window.location.href = '/zhaohui.html';
+        }
+    })
+    })(mui, document, jQuery);
+</script>
+</body>
+</html>
+

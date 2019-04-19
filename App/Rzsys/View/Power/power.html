@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>权限添加</title>
+	<meta name="renderer" content="webkit">	
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">	
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">	
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">	
+	<meta name="apple-mobile-web-app-capable" content="yes">	
+	<meta name="format-detection" content="telephone=no">	
+	<link rel="stylesheet" type="text/css" href="/Public/admin/common/layui/css/layui.css" media="all">
+	<link rel="stylesheet" type="text/css" href="/Public/admin/common/bootstrap/css/bootstrap.css" media="all">
+	<link rel="stylesheet" type="text/css" href="/Public/admin/common/global.css" media="all">
+	<link rel="stylesheet" type="text/css" href="/Public/admin/css/personal.css" media="all">
+    <style type="text/css">
+        form {
+            width: 500px;
+            margin: 10px auto;
+        }
+
+        h1, h2, h3 {
+            padding: 10px 0;
+        } 
+
+        a {
+            text-align: right;
+            font-size: 18px;
+            color: #1C86EE;
+        }
+
+        .xtree_contianer {
+            width: 500px;
+            border: 1px solid #9C9C9C;
+            overflow: auto;
+            margin-bottom: 30px;
+            background-color: #fff;
+            padding: 10px 0 25px 5px;
+        }
+
+        .div-btns {
+            margin: 20px 0;
+        }
+
+        .layui-form-label {
+            width: 60px !important;
+        }
+    </style>
+</head>
+<body>
+<section class="layui-larry-box">
+	<div class="larry-personal">
+		<header class="larry-personal-tit">
+			<span>添加权限</span>
+		</header><!-- /header -->
+		<div class="larry-personal-body clearfix">
+			<form class="layui-form col-lg-5"  method="post"  >
+            <input type="hidden" name="id" id="rid" value="{$data['id']?$data['id']:''}">
+           	   
+                <div class="layui-form-item">
+					<label class="layui-form-label">角色名称</label>
+					<div class="layui-input-block">  
+						<input type="text" name="name" id='name' required class="layui-input " value="{$data['name']?$data['name']:''}" >
+					</div>
+				</div>
+                <div class="layui-form-item" pane="">
+                    <label class="layui-form-label">权限</label>
+                    <div class="layui-input-block">  
+						<div id="xtree1" class="xtree_contianer">
+                        
+                        </div>
+					</div>
+                      
+                  </div>
+              
+            	
+				
+				<div class="layui-form-item">
+					<div class="layui-input-block">
+						<button class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+						<button type="reset" class="layui-btn layui-btn-primary">重置</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</section>
+<script type="text/javascript" src="/Public/admin/js/jquery-1.9.0.min.js"></script>
+<script type="text/javascript" src="/Public/admin/common/layui/layui.js"></script>
+<script src="/Public/admin//layui-xtree/layui-xtree.js"></script>
+<script type="text/javascript">
+
+	layui.use(['form','upload'],function(){
+		var form = layui.form();
+		  $.ajax({
+             type: "post",
+             url: "{:U('power/listrole')}",
+             data: {rid:$("#rid").val()},
+             dataType: "json",
+			 async:false,
+             success: function(data){
+             	 var json=data; 
+				  var xtree1 = new layuiXtree({
+						elem: 'xtree1'   //(必填) 放置xtree的容器，样式参照 .xtree_contianer
+						, form: form     //(必填) layui 的 from
+						, isopen: false
+						, data: json     //(必填) json数据
+					   });
+					    form.on('submit(demo1)', function(data){  
+		 					var oCks = xtree1.GetChecked(); //这是方法
+							var rel='';
+							for (var i = 0; i < oCks.length; i++) {
+								rel+=oCks[i].value+',';
+							}
+							if($('#name').val()!=''){
+								 $.ajax({
+									 type: "post",
+									 url: "{:U('power/pdoadd')}",
+									 data: {rid:$("#rid").val(),'name':$('#name').val(),'oCks':rel},
+									 dataType: "json",
+									 async:false,
+									 success: function(data){
+										layer.msg('操作成功！');
+												setTimeout(function() {
+													window.location = "{:U('power/pwlist')}";
+												}, 1200);
+									  }
+										
+									 
+								 });
+							}else{
+								layer.msg('角色名称不能为空！');
+							}
+						  
+							 return false;	 
+							
+							
+					  });        
+              }
+         });
+         
+      
+
+		  //监听提交  
+		 
+	});
+	
+function checkall(){
+	
+}
+</script>
+</body>
+</html>

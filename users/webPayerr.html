@@ -1,0 +1,71 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,initial-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<link rel="stylesheet" href="/css/mui.min.css">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/iconfont.css">
+    <script src="/js/phone.js"></script>
+<title>订单支付</title>
+<style type="text/css">
+   
+   .box{width:100%;text-align:center;margin:0px auto;margin-top:30%;}
+   .tubiao{margin:0 auto;display:flex;justify-content:center;border:3px solid #39B263; width:70px; height:70px; border-radius:50%; align-items:center;}
+   .mui-icon-checkmarkempty{color:#39B263;font-size:40px;}
+   .tips{display:flex;justify-content:center;width:100%;padding:20px;}
+</style>
+</head>
+<body>
+ <div id="pay">
+    <header class="mui-bar mui-bar-nav">
+	<h1 class="mui-title">订单支付</h1>
+  </header>
+  <div class="mui-content">
+      <div class="box">
+        <div class="tubiao"><span class="mui-icon mui-icon-closeempty"></span></div>
+        <span class="tips">支付失败!</span>
+      </div>
+  </div>
+   <nav class="mui-bar mui-bar-tab">
+			<a v-on:click="foot_bar(1)" class="mui-tab-item" href="#index">
+				<span class="mui-icon mui-icon-home"></span>
+				<span class="mui-tab-label">首页</span>
+			</a>
+			<a v-on:click="foot_bar(2)" class="mui-tab-item" href="#tabbar-with-chat">
+				<span class="mui-icon iconfont icon-fenxiang" ></span>
+				<span class="mui-tab-label">推广</span>
+			</a>
+			<a v-on:click="foot_bar(3)" class="mui-tab-item  mui-active" href="#usercenter">
+				<span class="mui-icon mui-icon-contact"></span>
+				<span class="mui-tab-label">个人中心</span>
+			</a>
+    </nav>
+</div>
+<script src="/js/mui.min.js"></script>
+<script src="/js/vue.js"></script>
+<script type="text/javascript" charset="utf-8">
+    mui.init();
+    new Vue({
+        el: '#pay',
+        data: {
+        },
+        methods: {
+             foot_bar(i) {
+                switch (i)
+                {
+                    case 1: location.href = "/index.html"; break;
+                    case 2: location.href = "/tuiguang.html";break;
+                    case 3: location.href = "/users/index.html"; break;
+                    default:
+                        location.href = "/index.html";
+                        break;
+                }
+            }
+        }
+    })
+</script>
+</body>
+</html>

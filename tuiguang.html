@@ -1,0 +1,159 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,initial-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<link rel="stylesheet" href="/css/mui.min.css">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/iconfont.css">
+    <script src="/js/phone.js"></script>
+<title>推广</title>
+<style type="text/css">
+    .content{padding:10px 3%;}
+    .content .cont{width:100%;}
+    .cont img{width:100%;}
+    .tgewm{width:100%;overflow:hidden;height:100%;position:relative;}
+    .tgewm img{width:100%;height:100%;}
+    .tgewm .ewmbox{position:absolute;top:36%;width:100%;text-align:center;color:#fff;font-size:15px;}
+    .tgewm #qrcode{width:130px;height:130px;margin:0 auto;padding:10px;background:#fff;}
+    .tgewm .ewmbox .ljfx{background:linear-gradient(to bottom,#FED71A,#FFB107);border-radius:20px;width:35%;margin:15px auto;padding:5px 0px;}
+    .tgewm .ewmbox .tgsm{margin-top:20px;display:flex;align-items:center;justify-content:center;}
+</style>
+</head>
+<body>
+   <header class="mui-bar mui-bar-nav">
+	<h1 class="mui-title">推广</h1>
+  </header>
+<div style="margin-top:44px;">
+   <div class="mui-content" style="margin-bottom:50px;">
+        <div class="loading">
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+        </div>
+        <div class="content" style="display:none;">
+          <div class="cont"></div>
+          <div class="btn" id="show_ewm">进入专属推广二维码</div>
+        </div>
+    </div>
+    <div class="tgewm" style="display:none;">
+          <img src="/images/tjmbg1.jpg" />
+          <div class="ewmbox">
+            <div id="qrcode"></div>
+            <div class="ljfx">立即分享</div>
+            <div class="tgsm"><span class="iconfont icon-bangzhu-yin" style="font-size:20px;"></span>&nbsp;<span>推广说明</span></div>
+          </div>
+    </div>
+    <nav class="mui-bar mui-bar-tab">
+			<a id="index" class="mui-tab-item" href="#index">
+				<span class="mui-icon mui-icon-home"></span>
+				<span class="mui-tab-label">首页</span>
+			</a>
+			<a id="tuiguang" class="mui-tab-item  mui-active" href="#tabbar-with-chat">
+				<span class="mui-icon iconfont icon-fenxiang"></span>
+				<span class="mui-tab-label">推广</span>
+			</a>
+			<a id="usercenter" class="mui-tab-item" href="#usercenter">
+				<span class="mui-icon mui-icon-contact"></span>
+				<span class="mui-tab-label">个人中心</span>
+			</a>
+	</nav>
+</div>
+<script src="/js/jquery-1.11.2.min.js"></script>
+<script src="/js/qrcode.min.js"></script>
+<script src="/js/mui.min.js"></script>
+<script src="/js/api.js"></script>
+<script src="/js/axios.js"></script>
+<script type="text/javascript" charset="utf-8">
+  (function ($, doc, $$) {
+      $.init();
+    document.getElementById("index").addEventListener('tap', function() {
+        mui.openWindow({
+         url: '/index.html'
+		})
+    })
+    document.getElementById("usercenter").addEventListener('tap', function() {
+        mui.openWindow({
+         url: '/users/index.html'
+		})
+    })
+      $$(doc).ready(function () {
+          var hyid = localStorage.getItem("hyid");
+          if (hyid != 0 && hyid != 'undefined' && hyid != null && hyid != '') {
+              var c =globalData.siteadd + "register.html?pid=" + hyid;
+              var qrcode = new QRCode('qrcode', {
+                    text:c,
+                    width: 100,
+                    height: 100,
+                    correctLevel: QRCode.CorrectLevel.H
+              });
+          }
+          var url = globalData.apiurl;
+           axget('/yindao', {type:"tuiguang"}).then((res) => {
+              //console.log(res);
+               if (res.code == "0") {
+                   $$(".loading").css("display", "none");
+                   $$(".content").css("display", "block");
+                   $$(".cont").html(res.data.ad.CONTENT);
+              } else {
+                  mui.toast(res.msg);
+              }
+           })
+    })
+      $$("#show_ewm").on("click", function () {
+        var hyid = localStorage.getItem("hyid");
+           if (hyid != 0 && hyid != 'undefined' && hyid != null && hyid != '') {
+               $$(".mui-content").css("display", "none");
+               $$(".tgewm").css("display", "block");
+           } else {
+                mui.alert("请先登录", ' ', function() {
+				location.href="/login.html"
+		   });
+         }
+      })
+
+      $$(".tgsm").on("click", function () {
+           $$(".mui-content").css("display", "block");
+           $$(".tgewm").css("display", "none");
+      })
+
+      $$(".ljfx").on("click", function () {
+          var hyid = localStorage.getItem("hyid");
+          var name = Math.floor(Math.random() * 999999);
+          var imgData = $$("#qrcode").find("img").attr("src");
+          downloadFile(name + hyid+'.png', imgData);
+      })
+      function downloadFile(fileName, content) {
+        let aLink = document.createElement('a');
+        let blob = base64ToBlob(content); //new Blob([content]);
+
+        let evt = document.createEvent("HTMLEvents");
+        evt.initEvent("click", true, true);//initEvent 不加后两个参数在FF下会报错  事件类型，是否冒泡，是否阻止浏览器的默认行为
+        aLink.download = fileName;
+        aLink.href = URL.createObjectURL(blob);
+
+        // aLink.dispatchEvent(evt);
+        aLink.click()
+      }
+      //base64转blob
+     function base64ToBlob(code) {
+        let parts = code.split(';base64,');
+        let contentType = parts[0].split(':')[1];
+        let raw = window.atob(parts[1]);
+        let rawLength = raw.length;
+
+        let uInt8Array = new Uint8Array(rawLength);
+
+        for (let i = 0; i < rawLength; ++i) {
+          uInt8Array[i] = raw.charCodeAt(i);
+        }
+        return new Blob([uInt8Array], {type: contentType});
+      }
+})(mui, document, jQuery);
+</script>
+</body>
+</html>

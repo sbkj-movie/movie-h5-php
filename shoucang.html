@@ -1,0 +1,369 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,initial-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<link rel="stylesheet" href="/css/mui.min.css">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/iconfont.css">
+    <script src="/js/phone.js"></script>
+<title>我的收藏</title>
+<style type="text/css">
+     .mui-content{margin-top:90px;}
+    .mui-segmented-control{border:0px;}
+    .mui-segmented-control .mui-control-item.mui-active{background:none;color:#3c3c3c;border-bottom:#3c3c3c 1px solid;}
+    .mui-segmented-control .mui-control-item{border-left:0px;color:#333;border-bottom:1px solid #E5E5E5;}
+
+    .tips{font-size:12px;color:#333;padding:10px;}
+    .listbox{display:flex;justify-content:space-between;padding:15px 5px;height:130px;position:relative;border-bottom:1px solid #f2f2f2;}
+    .listbox .imgbox{width:40%;overflow:hidden;}
+    .listbox .imgbox img{width:100%;height:100%;}
+    .listbox .infobox{width:58%;overflow:hidden;margin-left:2%;}
+    .listbox .infobox .name{font-size:15px;color:#333;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}
+    .listbox .infobox .status{margin-top:10px;font-size:13px;}
+    .listbox .infobox .status .vip{background:#d41717;color:#fff;border-radius:20px;padding:3px 10px;}
+    .listbox .infobox .status .mian{background:linear-gradient(to right,#4f4f4f,#3c3c3c);color:#fff;border-radius:20px;padding:3px 10px;}
+    .listbox .infobox .notes{font-size:13px;color:#bbb;margin-top:8px;width:80%;max-height:60px;overflow:hidden;}
+    .listbox .infobox .del{position:absolute;right:15px;bottom:18px;}
+    .listbox .infobox .del .icon-shanchu{font-size:20px;color:#939393;}
+    .mui-control-content{position:initial;}
+    .mui-bar-nav~.mui-content .mui-pull-top-pocket{top:0px;}
+    .mui-scroll-wrapper{margin-top:190px;}
+    .mgtop50{margin-top:50px;}
+    .mgtop100{margin-top:140px;}
+</style>
+</head>
+<body>
+  <div id="sc">
+   <div class="down" :class="{'downs':app}">
+            <div class="d-logo"><span class="mui-icon mui-icon-close" v-on:click="closeAPP"></span>&nbsp;<img src="/images/logo.png" style="width:100px;" /></div>
+            <div class="d-app"><a href="/download.html">下载APP</a></div>
+   </div>
+   <div class="header" :class="{'headers':app}">
+          <div class="hnav">
+           <div class="logo-box">
+               <a :href="'/users/qiehuanxianlu.html'">地址列表</a>
+           </div>
+           <ul class="menu">
+               <li><a href="/index.html">精选</a></li>
+               <li><a href="/shipin.html">视频</a></li>
+               <li><a href="/yingpian.html">影片</a></li>
+               <li><a href="/manhua.html">漫画</a></li>
+           </ul>
+           <div class="search"><a :href="'/search.html'"><span class="mui-icon mui-icon-search"></span></a></div>
+          </div>
+   </div>
+  <div class="mui-content" :class="{'mgtop50':app}">
+     <div style="padding: 10px 10px;background:#fff;">
+		 <div id="segmentedControl" class="mui-segmented-control">
+		 	<a class="mui-control-item mui-active" href="#item1">视频</a>
+		 	<a class="mui-control-item" href="#item2">漫画</a>
+		 </div>
+	  </div>
+  </div>
+ </div>
+      <div id="item1" class="mui-control-content mui-active" >
+        <div class="tips">温馨提示：如果您的收藏视频减少了，那是因为视频下架了</div>
+          <div id="refreshContainer" class="mui-scroll-wrapper" :class="{'mgtop100':app}">
+            <div class="mui-scroll">
+                 <div v-if="loading" class="loading">
+                     <span></span>
+                     <span></span>
+                     <span></span>
+                     <span></span>
+                     <span></span>
+                 </div>
+                 <div v-else>
+                    <div class="listbox" v-for="(item,index) of shipinData" :key="index">
+                        <div class="imgbox" @tap="fnOpen(item.ID,1)"><img :src="item.pic" /></div>
+                        <div class="infobox">
+                            <div class="name">{{item.name}}</div>
+                            <div class="status"><span class="vip" v-if="item.type==2">VIP视频</span><span class="mian" v-else>免费观看</span></div>
+                            <div class="notes">{{item.content}}</div>
+							<div class="del"><span class="iconfont icon-shanchu" @tap="del(item.lookid,index,1)"></span></div>
+                            <!--<div class="del"><span class="iconfont icon-shanchu" v-on:click="del(item.lookid,index,1)"></span></div>-->
+                        </div>
+                    </div>
+                    <div v-if="spNum==0" style="text-align:center;margin-top:100px;font-size:15px;color:#666;">还没有收藏过视频！</div>
+                </div>
+            </div>
+          </div>
+      </div>
+      <div id="item2" class="mui-control-content">
+          <div class="tips">温馨提示：如果您的收藏漫画减少了，那是因为漫画下架了</div>
+           <div id="refreshContainerM" class="mui-scroll-wrapper" :class="{'mgtop100':app}">
+            <div class="mui-scroll">
+                <div v-if="loading" class="loading">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <div v-else>
+                     <div class="listbox" v-for="(item,index) of manhuaData" :key="index">
+                       <div class="imgbox"@tap="fnOpen(item.ID,2)"><img :src="item.pic" /></div>
+                       <div class="infobox">
+                           <div class="name">{{item.name}}</div>
+                           <div class="notes">{{item.content}}</div>
+                           <div class="del"><span class="iconfont icon-shanchu" @tap="del(item.lookid,index)"></span></div>
+                       </div>
+                     </div>
+                     <div v-if="mhNum==0" style="text-align:center;margin-top:100px;font-size:15px;color:#666;">还没有收藏过漫画！</div>
+                </div>
+            </div>
+          </div>
+       </div>
+<script src="/js/vue.js"></script>
+<script src="/js/api.js"></script>
+<script src="/js/axios.js"></script>
+<script src="/js/mui.min.js"></script>
+<script type="text/javascript" charset="utf-8">
+    mui.init({
+        pullRefresh: {
+            container: "#refreshContainer",
+            down: {
+                  style:"circle",
+                     callback :function(){ 
+                         window.setTimeout(function () {
+                            vm.getData(1);
+                        },500);
+                    }
+                },
+            　　up: {
+                　　contentrefresh : "正在加载...",
+                    contentnomore:'没 有 更 多 数 据 了',
+                    callback:function(){
+                        window.setTimeout(function(){
+                            vm.getmore(1);
+                        },500);
+                    }
+            　　}
+        }
+    });
+   
+    mui('#segmentedControl').on('tap', 'a', function (e) {
+        var itm = e.target.attributes.href.value;
+        if (itm == "#item1") {
+            vm.getData(1);
+        }
+        if (itm == "#item2") {
+             mui("#refreshContainerM").pullRefresh({
+                 down: {
+                      style:"circle",
+                      callback :function(){ 
+                      window.setTimeout(function () {
+                         //vm.getData(2);
+                        },500);
+                      }
+               },
+              up:{
+                 contentrefresh : "正在加载...",
+                 contentnomore:'没 有 更 多 数 据 了',
+                 callback:function(){
+                       window.setTimeout(function(){
+                           //vm.getmore(2);
+                       },500);
+                    }
+              }
+            })
+            //vm.getData(2);
+        }
+    });
+    var datas = {
+        loading: true,
+        app: false,
+        hyid: 0,
+        token: 0,
+        shipinData: '',
+        manhuaData: '',
+        spNum:0,
+        mhNum:0,
+        pagesizeS: 10,
+        pageindexS: 0,
+        isNumS: false,//用于判断是否还有数据
+        pagesizeM: 10,
+        pageindexM: 0,
+        isNumM: false//用于判断是否还有数据
+    };
+    var vm= new Vue({
+        el: '#item1',
+        data: datas,
+        created: function () {
+            this.getData(1);//获取数据
+        },
+        methods: {
+            getData(t){
+                var that = this;
+                that.loading = true;
+                var pgsize =0;
+                var pgidx = 0;//当前页
+                if(t==1){
+                    pgsize=that.pagesizeS;
+                    that.pageindexS = 0;//重置为0
+                    that.isNumS = false;//重置为false
+                }else if(t==2){
+                    pgsize=that.pagesizeM;
+                    that.pageindexM = 0;//重置为0
+                    that.isNumM = false;//重置为false
+                }
+                var hyid = localStorage.getItem("hyid");
+                var token = localStorage.getItem("token");
+                if (hyid != 0 && hyid != 'undefined' && hyid != null && hyid != '') {
+                    that.hyid = hyid;
+                    that.token = token;
+                    axget('/lookjilu', { uid: hyid, token: token, type:t, looktype: 2, pagesize: pgsize, pageindex: pgidx }).then((res) => {
+                       console.log(res);
+                        if (res.code == "0") {
+                            if (t == 1) {
+                              that.shipinData = res.data
+                              if(res.data.length>0){
+                                that.spNum=res.data.length
+                              }
+                            } else if (t == 2) {
+                                that.manhuaData = res.data
+                                if(res.data.length>0){
+                                    that.mhNum=res.data.length
+                                }
+                            }
+                            that.loading = false;
+                        } else if (res.code == "2") {
+                            that.loading = false;
+                            mui.alert('账号在别处登录,您已被迫下线！', ' ', function() {
+					          localStorage.clear();
+                              location.href="/login.html"
+				            });
+                        } else {
+                            that.loading = false;
+                            mui.toast(res.msg);
+                        }
+                        if (t == 1) {
+                            mui('#refreshContainer').pullRefresh().endPulldownToRefresh();
+                            mui('#refreshContainer').pullRefresh().refresh(true);
+                        } else if (t == 2) {
+                            mui('#refreshContainerM').pullRefresh().endPulldownToRefresh();
+                            mui('#refreshContainerM').pullRefresh().refresh(true);
+                        }
+                       
+                     })
+                } else {
+                    location.href = "/login.html";
+                }
+            },//加载更多
+            getmore: function (t) {
+                var self = this;
+                var pgsize =0;
+                var pgidx = 0;//当前页
+                var hyid = self.hyid;
+                var token = self.token;
+                if(t==1){
+                    pgsize = self.pagesizeS;
+                    pgidx = self.pageindexS + 1;
+                    self.pageindexS = pgidx;
+                    mui('#refreshContainer').pullRefresh().endPullupToRefresh(self.isNumS); 
+                }else if(t==2){
+                    pgsize = self.pagesizeM;
+                    pgidx = self.pageindexM + 1;
+                    self.pageindexM = pgidx;
+                    mui('#refreshContainerM').pullRefresh().endPullupToRefresh(self.isNumM); 
+                }
+                if (hyid != 0 && hyid != 'undefined' && hyid != null && hyid != '') {
+                    axget('/lookjilu', { uid: hyid, token: token, type:t, looktype: 2, pagesize: pgsize, pageindex: pgidx }).then((res) => {
+                        //console.log(res);
+                        if (res.code == 0) {
+                            if (res.data.length > 0) {
+                                if(t==1){
+                                    var data = self.shipinData;
+                                        data = data.concat(res.data)
+                                        self.shipinData = data;
+                                        mui('#refreshContainer').pullRefresh().refresh(true);
+                                }else if(t==2){
+                                    var data = self.manhuaData;
+                                        data = data.concat(res.data)
+                                        self.manhuaData = data;
+                                        mui('#refreshContainerM').pullRefresh().refresh(true);
+                                }
+                            } else {
+                                if (t == 1) {
+                                    self.isNumS = true;
+                                } else {
+                                    self.isNumM = true;
+                                }
+                            }
+                        } else if (res.code == 2) {
+                            mui.alert('账号在别处登录,您已被迫下线！', ' ', function() {
+					          localStorage.clear();
+                              location.href="/login.html"
+				            });
+                        } else {
+                            mui.toast(res.msg);
+                        }
+                    })
+                }
+            },
+            del(ids,idx,i) {
+                var that = this;
+                var btnArray = ['否', '是'];
+                mui.confirm('确定要删除吗？', '', btnArray, function (e) {
+                    if (e.index == 1) {
+                        var hyid = that.hyid;
+                        var token = that.token;
+                        if (hyid != 0 && hyid != 'undefined' && hyid != null && hyid != '') {
+                            axget('/dellook', { uid: hyid, token: token, type: 2, id: ids }).then((res) => {
+                                //console.log(res);
+                                if (res.code == "0") {
+                                    mui.toast(res.msg);
+                                    if (i == 1) {
+                                        that.shipinData.splice(idx, 1);
+                                    } else {
+                                        that.manhuaData.splice(idx, 1);
+                                    }
+                                } else if (res.code == 2) {
+                                    mui.alert('账号在别处登录,您已被迫下线！', ' ', function() {
+					                    localStorage.clear();
+                                        location.href="/login.html"
+				                    });
+                                } else {
+                                    mui.toast(res.msg);
+                                }
+                            })
+                        } else {
+                            mui.toast("删除失败,未获取到用户,请重新登录!");
+                        }
+                    }
+                })
+            }, fnOpen(ids, i) {
+                if (i == 1) {
+                   location.href = "/shipin_show.html?id=" + ids
+                } else if (i == 2) {
+                    location.href = "manhua_list.html?id="+ids;
+                }
+            }
+         }
+    })
+    var vmh = new Vue({
+        el: '#item2',
+        data: datas,
+        created: function () {
+            this.siteadd = globalData.siteadd;//站点地址
+        },
+        methods: {
+            del(ids, idx) {
+                vm.del(ids,idx,2);
+            }
+        }
+    })
+    var sc = new Vue({
+        el: '#sc',
+        data: datas,
+        methods: {
+            closeAPP() {
+                this.app = true;
+            }
+        }
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,128 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,initial-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<link rel="stylesheet" href="/css/mui.min.css">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/iconfont.css">
+    <script src="/js/phone.js"></script>
+<title>银行卡管理</title>
+<style type="text/css">
+    .card-box{background:linear-gradient(to right,#4f4f4f,#3c3c3c);height:150px;width:90%;margin:0 auto;margin-top:20px;border-radius:10px;color:#fff;}
+    .card-box .bankName{padding:20px 20px 10px 20px;font-size:18px;}
+    .card-box .cardNumber{font-size:20px;padding:10px 20px 15px 20px;border-bottom:1px dashed #B4E0FC;}
+    .card-box .name{display:flex;justify-content:space-between;padding:13px 20px 0 20px;align-items:center;}
+</style>
+</head>
+<body>
+    <header class="mui-bar mui-bar-nav">
+	<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	<h1 class="mui-title">银行卡管理</h1>
+  </header>
+  <div class="mui-content">
+      <div v-if="loading" class="loading">
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+        </div>
+      <div v-else>
+       <div v-if="t==0">
+         <div class="card-box" v-for="(item,index) of listData" :key="item.ID">
+           <div class="bankName">{{item.BC_OPEN_BANK}}</div>
+           <div class="cardNumber">{{item.BC_NUMBER}}</div>
+           <div class="name"><span>持卡人:{{item.BC_NAME}}</span><span class="iconfont icon-shanchu" v-on:click="delbank(item.ID,index)" style="font-size:20px;"></span></div>
+         </div>
+       </div>
+       <div v-else>
+          <div class="card-box" v-for="(item,index) of listData" :key="item.ID" v-on:click="clickB(item.ID)">
+            <div class="bankName">{{item.BC_OPEN_BANK}}</div>
+            <div class="cardNumber">{{item.BC_NUMBER}}</div>
+            <div class="name"><span>持卡人:{{item.BC_NAME}}</span><span class="iconfont icon-shanchu" v-on:click.stop="delbank(item.ID,index)" style="font-size:20px;"></span></div>
+         </div>
+       </div>
+        <a :href="'add_card.html'" class="btn">新增银行卡</a>
+    </div>
+  </div>
+<script src="/js/vue.js"></script>
+<script src="/js/mui.min.js"></script>
+<script src="/js/api.js"></script>
+<script src="/js/axios.js"></script>
+<script type="text/javascript" charset="utf-8">
+    mui.init();  
+    new Vue({
+        el: '.mui-content',
+        data: {
+            loading: true,
+            t:0,//来源:如果从提现页面进来t=1,如果其他页面进来t=0
+            listData:''
+        },
+        created: function () {
+            this.getList()
+        },
+        methods: {
+            getList() {
+                var that = this;
+                var ty=getQueryString("t");//来源:如果从提现页面进来ty=1
+                if (ty== 0 && ty== 'undefined' && ty== null && ty== '') {
+                    ty= 0;
+                }
+                that.t = ty;
+
+                var hyid = localStorage.getItem("hyid");
+                var token = localStorage.getItem("token");
+                if (hyid != 0 && hyid != 'undefined' && hyid != null && hyid != '') {
+                    axget('/banklist', { uid: hyid, token: token}).then((res) => {
+                        //console.log(res);
+                        if (res.code == "0") {
+                            that.listData = res.data;
+                        } else if (res.code == "2") {
+                           mui.alert('账号在别处登录,您已被迫下线！', ' ', function() {
+					          localStorage.clear();
+                              location.href="/login.html"
+				            });
+                        }  else {
+                           mui.toast(res.msg);
+                        }
+                       that.loading = false;
+                    })
+                } else {
+                    location.href = "/login.html";
+                }
+            },
+            clickB(ids) {
+                var that = this;
+                location.href = "tixian.html?id=" + ids;
+            },
+            delbank(ids,idx) {
+                var that = this;
+                var btnArray = ['否', '是'];
+				mui.confirm('确定要删除吗？', '', btnArray, function(e) {
+					if (e.index == 1) {
+						var hyid = localStorage.getItem("hyid");
+                         var token = localStorage.getItem("token");
+                         if (hyid != 0 && hyid != 'undefined' && hyid != null && hyid != '') {
+                             axget('/delbank', { uid: hyid, token: token,id:ids}).then((res) => {
+                                 if (res.code == "0") {
+                                     mui.toast(res.msg);
+                                     that.listData.splice(idx, 1);
+                                 } else {
+                                    mui.toast(res.msg);
+                                 }
+                                that.loading = false;
+                             })
+                         } else {
+                             location.href = "/login.html";
+                         }
+					}
+				})
+            }
+        }
+    })
+</script>
+</body>
+</html>

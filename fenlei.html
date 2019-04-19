@@ -1,0 +1,130 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,initial-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<link rel="stylesheet" href="/css/mui.min.css">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" type="text/css" href="/css/icons-extra.css" />
+<link rel="stylesheet" type="text/css" href="/css/iconfont.css" />
+<script src="/js/phone.js"></script>
+<title>全部分类</title>
+<style type="text/css">
+    body{ background:#fff;}
+    .mui-content{background:#fff;border:1px solid #fff;margin-top:90px;margin-bottom:70px;}
+    .list-item{width:38%;float:left;margin-top:20px;margin-left:8%}
+    .tit{background:linear-gradient(to right,#4f4f4f,#3c3c3c);color:#fff;height:40px;line-height:40px;text-align:center;}
+    .mgtop50{margin-top:50px;}
+</style>
+</head>
+<body>
+  <div id="fenlei">
+    <div v-if="loading" class="loading">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+     </div>
+    <div v-else>
+    <div class="down" :class="{'downs':app}">
+           <div class="d-logo"><span class="mui-icon mui-icon-close" v-on:click="closeAPP"></span>&nbsp;<img src="/images/logo.png" style="width:100px;" /></div>
+           <div class="d-app"><a href="/download.html">下载APP</a></div>
+       </div>
+       <div class="header" :class="{'headers':app}">
+          <div class="hnav">
+           <div class="logo-box">
+               <a :href="'/users/qiehuanxianlu.html'">地址列表</a>
+           </div>
+           <ul class="menu">
+               <li><a href="/index.html">精选</a></li>
+               <li><a href="/shipin.html">视频</a></li>
+               <li><a href="/yingpian.html">影片</a></li>
+               <li><a href="/manhua.html">漫画</a></li>
+           </ul>
+           <div class="search"><a :href="'/search.html'"><span class="mui-icon mui-icon-search"></span></a></div>
+          </div>
+       </div>
+      <div class="mui-content" :class="{'mgtop50':app}">
+          <div class="list" style="margin-top:10px;">
+          <div class="list-item" v-for="(item,index) in listData" :key="item.ID">
+              <a :href="'fenlei_list.html?id='+item.ID+'&t='+item.CL_TYPE" title="item.CL_NAME"><div class="tit">{{item.CL_NAME}}</div></a>
+          </div>
+          </div>
+          <div v-if="jlNum==0" style="text-align:center;margin-top:50px;font-size:15px;color:#666;">暂无内容！</div>
+      </div>
+    <nav class="mui-bar mui-bar-tab">
+			<a @tap="foot_bar(1)" class="mui-tab-item" href="#index">
+				<span class="mui-icon mui-icon-home"></span>
+				<span class="mui-tab-label">首页</span>
+			</a>
+			<a @tap="foot_bar(2)" class="mui-tab-item  mui-active" href="#tabbar-with-chat">
+				<span class="mui-icon mui-icon-extra mui-icon-extra-class"></span>
+				<span class="mui-tab-label">分类</span>
+			</a>
+			<a @tap="foot_bar(3)" class="mui-tab-item" href="#usercenter">
+				<span class="mui-icon mui-icon-contact"></span>
+				<span class="mui-tab-label">个人中心</span>
+			</a>
+		</nav>
+    </div>
+ </div>
+<script src="/js/vue.js"></script>
+<script src="/js/api.js"></script>
+<script src="/js/axios.js"></script>
+<script src="/js/mui.min.js"></script>
+<script type="text/javascript" charset="utf-8">
+    mui.init();
+     new Vue({
+        el: '#fenlei',
+        data: {
+            loading: true,
+            app:false,
+            siteadd: "",//站点地址
+            listData: '',
+            jlNum:1,
+        },
+        created: function () {
+            this.siteadd = globalData.siteadd;//站点地址
+            this.getListData();//获取数据
+        },
+         methods: {
+             //获取数据
+            getListData: function () {
+                var self = this;
+                axget('/classall', {}).then((res) => {
+                    if (res.code == 0) {
+                        if (res.data.length > 0) {
+                            self.jlNum = res.data.length;
+                        } else {
+                            self.jlNum = 0;
+                        }
+                        self.listData = res.data;
+						self.loading = false;
+                    } else {
+                        self.loading = false;
+                        mui.toast(res.msg);
+                    }
+                })
+             },closeAPP() {
+                this.app = true;
+            },
+             foot_bar(i) {
+                switch (i)
+                {
+                    case 1: window.location.href = "/index.html";break;
+                    case 2: location.href = "/fenlei.html";break;
+                    case 3: window.location.href = "/users/index.html"; break;
+                    default:
+                        location.href = "/index.html";
+                        break;
+                }
+            }
+        }
+    })
+</script>
+</body>
+</html>
+

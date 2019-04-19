@@ -1,0 +1,296 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,initial-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<link rel="stylesheet" href="/css/mui.min.css">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/icons-extra.css">
+<script src="/js/phone.js"></script>
+ <style>
+  .mui-content{margin-top:90px;margin-bottom:70px;}
+  .mui-slider{overflow:hidden;width:100%;height:180px;margin:0 auto;}
+  .mui-slider img{width:100%;height:180px;}
+  .mui-slider-title{color:#fff;background-color: rgba(0,0,0,0.5);}
+  .mui-slider-indicator{bottom:7px;}
+  .mui-slider-indicator .mui-indicator{background:#ffffff00;margin:1px;}
+  .mui-slider-indicator .mui-active.mui-indicator{background:#fff;}
+  .mui-text-right{padding-right:10px;}
+  .mgtop50{margin-top:50px;}
+  .list{display:flex;justify-content:space-between;flex-wrap:wrap;}
+   .items{margin:10px 0%;background:#fff;padding:0 0 8px 0px;position:relative;}
+    .items img{width:100%;height:200px;/*border-radius:10px 10px 0 0px;*/}
+    .items .bd{display:flex;justify-content:space-between;align-items:center;color:#333;font-size:15px;padding:2px 10px;}
+    .items .l{width:70%;}
+    .items .r{display:flex;align-items:center;}
+    .items .r .iconfont{font-size:23px;}
+    .items .r .fx{margin-left:15px;margin-top:2px;}
+    .mfsk{display:inline;position:absolute;top:20px; background:linear-gradient(to right,#4f4f4f,#3c3c3c);font-size:15px; color:#fff;padding:3px 10px;border-radius:0 15px 15px 0px;}
+    .vico{display:inline;position:absolute;top:70px;left:43%;background-image:url(/images/vico.png);width:50px;height:50px;background-repeat:no-repeat;background-size:cover;}
+   
+ </style>
+<title>首页</title>
+</head>
+<body>
+  <div id="app">
+     <div v-if="loading" class="loading">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+     </div>
+    <div v-else>
+       <div class="down" :class="{'downs':app}">
+           <div class="d-logo"><span class="mui-icon mui-icon-close" v-on:click="closeAPP"></span>&nbsp;<img src="/images/logo.png" style="width:100px;" /></div>
+           <div class="d-app"><a href="/download.html">下载APP</a></div>
+       </div>
+       <div class="header" :class="{'headers':app}">
+          <div class="hnav">
+           <div class="logo-box">
+               <a :href="'/users/qiehuanxianlu.html'">地址列表</a>
+           </div>
+           <ul class="menu">
+               <li><a href="/index.html" class="act">精选</a></li>
+               <li><a href="/shipin.html">视频</a></li>
+               <li><a href="/yingpian.html">影片</a></li>
+               <li><a href="/manhua.html">漫画</a></li>
+           </ul>
+           <div class="search"><a :href="'/search.html'"><span class="mui-icon mui-icon-search"></span></a></div>
+          </div>
+       </div>
+       <div class="mui-content" :class="{'mgtop50':app}">
+         <div id="slider" class="mui-slider">
+				<div class="mui-slider-group mui-slider-loop">
+				    <div class="mui-slider-item" :class="{'mui-slider-item-duplicate':!index||index==bannerList.length-1}" v-for="(item,index) in bannerList" :key="index">
+						<a :href="'shipin_show.html?id='+item.BN_TYPE_ID" v-if="item.BN_TYPE_ID!=0">
+                            <img :src="item.BN_URL"/>
+                            <p class="mui-slider-title">{{item.BN_NAME}}</p>
+                        </a>
+                        <a href="#" v-else>
+                            <img :src="item.BN_URL"/>
+                            <p class="mui-slider-title">{{item.BN_NAME}}</p>
+                        </a>
+					</div>
+				</div>
+				<div class="mui-slider-indicator mui-text-right">
+					<div class="mui-indicator" :class="{'mui-active':!index}" v-for="(item,index) in banner" :key="item.ID"></div>
+				</div>
+		    </div>
+       <div class="mianfei">
+        <div class="tit-box">
+           <span class="l"><span class="h"></span><span class="tit">免费影片</span></span><span class="more"><a href="/yingpian.html">更多>></a></span>
+        </div>
+        <div class="list">
+             <div class="item" v-for="(item,key) in mianfeiData" :key="item.ID">
+                <a :href="'shipin_show.html?id='+item.ID" title="item.MV_NAME">
+                <img :src="item.MV_PHOTO_URL" class="img"/>
+                <div class="bd"><span class="title">{{item.MV_NAME}}</span><span class="guankan">免费观看</span></div>
+                </a>
+               </div>
+        </div>
+       </div>
+
+       <div class="zuixin">
+        <div class="tit-box">
+           <span class="l"><span class="h"></span><span class="tit">最新影片</span></span><span class="more"><a href="/yingpian.html">更多>></a></span>
+        </div>
+        <div class="list">
+            <div class="item" v-for="(item,key) in zuixinData" :key="item.ID">
+                <a :href="'shipin_show.html?id='+item.ID" title="item.MV_NAME">
+                <img :src="item.MV_PHOTO_URL" class="img"/>
+                <div class="bd"><span class="title">{{item.MV_NAME}}</span>
+                    <span v-if="item.MV_TYPE==1" class="guankan">免费视频</span>
+                    <span v-else class="guankan vip">VIP视频</span>
+                </div>
+                </a>
+            </div>
+        </div>
+       </div>
+
+       <div class="jingxuan">
+        <div class="tit-box">
+           <span class="l"><span class="h"></span><span class="tit">精选视频</span></span><span class="more"><a href="/shipin.html">更多>></a></span>
+        </div>
+        <div class="list">
+            <div class="item" v-for="(item,key) in jingxuanData" :key="item.id">
+                <a :href="'shipin_show.html?id='+item.ID" title="item.MV_NAME">
+                <img :src="item.MV_PHOTO_URL" class="img"/>
+                <div class="bd"><span class="title">{{item.MV_NAME}}</span>
+                    <span v-if="item.MV_TYPE==1" class="guankan">免费视频</span>
+                    <span v-else class="guankan vip">VIP视频</span>
+                </div>
+               </a>
+            </div>
+        </div>
+       </div>
+
+        <div class="manhua">
+        <div class="tit-box">
+           <span class="l"><span class="h"></span><span class="tit">精选漫画</span></span><span class="more"><a href="/manhua.html">更多>></a></span>
+        </div>
+        <div class="list">
+            <div class="item" v-for="(item,key) in manhuaData" :key="item.id">
+               <a :href="'manhua_list.html?id='+item.ID" title="item.CT_NAME">
+                <img :src="item.CT_PHOTO_URL" class="img"/>
+                <div class="bd"><span class="titles">{{item.CT_NAME}}</span></div>
+               </a>
+            </div>
+        </div>
+       </div>
+      <div class="yingpian">
+        <div class="tit-box">
+           <span class="l"><span class="h"></span><span class="tit">影片列表</span></span>
+        </div>
+          <div class="items" v-for="(item,index) in yingpianData" :key="item.ID">
+              <a :href="'shipin_show.html?id='+item.ID"><img :src="item.MV_PHOTO_URL" class="img"/></a>
+               <div class="bd">
+                  <div class="l">{{item.MV_NAME}}</div>
+               </div>
+               <div class="mfsk" v-if="item.MV_TYPE==1">免费试看</div>
+               <div class="mfsk" v-else>VIP视频</div>
+               <a :href="'shipin_show.html?id='+item.ID"><div class="vico"></div></a>
+            </div>
+         <div v-on:click="fnmore()" v-if="jlNum!=0" style="margin:20px;text-align:center;font-size:15px;color:#666;">点击加载更多</div>
+       </div>
+      </div>
+   <nav class="mui-bar mui-bar-tab">
+			<a @tap="foot_bar(1)" class="mui-tab-item mui-active" href="#index">
+				<span class="mui-icon mui-icon-home"></span>
+				<span class="mui-tab-label">首页</span>
+			</a>
+			<a @tap="foot_bar(2)" class="mui-tab-item" href="#tabbar-with-chat">
+				<span class="mui-icon mui-icon-extra mui-icon-extra-class"></span>
+				<span class="mui-tab-label">分类</span>
+			</a>
+			<a @tap="foot_bar(3)" class="mui-tab-item" href="#usercenter">
+				<span class="mui-icon mui-icon-contact"></span>
+				<span class="mui-tab-label">个人中心</span>
+			</a>
+	</nav>
+    </div>
+  </div>
+<script src="/js/vue.js"></script>
+<script src="/js/api.js"></script>
+<script src="/js/axios.js"></script>
+<script src="/js/mui.min.js"></script>
+<script src="https://pv.sohu.com/cityjson?ie=utf-8"></script>
+<script type="text/javascript" charset="utf-8">
+ mui.init();
+    new Vue({
+        el: '#app',
+        data: {
+            loading: true,
+            app:false,
+            bannerList: '',//banner
+            banner: '',
+            mianfeiData: '',//免费影片
+            zuixinData: '',//最新影片
+            yingpianData: '',//影片列表
+            pagesize: 6,
+            pageindex: 0,
+            jlNum:0,
+            jingxuanData: '',//精选视频
+            manhuaData:''//精选漫画
+        },
+        created: function () {
+            this.getBanner();//获取banner
+            this.getListData();//获取首页数据
+        },
+        methods: {
+            //获取banner
+            getBanner: function () {
+               var self = this;
+                axget('/banner', {type:1}).then((res) => {
+                   // console.log(res.data);
+                    if (res.code == 0) {
+                        self.banner = JSON.parse(JSON.stringify(res.data))
+                        var datas = res.data;
+                        datas.push(res.data[0]);//往数组最后面添加一个元素
+                        datas.unshift(datas[datas.length - 2]);//往数组最前面添加一个元素
+                        self.bannerList = datas;
+                    }
+                })
+            },
+             //获取首页数据
+            getListData: function () {
+                var self = this;
+				var ips = returnCitySN['cip'];//用户IP
+                localStorage.setItem("ips", ips);
+                axget('/ipaddress', { ip: ips }).then((res) => {
+                    if (res.code == 0) {
+                        localStorage.setItem("cn", res.data);
+                    }
+                })
+                axget('/indexcont', {}).then((res) => {
+                   // console.log(res);
+                    if (res.code == 0) {
+                        self.mianfeiData = res.data.mianfei;
+                        self.zuixinData = res.data.new;
+                        self.jingxuanData = res.data.jingxuan;
+                        self.manhuaData = res.data.manhua;
+                        self.loading = false;
+                    } else {
+                       self.loading = false;
+                    }
+                })
+                var pgsize = self.pagesize;
+                self.pageindex=0;
+                axget('/hotmovie', {pagesize:pgsize,pageindex:0}).then((res) => {
+                    if (res.code == 0) {
+                        if (res.data.length==pgsize) {
+                            self.jlNum = res.data.length;
+                        } else {
+                            self.jlNum = 0;
+                        }
+                        self.yingpianData = res.data;
+                    }
+                })
+            },
+            fnmore() {
+                var self = this;
+                var pgsize = self.pagesize;
+                var pgidx = self.pageindex + 1;
+                self.pageindex = pgidx;
+                axget('/hotmovie', {pagesize: pgsize, pageindex: pgidx}).then((res) => {
+                        if (res.code == 0) {
+                            if (res.data.length > 0) {
+                                var data = self.yingpianData;
+                                data = data.concat(res.data)
+                                self.yingpianData = data;
+                            } else {
+                                self.jlNum = 0;
+                            }
+                        } else {
+                            mui.toast(res.msg);
+                        }
+                    })
+            },
+            foot_bar(i) {
+                switch (i)
+                {
+                    case 1: break;
+                    case 2: location.href = "/fenlei.html";break;
+                    case 3: location.href = "/users/index.html"; break;
+                    default:
+                        location.href = "/index.html";
+                        break;
+                }
+            }, closeAPP() {
+                this.app = true;
+            }
+        },
+        updated() {
+             var sliderMuiObj = mui(".mui-slider");//滑动科目 
+                sliderMuiObj.slider({
+                    interval: 3000
+             })
+        }
+    })
+   
+</script>
+</body>
+</html>
+

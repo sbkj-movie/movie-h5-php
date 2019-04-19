@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>权限管理</title>
+	<meta name="renderer" content="webkit">	
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">	
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">	
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">	
+	<meta name="apple-mobile-web-app-capable" content="yes">	
+	<meta name="format-detection" content="telephone=no">	
+	<link rel="stylesheet" type="text/css" href="/Public/admin/common/layui/css/layui.css" media="all">
+	<link rel="stylesheet" type="text/css" href="/Public/admin/common/bootstrap/css/bootstrap.css" media="all">
+	<link rel="stylesheet" type="text/css" href="/Public/admin/common/global.css" media="all">
+	<link rel="stylesheet" type="text/css" href="/Public/admin/css/personal.css" media="all">
+</head>
+<body>
+<section class="layui-larry-box">
+	<div class="larry-personal" >
+	    <div class="layui-tab">
+            <blockquote class="layui-elem-quote news_search" style="display:none">
+		
+		<div class="layui-inline">
+		    <div class="layui-input-inline">
+		    	<input value="" placeholder="请输入关键字" class="layui-input search_input" type="text">
+		    </div>
+		    <a class="layui-btn search_btn">查询</a>
+		</div><div class="layui-inline">
+			<a class="layui-btn layui-btn-normal newsAdd_btn">添加文章</a>
+		</div>
+		<div class="layui-inline">
+			<a class="layui-btn recommend" style="background-color:#5FB878">推荐文章</a>
+		</div>
+		<div class="layui-inline">
+			<a class="layui-btn audit_btn">审核文章</a>
+		</div>
+		<div class="layui-inline">
+			<a class="layui-btn layui-btn-danger batchDel">批量删除</a>
+		</div>
+		<div class="layui-inline">
+			<div class="layui-form-mid layui-word-aux">本页面刷新后除新添加的文章外所有操作无效，关闭页面所有数据重置</div>
+		</div>
+	</blockquote>
+            
+		    <div class="layui-tab-content larry-personal-body clearfix mylog-info-box">
+		         <!-- 操作日志 -->
+                <div class="layui-tab-item layui-field-box layui-show">
+                     <table class="layui-table table-hover" lay-even="" lay-skin="nob">
+                          <thead>
+                              <tr>
+                                  <th><input type="checkbox" id="selected-all"></th>
+                                  <th>ID</th>
+                                  <th>名称</th>
+                                  <th>添加时间</th>
+                                  <th>操作</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                           <volist name="ad" id="data" >
+                            <tr>
+                                            <td><input type="checkbox"></td>
+                                             <td>{$data['id']}</td>
+                                            <td>{$data['name']}</td>
+                                           
+                                             <td>{$data['addtime']|date="Y-m-d H:i:s",###}</td>
+                                              
+											<td><a href="{:U('power/pwdel')}?id={$data['id']}&pg={$pg}"class="layui-btn layui-btn-small" onclick="return delall()" <if condition="$data['id']==1"> style="display:none"</if>><i class="iconfont icon-shanchu1"></i>删除</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="{:U('power/power')}?id={$data['id']}&pg={$pg}" class="layui-btn layui-btn-small"><i class="iconfont icon-shanchu1"></i>编辑</a></td>
+                                          </tr>
+                            </volist>
+                              
+                          </tbody>
+                     </table>
+                      <div class="larry-table-page clearfix">
+                         
+				          <div id="page2" class="page">{$page}</div>
+			         </div>
+			    </div>
+			     <!-- 登录日志 -->
+			  
+		    </div>
+		</div>
+	</div>
+</section>
+<script type="text/javascript" src="/Public/admin/common/layui/layui.js"></script>
+<script type="text/javascript">
+function delall(){
+	if(confirm("确认要删除吗？")){
+		return true;
+	}else{
+		return false;
+	}
+}
+	
+</script>
+</body>
+</html>

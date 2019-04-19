@@ -1,0 +1,172 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,initial-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<link rel="stylesheet" href="/css/mui.min.css">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/iconfont.css">
+    <script src="/js/phone.js"></script>
+<title>搜索</title>
+<style type="text/css">
+    .search-box{margin:20px 30px 0px 30px;}
+    .input-box{border-radius:10px;background:#DADADA;height:40px;line-height:40px;display:flex;align-items:center;}
+    .input-box .input{background:none;border:0px;color:#333;width:90%;font-size:15px;margin-bottom:0px;}
+    .input-box .input::-webkit-input-placeholder{color:#333;}/* 使用webkit内核的浏览器 */
+    .input-box .input:-moz-placeholder{color:#333;}/* Firefox版本4-18 */
+    .input-box .input::-moz-placeholder{color:#333;} /* Firefox版本19+ */
+    .input-box .input:-ms-input-placeholder{color:#333;}
+    .mui-icon-search{color:#333;font-size:20px;}
+
+    .search-im{display:flex;flex-wrap:wrap;margin:0 15px;}
+    .search-im span{padding:5px 10px;margin:10px 5px 0px 5px;background:#eee;color:#333;font-size:15px;border-radius:5px;}
+    .form{width:90%;}
+    input[type=search]{text-align:left;}
+    .topItem{margin:15px 3%;display:flex;justify-content:space-around;align-items:center;border-bottom:1px solid #ddd;}
+    .topItem span{color:#333;font-size:15px;width:50%;text-align:center;display:block;padding:10px 0px;}
+    .topItem span.act{color:#3c3c3c;border-bottom:1px solid #3c3c3c;}
+    .listbox{display:flex;justify-content:space-between;padding:10px 5px;height:130px;position:relative;border-bottom:1px solid #f2f2f2;}
+    .listbox .imgbox{width:40%;overflow:hidden;}
+    .listbox .imgbox img{width:100%;height:100%;border-radius:0px;}
+    .listbox .infobox{width:58%;overflow:hidden;margin-left:2%;}
+    .listbox .infobox .name{font-size:15px;color:#333;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}
+    .listbox .infobox .status{margin-top:10px;font-size:13px;}
+    .listbox .infobox .status .vip{background:#d41717;color:#fff;border-radius:20px;padding:3px 10px;}
+    .listbox .infobox .status .mian{background:linear-gradient(to right,#4f4f4f,#3c3c3c);color:#fff;border-radius:20px;padding:3px 10px;}
+    .listbox .infobox .notes{font-size:13px;color:#bbb;margin-top:8px;width:90%;max-height:60px;overflow:hidden;}
+
+</style>
+</head>
+<body>
+  <header class="mui-bar mui-bar-nav">
+	<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	<h1 class="mui-title">搜索</h1>
+  </header>
+   <div class="mui-content">
+       <div class="search-box">
+          <div class="input-box">
+              <form action="javascript:searchClick()" class="form"><input type="search" v-model="keywords" class="input" placeholder="请输入"/></form><span class="mui-icon mui-icon-search" @click="searchClick"></span>
+          </div>
+      </div>
+       <div v-if="isShow">
+         <div style="display:flex;justify-content:space-between;padding:20px 30px;font-size:15px;">
+             <span>搜索历史</span><span class="iconfont icon-shanchu" @click="clear"></span>
+         </div>
+         <div class="search-im">
+             <span v-for="(item,index) of searchData" :key="index" @click="itmclick(index)">{{item}}</span>
+         </div>
+       </div>
+       <div v-else>
+           <div v-if="loading" class="loading">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <div v-else>
+                 <div class="topItem">
+                     <span :class="{act:topitem==1}" @click="show(1)">视频</span><span :class="{act:topitem==2}" @click="show(2)">漫画</span>
+                 </div>
+                <div v-if="topitem==1">
+                  <div class="listbox" v-for="(item,index) of shipinData" :key="index">
+                     <div class="imgbox"><a :href="'shipin_show.html?id='+item.ID" title="item.name"><img :src="item.pic" /></a></div>
+                       <div class="infobox">
+                           <div class="name">{{item.name}}</div>
+                           <div class="notes">{{item.detail}}</div>
+                       </div>
+                  </div>
+                    <div v-if="spNum==0" style="text-align:center;margin-top:20px;font-size:15px;color:#666;">在视频里没有找到您搜索的内容</div>
+                </div>
+                <div v-else>
+                  <div class="listbox" v-for="(item,index) of manhuaData" :key="index">
+                      <div class="imgbox"><a :href="'manhua_list.html?id='+item.ID" title="item.name"><img :src="item.pic" /></a></div>
+                       <div class="infobox">
+                           <div class="name">{{item.name}}</div>
+                           <div class="notes">{{item.content}}</div>
+                       </div>
+                  </div>
+                    <div v-if="mhNum==0" style="text-align:center;margin-top:20px;font-size:15px;color:#666;">在漫画里没有找到您搜索的内容</div>
+                </div>
+            </div>
+       </div>
+   </div>
+<script src="/js/vue.js"></script>
+<script src="/js/api.js"></script>
+<script src="/js/axios.js"></script>
+<script src="/js/mui.min.js"></script>
+<script type="text/javascript" charset="utf-8">
+    mui.init();
+     new Vue({
+        el: '.mui-content',
+        data: {
+            loading: true,
+            isShow: true,
+            topitem: 1,
+            spNum:0,
+            mhNum:0,
+            keywords:'',//搜索关键字
+            searchData:[],//搜索记录
+            shipinData: '',//搜索结果视频数据
+            manhuaData:'',//搜索结果漫画数据
+        },
+         created: function () {
+            this.getInfo()
+        },
+        methods: {
+            getInfo() {
+                var that = this;
+                var list = localStorage.getItem("searchData");
+                if (list != 0 && list != 'undefined' && list != null && list != '') {
+                    that.searchData = JSON.parse(list);
+                }
+            }, searchClick() {
+                var that = this;
+                that.loading = true;
+                that.topitem = 1;
+                var keyw = that.keywords;
+                var datas = that.searchData;
+                if (isNull(keyw)) {
+                    mui.toast("请输入要查询的内容！");
+                    that.loading = false;
+                    return;
+                }
+                if (datas.indexOf(keyw)< 0) {
+                    datas.unshift(keyw);
+                    localStorage.setItem("searchData", JSON.stringify(datas));
+                }
+                that.isShow = false;
+                    axget('/searchkey', { keywords: keyw }).then((res) => {
+                        //console.log(res);
+                    if (res.code == "0") {
+                        that.shipinData = res.data.movie;
+                        that.manhuaData = res.data.cartoon;
+                        if(res.data.movie.length>0){
+                            that.spNum=res.data.movie.length;
+                        }
+                        if(res.data.cartoon.length>0){
+                            that.mhNum=res.data.cartoon.length;
+                        }
+                    }else {
+                       mui.toast(res.msg);
+                     }
+                    that.loading = false;
+                    })
+            }, clear() {
+                localStorage.removeItem('searchData');
+                this.searchData=[]
+            }, itmclick(idx) {
+                var that = this;
+                var key = that.searchData[idx];
+                that.keywords = key;
+            }, show(idx) {
+                this.topitem = idx;
+            }
+        }
+    })
+</script>
+</body>
+</html>
+

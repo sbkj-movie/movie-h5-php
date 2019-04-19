@@ -1,0 +1,246 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,initial-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<link rel="stylesheet" href="/css/mui.min.css">
+<link rel="stylesheet" href="/css/style.css">
+ <link rel="stylesheet" type="text/css" href="/css/icons-extra.css" />
+    <script src="/js/phone.js"></script>
+<title>影片</title>
+<style type="text/css">
+  body{background:#f8f8f8;}
+  .mui-content{background:#f8f8f8;margin-top:90px;margin-bottom:70px;}
+  .mui-slider{overflow:hidden;width:100%;height:200px;margin:0 auto;}
+  .mui-slider img{width:100%;height:200px;}
+  .mui-slider-title{color:#fff;background-color: rgba(0,0,0,0.5);}
+  .mui-slider-indicator{bottom:7px;}
+  .mui-slider-indicator .mui-indicator{background:#ffffff00;margin:1px;}
+  .mui-slider-indicator .mui-active.mui-indicator{background:#fff;}
+  .mui-text-right{padding-right:10px;}
+  .list{display:flex;justify-content:space-between;flex-wrap:wrap;}
+  .mui-scroll-wrapper{margin-top:90px;margin-bottom:50px;}
+  .mgtop60{margin-top:60px;}
+</style>
+</head>
+<body>
+  <div id="yingpian">
+    <div class="down" :class="{'downs':app}">
+           <div class="d-logo"><span class="mui-icon mui-icon-close" v-on:click="closeAPP"></span>&nbsp;<img src="/images/logo.png" /></div>
+           <div class="d-app"><a href="/download.html">下载APP</a></div>
+       </div>
+       <div class="header" :class="{'headers':app}">
+          <div class="hnav">
+           <div class="logo-box">
+               <a :href="'/users/qiehuanxianlu.html'">地址列表</a>
+           </div>
+           <ul class="menu">
+               <li><a href="/index.html">精选</a></li>
+               <li><a href="/shipin.html">视频</a></li>
+               <li><a href="/yingpian.html" class="act">影片</a></li>
+               <li><a href="/manhua.html">漫画</a></li>
+           </ul>
+           <div class="search"><a :href="'/search.html'"><span class="mui-icon mui-icon-search"></span></a></div>
+          </div>
+      </div>
+       <div class="mui-content" :class="{'mgtop60':app}">
+        <div id="refreshContainer" class="mui-scroll-wrapper" :class="{'mgtop60':app}">
+        <div class="mui-scroll">
+            <div v-if="loading" class="loading">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <div v-else>
+              <div id="slider" class="mui-slider" v-if="isBanner">
+				<div class="mui-slider-group mui-slider-loop">
+				    <div class="mui-slider-item" :class="{'mui-slider-item-duplicate':!index||index==bannerData.length-1}" v-for="(item,index) in bannerData" :key="item.id">
+						<a v-if="item.BN_TYPE_ID!=0" @tap="show(item.BN_TYPE_ID)">
+                            <img :src="item.BN_URL"/>
+                            <p class="mui-slider-title">{{item.BN_NAME}}</p>
+                        </a>
+                        <a href="#" v-else>
+                            <img :src="item.BN_URL"/>
+                            <p class="mui-slider-title">{{item.BN_NAME}}</p>
+                        </a>
+					</div>
+				</div>
+				<div class="mui-slider-indicator mui-text-right">
+					<div class="mui-indicator" :class="{'mui-active':!index}" v-for="(item,index) in banner" :key="item.id"></div>
+				</div>
+			 </div>
+              <div class="list">
+                 <div class="item" v-for="(item,index) in listData" :key="item.ID">
+                   <img :src="item.MV_PHOTO_URL" class="img" @tap="show(item.ID)"/>
+                     <div class="bd"><span class="title">{{item.MV_NAME}}</span>
+                      <span class="guankan" v-if="item.MV_TYPE==1">免费观看</span>
+                      <span class="guankan vip" v-else>VIP视频</span>
+                    </div>
+                 </div>
+               </div>
+                <div v-if="jlNum==0" style="text-align:center;margin-top:50px;font-size:15px;color:#666;">暂无内容！</div>
+            </div>
+        </div>
+      </div>
+     </div>
+   <nav class="mui-bar mui-bar-tab">
+			<a @tap="foot_bar(1)" class="mui-tab-item mui-active" href="#tabbar">
+				<span class="mui-icon mui-icon-home"></span>
+				<span class="mui-tab-label">首页</span>
+			</a>
+			<a @tap="foot_bar(2)" class="mui-tab-item" href="#tabbar-with-chat">
+				<span class="mui-icon mui-icon-extra mui-icon-extra-class"></span>
+				<span class="mui-tab-label">分类</span>
+			</a>
+			<a @tap="foot_bar(3)" class="mui-tab-item" href="#usercenter">
+				<span class="mui-icon mui-icon-contact"></span>
+				<span class="mui-tab-label">个人中心</span>
+			</a>
+	 </nav>
+ </div>
+
+<script src="/js/vue.js"></script>
+<script src="/js/api.js"></script>
+<script src="/js/axios.js"></script>
+<script src="/js/mui.min.js"></script>
+<script type="text/javascript" charset="utf-8">
+     mui.init({
+        pullRefresh: {
+            container: "#refreshContainer",
+            down: {
+                  style:"circle",
+                     callback :function(){ 
+                         window.setTimeout(function () {
+                            vm.getListData();
+                        },500);
+                    }
+                },
+            　　up: {
+                　　contentrefresh : "正在加载...",
+                    contentnomore:'没 有 更 多 数 据 了',
+                    callback:function(){
+                        window.setTimeout(function(){
+                            vm.getmore();
+                        },500);
+                    }
+            　　}
+        }
+    });
+    
+   var vm=new Vue({
+        el: '#yingpian',
+        data: {
+            loading: true,
+            app: false,
+            isBanner:true,
+            banner: '',
+            bannerData: '',
+            pagesize: 10,
+            pageindex:0,
+            listData: '',
+            jlNum: 1,
+            isNum: false,//用于判断是否还有数据
+        },
+        created: function () {
+            this.getBanner();//获取数据
+            this.getListData();//获取数据
+        },
+        methods: {
+            //获取banner
+            getBanner: function () {
+                var self = this;
+                axget('/banner', { type: 3 }).then((res) => {
+                    if (res.code == 0) {
+                        if (res.data != 0 && res.data != 'undefined' && res.data != null && res.data != '') {
+                            self.banner = JSON.parse(JSON.stringify(res.data))
+                            var datas = res.data;
+                            datas.push(res.data[0]);//往数组最后面添加一个元素
+                            datas.unshift(datas[datas.length - 2]);//往数组最前面添加一个元素
+                            self.bannerData = datas;
+                            self.isBanner = true;
+                        } else {
+                            self.isBanner = false;
+                        }
+                    } else {
+                       mui.toast(res.msg);
+                    }
+                 })
+            }, show(ids) {
+                 if (ids != 0 && ids != 'undefined' && ids != null && ids != '') {
+                     window.location.href = "shipin_show.html?id=" + ids;
+                 }
+             },
+             //获取数据
+            getListData: function () {
+                var self = this;
+                var pgsize = self.pagesize;
+                self.pageindex=0;
+                axget('/hotmovie', {pagesize:pgsize,pageindex:0}).then((res) => {
+                    //console.log(res);
+                    if (res.code == 0) {
+                        if (res.data.length > 0) {
+                            self.jlNum = res.data.length;
+                        } else {
+                            self.jlNum = 0;
+                        }
+                        self.listData = res.data;
+						self.loading = false;
+                    } else {
+						self.loading = false;
+                        mui.toast(res.msg);
+                    }
+                    mui('#refreshContainer').pullRefresh().endPulldownToRefresh();
+                    mui('#refreshContainer').pullRefresh().refresh(true);
+                })
+            },//加载更多
+            getmore: function () {
+                var self = this;
+                var pgsize = self.pagesize;
+                var pgidx = self.pageindex + 1;
+                self.pageindex = pgidx;
+                mui('#refreshContainer').pullRefresh().endPullupToRefresh(self.isNum); 
+                axget('/hotmovie', {pagesize: pgsize, pageindex: pgidx}).then((res) => {
+                        //console.log(res);
+                        if (res.code == 0) {
+                            if (res.data.length > 0) {
+                                var data = self.listData;
+                                data = data.concat(res.data)
+                                self.listData = data;
+                                mui('#refreshContainer').pullRefresh().refresh(true);
+                            } else {
+                                self.isNum = true;
+                            }
+                        } else {
+                            mui.toast(res.msg);
+                        }
+                    })
+            },
+             foot_bar(i) {
+                switch (i)
+                {
+                    case 1: location.href = "/index.html";break;
+                    case 2: location.href = "/fenlei.html";break;
+                    case 3: location.href = "/users/index.html"; break;
+                    default:
+                        location.href = "/index.html";
+                        break;
+                }
+            }, closeAPP() {
+                this.app = true;
+            }
+        },
+        updated() {
+            var sliderMuiObj = mui(".mui-slider");//滑动科目 
+                sliderMuiObj.slider({
+                    interval: 3000
+             })
+        }
+    })
+</script>
+</body>
+</html>
+

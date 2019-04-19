@@ -1,0 +1,154 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,initial-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<link rel="stylesheet" href="/css/mui.min.css">
+<link rel="stylesheet" href="/css/style.css">
+    <script src="/js/phone.js"></script>
+<title>密码修改</title>
+<style type="text/css">
+     body {background: #f8f8f8;}
+    .mui-content{background: #f8f8f8;}
+    .mui-input-group {padding:10px 30px 20px 30px;background:#fff;margin-top:10px;}
+    .mui-input-group:before{height:0px;}
+    .mui-input-group:after{height:0px;}
+    .mui-input-group .mui-input-row .mui-input{font-size:15px;}
+    .qus-box{padding:10px 30px;background:#fff;padding-top:20px;}
+    .qus-box{font-size:15px;color:#333;position:relative}
+    .qus-box .mui-input{margin-top:5px;font-size:15px;color:#333;}
+ 
+</style>
+</head>
+<body>
+    <header class="mui-bar mui-bar-nav">
+	<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	<h1 class="mui-title">密码修改</h1>
+  </header>
+  <div class="mui-content">
+     <div id="loading" class="loading">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+     </div>
+    <div id="cont" style="display:none">
+      <div class="qus-box">
+          <span id="qus1"></span>
+          <input id='answer1' type="text" class="mui-input" placeholder="请输入答案">
+          <span id="qus2"></span>
+          <input id='answer2' type="text" class="mui-input" placeholder="请输入答案">
+          <span id="qus3"></span>
+          <input id='answer3' type="text" class="mui-input" placeholder="请输入答案">
+      </div>
+      <div class="mui-input-group">
+			<div class="mui-input-row" style="margin-top:10px;">
+				<input id='password' type="password" class="mui-input" style="border:1px solid rgba(0,0,0,.2);" placeholder="请输入新的登录密码">
+			</div>
+			<div class="mui-input-row" style="margin-top:10px;">
+				<input id='rpassword' type="password" class="mui-input" style="border:1px solid rgba(0,0,0,.2);" placeholder="请再次输入新的登录密码">
+			</div>
+	   </div>
+        <button id="btndenglu" class="btn" style="line-height:0px;">提交修改</button>
+    </div>
+  </div>
+<script src="/js/jquery-1.11.2.min.js"></script>
+<script src="/js/mui.min.js"></script>
+<script src="/js/api.js"></script>
+<script src="/js/axios.js"></script>
+<script type="text/javascript" charset="utf-8">
+  (function ($, doc, $$) {
+     $.init();
+      $$(doc).ready(function () {
+          var hyid = localStorage.getItem("hyid");
+          var token = localStorage.getItem("token");
+          if (hyid != 0 && hyid != 'undefined' && hyid != null && hyid != '') {
+             axget('/pwdwenti', { uid: hyid,token: token}).then((res) => {
+               //console.log(res);
+                 if (res.code == "0") {
+                     $$("#qus1").html(res.data[0]);
+                     $$("#qus2").html(res.data[1]);
+                     $$("#qus3").html(res.data[2]);
+                     $$("#loading").css("display", "none");
+                     $$("#cont").css("display","block")
+               }else if (res.code == "2") {
+                  mui.alert('账号在别处登录,您已被迫下线！', ' ', function() {
+					  localStorage.clear();
+                      location.href="/login.html"
+				  });
+               } else {
+                     mui.toast(res.msg);
+                     window.history.go(-1);
+               }
+             })
+           } else {
+            location.href = "/login.html";
+           }
+     })
+     document.getElementById("btndenglu").addEventListener('tap', function () {
+         var ans1 = doc.querySelector("#answer1").value;
+         var ans2 = doc.querySelector("#answer2").value;
+         var ans3 = doc.querySelector("#answer3").value;
+         var pwd = doc.querySelector("#password").value;
+         var rpwd = doc.querySelector("#rpassword").value;
+         if (isNull(ans1)) {
+            mui.toast("请输入问题1的答案");
+            return false;
+         }
+         if (isNull(ans2)) {
+            mui.toast("请输入问题2的答案");
+            return false;
+         }
+         if (isNull(ans3)) {
+            mui.toast("请输入问题3的答案");
+            return false;
+         }
+         if (isNull(pwd)) {
+            mui.toast("请输入新的密码");
+            return false;
+         }
+         if (isNull(rpwd)) {
+            mui.toast("请输入重复密码");
+            return false;
+         }
+         if (pwd!=rpwd) {
+            mui.toast("两次密码不一致");
+            return false;
+         }
+         var btn='';
+         btn = document.getElementById("btndenglu");
+         btn.disabled = true;
+         btn.innerText = "正在提交，请稍候...";
+         var hyid = localStorage.getItem("hyid");
+         var token = localStorage.getItem("token");
+         if (hyid != 0 && hyid != 'undefined' && hyid != null && hyid != '') {
+             axget('/editmima', { uid: hyid, answer1: ans1, answer2: ans2, answer3: ans3, pwd: pwd,type:1 }).then((res) => {
+                 if (res.code == "0") {
+                     mui.toast(res.msg);
+					 localStorage.clear();
+                     location.href="/login.html"
+                     btn.disabled = false;
+                     btn.innerText = "提交修改";
+                 } else if (res.code == "2") {
+                    mui.alert('账号在别处登录,您已被迫下线！', ' ', function() {
+					    localStorage.clear();
+                        location.href="/login.html"
+				    });
+                  } else {
+                     btn.disabled = false;
+                     btn.innerText = "提交修改";
+                     mui.toast(res.msg);
+                 }
+             })
+         } else {
+             location.href = "/login.html";
+         }
+         
+      })
+    })(mui, document, jQuery);
+</script>
+</body>
+</html>

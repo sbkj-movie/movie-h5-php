@@ -1,0 +1,110 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,initial-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<link rel="stylesheet" href="/css/mui.min.css">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/cropper.css">
+<link rel="stylesheet" href="/css/myCrop.css"/>
+    <script src="/js/phone.js"></script>
+<title>头像修改</title>
+<style type="text/css">
+    .mui-content{width:100%;margin:0 auto;text-align:center;}
+    #photoBtn{margin:20px auto;margin-top:50px;}
+    #showImg{width:100px;height:100px;border-radius:50%;border:0px;overflow:hidden;margin:20px 0px;}
+    .cropper-bg{background:#242424;}
+    .bottom{position:fixed;bottom:0px;background:#020202;width:100%;height:50px;}
+    .docs-buttons{display:flex;justify-content:space-around;height:50px; align-items:center;}
+    .btn-primary{background:none;color:#049B0D;border:0px;font-size:18px;}
+</style>
+</head>
+<body>
+    <header class="mui-bar mui-bar-nav">
+	<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	<h1 class="mui-title">头像修改</h1>
+  </header>
+  <div class="mui-content">
+     <input id="photoBtn" type="button"  onclick="document.getElementById('inputImage').click()" value="选择照片">
+     <input  id="inputImage"  type="file" accept="image/*" style="display: none;"/>
+      <br />
+      <img  id="showImg"/>
+      <button class="btn" id="baocun" style="line-height:0px;display:none;width:70%;">确认保存</button>
+     <div class="container" style="padding: 0;margin: 0;position:fixed;display: none;top: 0;left: 0;z-index: 200;" id="containerDiv">
+	    <div class="row" style="display: none;" id="imgEdit">
+	      <div class="col-md-9">
+	        <div class="img-container">
+	          <img src="" alt="Picture">
+	        </div>
+	      </div>
+	    </div>
+	    <div class="bottom" id="actions">
+	      <div class="docs-buttons">
+	        <button type="button" class="btn-primary"  onclick="document.getElementById('inputImage').click()">
+	            <span class="docs-tooltip" data-toggle="tooltip" >
+	              <span class="fa fa-power-off" >重新选择</span>
+	            </span>
+	        </button>
+	        <button type="button" class="btn-primary" id="imgCutConfirm" data-method="getCroppedCanvas" data-option="{ &quot;width&quot;: 320, &quot;height&quot;: 180 }">
+	           <span class="docs-tooltip" data-toggle="tooltip" title="">确认</span> <!--cropper.getCroppedCanvas({ width: 320, height: 180 }) -->
+	        </button>
+	
+	      </div><!-- /.docs-buttons -->
+	    </div>
+  	</div>
+  </div>
+<script src="/js/jquery-1.11.2.min.js"></script>
+<script src="/js/mui.min.js"></script>
+<script type="text/javascript" src="/js/exif.js"></script>
+<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/js/cropper.js"></script>
+<script type="text/javascript" src="/js/myCrop.js"></script>
+<script src="/js/api.js"></script>
+<script src="/js/axios.js"></script>
+<script type="text/javascript">
+	var fileImg = "";
+	
+	$(function(){
+		$("#imgCutConfirm").bind("click",function(){
+			 $("#containerDiv").hide();
+         	 $("#imgEdit").hide();
+         	 $("#getCroppedCanvasModal").modal("hide");
+		})
+    })
+    $("#baocun").on("click", function () {
+        var btn='';
+        btn=document.getElementById("baocun");
+        //ajax提交
+        btn.disabled = true;
+        btn.innerText = "正在提交，请稍候...";
+        var imgpath = $("#showImg").attr("src");
+        var hyid = localStorage.getItem("hyid");
+        var token = localStorage.getItem("token");
+        if (hyid != 0 && hyid != 'undefined' && hyid != null && hyid != '') {
+		var data = 'ajax='+encodeURIComponent(JSON.stringify({
+				uid: hyid, token: token, pic: imgpath
+			}));
+            axpost('/upload', data).then((res) => {
+               console.log(res);
+                if (res.code == "0") {
+                    location.href = "/users/index.html";
+                }else if (res.code == "2") {
+                    mui.alert('账号在别处登录,您已被迫下线！', ' ', function() {
+					   localStorage.clear();
+                       location.href="/login.html"
+				  });
+                 }else {
+                    btn.disabled = false;
+                    btn.innerText = "确认保存";
+                    mui.toast(res.msg);
+                }
+            })
+        } else {
+            location.href = "/login.html";
+        }
+    })
+</script>
+</body>
+</html>

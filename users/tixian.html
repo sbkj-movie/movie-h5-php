@@ -1,0 +1,194 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,initial-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<link rel="stylesheet" href="/css/mui.min.css">
+<link rel="stylesheet" href="/css/style.css">
+    <script src="/js/phone.js"></script>
+<title>提现</title>
+<style type="text/css">
+     body {background: #F8F8F8;}
+    .mui-content{background: #F8F8F8;}
+    
+    .mui-content>.mui-table-view:first-child{margin-top:1px;}
+    .mui-table-view:before,.mui-table-view:after{height:0px;}
+    .mui-table-view-cell{padding:15px;}
+    .mui-table-view-cell a{color:#666;font-size:15px;}
+    .mui-icon-plus{color:#ccc;}
+    .cardNumber{font-size:12px;margin-left:30px;color:#A0A0A0;}
+    .mui-input-group:before,.mui-input-group:after{height:0px;}
+    .mui-input-group .mui-input-row:after{background-color:#F3F5FA;}
+	
+	.mui-input-group label {width:30%;font-size:15px;text-align:right;}
+    .mui-input-group .mui-input-row{height:50px;}
+    .mui-input-row label{padding:16px 5px;}
+	.mui-input-row label~input{width:70%;height:50px;padding:5px;font-size:15px;}
+    .tips{color:#C3C3C3;font-size:13px;text-align:center;margin-top:10px;}
+    .qbtx{float:right;margin-top:15px;background:linear-gradient(to right,#4f4f4f,#3c3c3c);color:#fff;border-radius:20px;font-size:12px;padding:2px 8px;margin-right:10px;}
+
+</style>
+</head>
+<body>
+    <header class="mui-bar mui-bar-nav">
+	<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	<h1 class="mui-title">提现</h1>
+  </header>
+  <div class="mui-content">
+       <div v-if="loading" class="loading">
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+        </div>
+      <div v-else>
+      <ul class="mui-table-view" v-if="yhk_id==0">
+		 <li class="mui-table-view-cell">
+		 	<a :href="'add_card.html'" class="mui-navigate-right"><span class="mui-icon mui-icon-plus"></span>&nbsp;添加账号信息</a>
+		 </li>
+	  </ul>
+      <ul class="mui-table-view" v-else>
+		 <li class="mui-table-view-cell">
+		 	<a :href="'card_list.html?t=1'" class="mui-navigate-right">{{bankInfo.BC_OPEN_BANK}} <span class="cardNumber">{{bankInfo.BC_NUMBER}}</span></a>
+		 </li>
+	  </ul>
+      <div style="margin-top:10px;">
+          <form class="mui-input-group">
+				<div class="mui-input-row">
+					<label>可提现金额：</label>
+					<input id='amount' type="text" class="mui-input" v-model="amount" disabled>
+				</div>
+				<div class="mui-input-row">
+					<label>提现金额：</label>
+					<input id='tixianjine' type="number" class="mui-input" v-model="txttixian" style="width:100px;float:left;" placeholder="请输入金额">
+                    <span class="qbtx" @click="qbtx">全部提现</span>
+				</div>
+                <div class="mui-input-row">
+					<label>交易密码：</label>
+					<input id='password' type="password" class="mui-input" v-model="password" placeholder="请输入交易密码">
+				</div>
+		  </form>
+      </div>
+      <button class="btn" v-on:click="tixian" style="line-height:0px;" :disabled="isDisabled">提交申请</button>
+      <div class="tips">温馨提示：第一次提现请填写交易密码</div>
+  </div>
+ </div>
+<script src="/js/vue.js"></script>
+<script src="/js/mui.min.js"></script>
+<script src="/js/api.js"></script>
+<script src="/js/axios.js"></script>
+<script type="text/javascript" charset="utf-8">
+    mui.init();
+    
+    new Vue({
+        el: '.mui-content',
+        data: {
+            loading: true,
+            hyid: 0,
+            token:0,
+            yhk_id: 0,//银行卡ID
+            bankInfo:'',//银行卡信息
+            amount: 0,//余额
+            txttixian: 0,//提现金额
+            password: '',
+            isDisabled: false
+        },
+        created: function () {
+            this.getInfo()
+        },
+        methods: {
+            getInfo() {
+                var that = this;
+                var yhid = getQueryString("id");//银行卡ID
+                if (yhid == 0 && yhid == 'undefined' && yhid == null && yhid == '') {
+                    yhid = 0;
+                }
+                var hyid = localStorage.getItem("hyid");
+                var token = localStorage.getItem("token");
+                if (hyid != 0 && hyid != 'undefined' && hyid != null && hyid != '') {
+                    axget('/bankfile', { uid: hyid, token: token, id: yhid }).then((res) => {
+                        //console.log(res);
+                        if (res.code == "0") {
+                            that.amount = res.data.money;
+                            that.bankInfo = res.data.bank;
+                            if (res.data.bank != 0) {
+                                that.yhk_id = res.data.bank.ID
+                            }
+                        } else if (res.code == "2") {
+                          mui.alert('账号在别处登录,您已被迫下线！', ' ', function() {
+					          localStorage.clear();
+                              location.href="/login.html"
+				            });
+                        }  else {
+                            mui.toast(res.msg);
+                        }
+                        that.loading = false;
+                    })
+                } else {
+                    location.href = "/login.html";
+                }
+            },
+            qbtx() {
+                this.txttixian=this.amount;
+            },
+            tixian() {
+                var that = this;
+                var yhid = that.yhk_id;//银行卡ID
+                if (yhid == 0) {
+                    mui.toast("请先添加银行卡！");
+                    return;
+                } else {
+                 var amount = that.amount;
+                 var tixian = that.txttixian;
+                 var pwd = that.password;
+                if (isNull(tixian)) {
+                    mui.toast("请输入提现金额！");
+                    return;
+                }
+                if (parseFloat(tixian) <= 0) {
+                    mui.toast("提现金额必须大于0元！");
+                    return;
+                }
+                if (parseFloat(tixian) > parseFloat(amount)) {
+                    mui.toast("提现金额不能大于账户余额！");
+                    return;
+                }
+                if (isNull(pwd)) {
+                    mui.toast("请输入交易密码！");
+                    return;
+                }
+                var hyid = localStorage.getItem("hyid");
+                var token = localStorage.getItem("token");
+                    if (hyid != 0 && hyid != 'undefined' && hyid != null && hyid != '') {
+                      that.isDisabled = true;
+                      axget('/tixian', { uid: hyid, token: token, money: tixian, bid: yhid, mima: pwd }).then((res) => {
+                      //console.log(res);
+                      if (res.code == "0") {
+                          mui.toast(res.msg);
+                          var am = amount - tixian;
+                          that.amount = am;
+                          that.txttixian = "";
+                          that.password = "";
+                      } else if (res.code == 2) {
+                          mui.alert('账号在别处登录,您已被迫下线！', ' ', function() {
+					          localStorage.clear();
+                              location.href="/login.html"
+				            });
+                       } else {
+                          mui.toast(res.msg);
+                          }
+                          that.isDisabled = false;
+                     })
+                }else {
+                    location.href = "/login.html";
+                }
+                }
+            }
+        }
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,202 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,initial-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<link rel="stylesheet" href="/css/mui.min.css">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/iconfont.css">
+<link rel="stylesheet" href="/css/icons-extra.css">
+<script src="/js/phone.js"></script>
+<title>个人中心</title>
+<style type="text/css">
+     body {background: #F8F8F8;}
+    .mui-content{background: #F8F8F8;margin-bottom:60px;margin-top:90px;}
+    .userinfo{background:#fff;width:100%;padding:20px 5%;text-align:center;}
+    .userinfo .headpic{width:60px;height:60px;overflow:hidden;border-radius:60%;margin:0 auto;}
+    .userinfo .headpic img{width:60px;height:60px;}
+    .nicheng,.login,.login a{font-size:15px;color:#333;margin-top:5px;}
+    .time{display:flex;justify-content:space-around;align-items:center;color:#B0B0B0;font-size:12px;margin-top:10px;}
+
+    .tc{background:#fff;margin-top:10px;display:flex;justify-content:space-around;height:50px;align-items:center;}
+    .tc a{color:#595959;font-size:15px;}
+    .tc a .iconfont{color:#595959;font-size:20px;}
+	.mui-table-view {margin-top:15px;}
+    .mui-table-view-cell{display:flex;align-items:center;}
+    .mui-table-view-cell a{color:#333;font-size:15px;width:100%;}
+    .mui-table-view-cell .iconfont{font-size:24px;}
+    .yanse-huang{color:#F8DD50;}
+    .yanse-lv{color:#3FD239;}
+    .yanse-cheng{color:#FD8A54;}
+    .yanse-lan{color:#5DC1F3;}
+	.outloginbox{width:100%;text-align:center;margin:10px 0px;}
+    .outlogin{border:0px;background:#3c3c3c;color:#fff;height:40px;border-radius: 5px;text-align:center;width:90%;}
+    .mgtop50{margin-top:50px;}
+</style>
+</head>
+<body>
+  <div id="user">
+        <div class="down" :class="{'downs':app}">
+            <div class="d-logo"><span class="mui-icon mui-icon-close" v-on:click="closeAPP"></span>&nbsp;<img src="/images/logo.png" style="width:100px;" /></div>
+            <div class="d-app"><a href="/download.html">下载APP</a></div>
+        </div>
+        <div class="header" :class="{'headers':app}">
+          <div class="hnav">
+           <div class="logo-box">
+               <a :href="'/users/qiehuanxianlu.html'">地址列表</a>
+           </div>
+           <ul class="menu">
+               <li><a href="/index.html">精选</a></li>
+               <li><a href="/shipin.html">视频</a></li>
+               <li><a href="/yingpian.html">影片</a></li>
+               <li><a href="/manhua.html">漫画</a></li>
+           </ul>
+           <div class="search"><a :href="'/search.html'"><span class="mui-icon mui-icon-search"></span></a></div>
+          </div>
+        </div>
+    <div class="mui-content" :class="{'mgtop50':app}">
+       <div v-if="loading" class="loading">
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+        </div>
+      <div v-else>
+       <div class="userinfo" v-if="isLogin">
+          <div class="headpic"><img :src="siteadd+headpic" @click="headclick"/></div>
+          <div class="nicheng">{{username}}</div>
+          <div class="time">
+            <span v-if="huiyuandata==0">会员有效期:未开通</span><span v-else>会员有效期:{{huiyuandata}}</span>
+          </div>
+      </div>
+      <div class="userinfo" v-else>
+          <div class="headpic"><a href="/login.html"><img src="/images/img01.png" /></a></div>
+          <div class="login"><a href="/login.html">登录/注册</a></div>
+      </div>
+      <div class="tc">
+          <a href="taocan.html"><span class="iconfont icon-qiandai"></span>&nbsp;套餐购买</a>
+      </div>
+
+      <div style="margin-top:10px;">
+            <ul class="mui-table-view">
+			    <li class="mui-table-view-cell">
+				    <span class="iconfont icon-shoucang yanse-huang"></span>&nbsp;<a href="shoucang.html" class="mui-navigate-right">我的收藏</a>
+			    </li>
+			    <li class="mui-table-view-cell">
+			    	<span class="iconfont icon-chakan yanse-lv"></span>&nbsp;<a href="guankanjilu.html" class="mui-navigate-right">观看记录</a>
+			    </li>
+                <li class="mui-table-view-cell">
+				    <span class="iconfont icon-jilu yanse-cheng"></span>&nbsp;<a href="goumaijilu.html" class="mui-navigate-right">购买记录</a>
+			    </li>
+                 <li class="mui-table-view-cell">
+				   <span class="iconfont icon-mima yanse-huang"></span>&nbsp;<a href="uppass.html" class="mui-navigate-right">密码修改</a>
+			    </li>
+                <li class="mui-table-view-cell">
+				    <span class="iconfont icon-yqfqiehuan yanse-lv"></span>&nbsp;<a href="qiehuanxianlu.html" class="mui-navigate-right">线路切换</a>
+			    </li>
+			    <li class="mui-table-view-cell">
+			    	<span class="iconfont icon-lianxikefu yanse-lan"></span>&nbsp;<a href="lianxi.html" class="mui-navigate-right">联系我们</a>
+			    </li>
+		    </ul>
+         </div>
+		  <div class="outloginbox" v-if="isLogin">
+          <button class="outlogin" v-on:click="outlogin">退出登录</button>
+        </div>
+    </div>
+    <nav class="mui-bar mui-bar-tab">
+			<a @tap="foot_bar(1)" class="mui-tab-item" href="#index">
+				<span class="mui-icon mui-icon-home"></span>
+				<span class="mui-tab-label">首页</span>
+			</a>
+			<a @tap="foot_bar(2)" class="mui-tab-item" href="#tabbar-with-chat">
+				<span class="mui-icon mui-icon-extra mui-icon-extra-class"></span>
+				<span class="mui-tab-label">分类</span>
+			</a>
+			<a @tap="foot_bar(3)" class="mui-tab-item  mui-active" href="#usercenter">
+				<span class="mui-icon mui-icon-contact"></span>
+				<span class="mui-tab-label">个人中心</span>
+			</a>
+    </nav>
+ </div>
+ </div>
+<script src="/js/vue.js"></script>
+<script src="/js/mui.min.js"></script>
+<script src="/js/api.js"></script>
+<script src="/js/axios.js"></script>
+<script type="text/javascript" charset="utf-8">
+ 
+    new Vue({
+        el: '#user',
+        data: {
+            loading: true,
+            app:false,
+            isLogin: false,
+            cutimg:0,
+            siteadd: "",//站点地址
+            hyid:0,
+            username: '',
+            headpic: '',
+            huiyuandata:0,
+            amount:0,
+        },
+        created: function () {
+            this.siteadd = globalData.siteadd;//站点地址
+            this.getuserInfo()
+        },
+        methods: {
+            getuserInfo() {//获取用户信息
+                var that = this;
+                var hyid = localStorage.getItem("hyid");
+                var token = localStorage.getItem("token");
+                if (hyid != 0 && hyid != 'undefined' && hyid != null && hyid != '') {
+                    axget('/userinfo', { uid: hyid, token: token }).then((res) => {
+                        //console.log(res);
+                        if (res.code == "0") {
+                            that.username = res.data.USERNAME;
+                            that.headpic = res.data.USERIMG;
+                            that.huiyuandata = res.data.taocan;
+                            that.amount = res.data.NO_PRICE;
+                            that.hyid = res.data.ID;
+                            that.isLogin = true;
+                            that.loading = false;
+                        } else if (res.code == "2") {
+                            mui.alert('账号在别处登录,您已被迫下线！', ' ', function() {
+                                localStorage.clear();
+                                location.href="/login.html"
+				            });
+                        } else {
+                            that.loading = false;
+                            mui.toast(res.msg);
+                        }
+                    })
+                } else {
+                    that.loading = false;
+                    this.isLogin = false;
+                }
+            }, outlogin() {
+                localStorage.clear();
+                location.href="/login.html"
+            },closeAPP() {
+                this.app = true;
+            },
+             foot_bar(i) {
+               switch (i)
+                {
+                    case 1: location.href = "/index.html"; break;
+                    case 2: location.href = "/fenlei.html";break;
+                    case 3: location.href = "/users/index.html"; break;
+                    default:
+                        location.href = "/index.html";
+                        break;
+                }
+            }, headclick() {
+                location.href="cutimg.html"
+             }
+        }
+    })
+</script>
+</body>
+</html>
