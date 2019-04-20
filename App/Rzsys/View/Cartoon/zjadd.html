@@ -3,12 +3,12 @@
 <head>
 	<meta charset="UTF-8">
 	<title>章节添加</title>
-	<meta name="renderer" content="webkit">	
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">	
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">	
-	<meta name="apple-mobile-web-app-status-bar-style" content="black">	
-	<meta name="apple-mobile-web-app-capable" content="yes">	
-	<meta name="format-detection" content="telephone=no">	
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="format-detection" content="telephone=no">
 	<link rel="stylesheet" type="text/css" href="/Public/admin/common/layui/css/layui.css" media="all">
 	<link rel="stylesheet" type="text/css" href="/Public/admin/common/bootstrap/css/bootstrap.css" media="all">
 	<link rel="stylesheet" type="text/css" href="/Public/admin/common/global.css" media="all">
@@ -27,15 +27,15 @@
 			<span>添加章节</span>
 		</header><!-- /header -->
 		<div class="larry-personal-body clearfix">
-			<form class="layui-form col-lg-5"  method="post" id="mainform" >
+			<form class="layui-form col-lg-6"  method="post" id="mainform" >
             <input type="hidden" name="id" id="upid" value="{$data['ID']?$data['ID']:''}">
             <input type="hidden" name="pg" id="pg" value="{$data['pg']?$data['pg']:'1'}">
             	<div class="layui-form-item">
                       <label class="layui-form-label">所属漫画</label>
-                      <div class="layui-input-block">  
-                      
+                      <div class="layui-input-block">
+
                         <select name="modules" id="classid" lay-verify="required" lay-search="">
-                        
+
                         	 <volist name="data.manhua" id="da" >
                           <option value="{$da.ID}"  <if condition="isset($data['CT_ID'])&&($data['CT_ID']==$da['ID'])"> selected</if>>{$da.CT_NAME}</option>
                            </volist>
@@ -44,70 +44,109 @@
                     </div>
            	    <div class="layui-form-item">
 					<label class="layui-form-label">章节名称</label>
-					<div class="layui-input-block">  
+					<div class="layui-input-block">
 						<input type="text" name="name" id="name" required class="layui-input " lay-verify="name" value="{$data['CTD_TITLE']?$data['CTD_TITLE']:''}"  >
 					</div>
 				</div>
-   
-                
-                
+
+
+
             		<div class="layui-form-item">
 					<label class="layui-form-label">漫画类型</label>
                      <input type="hidden" id="typeall" value="{$data['CT_TYPE']?$data['CT_TYPE']:'1'}">
 					<div class="layui-input-block">
-						<input type="radio" name="type" value="1" lay-filter="type"  title="免费" <if  condition="isset($data['CT_TYPE'])&&$data['CT_TYPE']==1 ">  checked="checked"</if> <if condition="!isset($data['CT_TYPE'])"> checked="checked"</if>><div class="layui-unselect layui-form-radio layui-form-radioed"><i class="layui-anim layui-icon"></i><span>免费</span></div>
-						<input type="radio" name="type" value="2" lay-filter="type"  title="会员" <if  condition="isset($data['CT_TYPE'])&&$data['CT_TYPE']==2">  checked="checked"</if>><div class="layui-unselect layui-form-radio"><i class="layui-anim layui-icon"></i><span>会员</span></div>
+						<input type="radio" name="type" value="1" lay-filter="type"  title="免费" <if  condition="isset($data['CT_TYPE'])&&$data['CT_TYPE']==1 ">  checked="checked"</if> <if condition="!isset($data['CT_TYPE'])"> checked="checked"</if>><div class="layui-unselect layui-form-radio layui-form-radioed"><i class="layui-anim layui-icon"></i><span>免费</span></div>
+						<input type="radio" name="type" value="2" lay-filter="type"  title="会员" <if  condition="isset($data['CT_TYPE'])&&$data['CT_TYPE']==2">  checked="checked"</if>><div class="layui-unselect layui-form-radio"><i class="layui-anim layui-icon"></i><span>会员</span></div>
 					</div>
 				</div>
-               
-  
+
+
                   <div class="layui-form-item">
                         <label class="layui-form-label">漫画封面图(527*375)</label>
                         <div class="layui-input-block">
                             <input type="text" name="spic" id="spic"   lay-verify="required"  class="layui-input" value="{$data['CTD_PHOTO_URL']?$data['CTD_PHOTO_URL']:''}">
-                             
+
                         </div>
-                       
+
                     </div>
-                 
-              
+
+
                 <div class="layui-form-item">
-					<label class="layui-form-label">漫画内容</label>
-					<div style="margin-left: 120px;">
-                        <div>  
-                           
-                            <div >
-                            <a onClick="addlunbo()" style=" display:block; width:80px; color:#fff; height:30px; line-height:30px; text-align:center; background:#2299ee" href="javascript:void(0)">添加</a>
-                            </div>
+                    <label class="layui-form-label">漫画内容</label>
+                    <div style="margin-left: 120px;">
+                        <div>
+
+
+                            <input type="text" id="hostName" required class="layui-input col-lg-12" value="" placeholder="漫画域名路径（例：https://www.abc.com)">
+                            <div style="width:100%; height:1px; clear:both"></div>
+                            <input type="text" id="folderName" required class="layui-input col-lg-6" value="" placeholder="漫画对应的文件夹名（例：manhua/mh001）">
+                            <div style="width:100%; height:5px; clear:both"></div>
+                            <input type="text" id="ctdNum" required class="layui-input col-lg-6" value="" placeholder="章节序号（例：1,2,3....）">
+                            <div style="width:100%; height:5px; clear:both"></div>
+                            <input type="text" id="startPage" required class="layui-input col-lg-6" value="" placeholder="起始页码">
+                            <div style="width:100%; height:5px; clear:both"></div>
+                            <input type="text" id="endPage" required class="layui-input col-lg-6" value="" placeholder="结束页码">
+                            <div style="width:100%; height:5px; clear:both"></div>
+                            <label class="layui-form-label">图片文件后缀</label>
+                            <input type="radio" name="fileSuffix" value="jpg" lay-filter="fileSuffixType"  title="jpg" checked><i class="layui-anim layui-icon"></i><span></span>
+                            <input type="radio" name="fileSuffix" value="png" lay-filter="fileSuffixType"  title="png"><i class="layui-anim layui-icon"></i><span></span>
+
+
                         </div>
-                        <div style="width:100%; height:1px; clear:both"></div>
+                        <div style="width:100%; height:5px; clear:both"></div>
                         <div id="lunbo">
-                         <if condition="!isset($data['CTD_PHOTO_LIST'])">
-                             <div id="lunbo_0">  
+                            <volist name="data.picall" id="da" key="k">
+                                <div id="lunbos_{$k}">
                                     <div style="float:left">
-                                    <input type="text" name="imgsrc[]"  lay-verify="required"  class="layui-input " value=""  style="width:250px; " >
+                                        <a href="{$da}" target="_blank">{$da}</a>
                                     </div>
-                                    <div style="float:right">
-                                    <a onClick="dellunbo('lunbo_0')" style=" display:block; width:80px; color:#fff; height:30px; line-height:30px; text-align:center; background:#2299ee" href="javascript:void(0)">删除</a>
-                                   </div>
-                                 </div>
+                                    <div style="float:right"></div>
+                                </div>
                                 <div style="width:100%; height:1px; clear:both"></div>
-                         </if>
-                            <volist name="data.picall" id="da" key="k" > 
-                             
-                                 <div id="lunbos_{$k}">  
-                                    <div style="float:left">
-                                    <input type="text" name="imgsrc[]"  lay-verify="required"  class="layui-input " value="{$da}"  style="width:250px; " >
-                                    </div>
-                                    <div style="float:right">
-                                    <a onClick="dellunbo('lunbos_{$k}')" style=" display:block; width:80px; color:#fff; height:30px; line-height:30px; text-align:center; background:#2299ee" href="javascript:void(0)">删除</a>
-                                   </div>
-                                 </div>
-                                <div style="width:100%; height:1px; clear:both"></div>
-                           </volist>
+                            </volist>
                         </div>
-                   </div>
-				</div>
+                    </div>
+                </div>
+
+
+<!--                <div class="layui-form-item">-->
+<!--                    <label class="layui-form-label">漫画内容</label>-->
+<!--                    <div style="margin-left: 120px;">-->
+<!--                        <div>-->
+
+<!--                            <div >-->
+<!--                                <a onClick="addlunbo()" style=" display:block; width:80px; color:#fff; height:30px; line-height:30px; text-align:center; background:#2299ee" href="javascript:void(0)">添加</a>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div style="width:100%; height:1px; clear:both"></div>-->
+<!--                        <div id="lunbo">-->
+<!--                            <if condition="!isset($data['CTD_PHOTO_LIST'])">-->
+<!--                                <div id="lunbo_0">-->
+<!--                                    <div style="float:left">-->
+<!--                                        <input type="text" name="imgsrc[]"  lay-verify="required"  class="layui-input " value=""  style="width:250px; " >-->
+<!--                                    </div>-->
+<!--                                    <div style="float:right">-->
+<!--                                        <a onClick="dellunbo('lunbo_0')" style=" display:block; width:80px; color:#fff; height:30px; line-height:30px; text-align:center; background:#2299ee" href="javascript:void(0)">删除</a>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div style="width:100%; height:1px; clear:both"></div>-->
+<!--                            </if>-->
+<!--                            <volist name="data.picall" id="da" key="k" >-->
+
+<!--                                <div id="lunbos_{$k}">-->
+<!--                                    <div style="float:left">-->
+<!--                                        <input type="text" name="imgsrc[]"  lay-verify="required"  class="layui-input " value="{$da}"  style="width:250px; " >-->
+<!--                                    </div>-->
+<!--                                    <div style="float:right">-->
+<!--                                        <a onClick="dellunbo('lunbos_{$k}')" style=" display:block; width:80px; color:#fff; height:30px; line-height:30px; text-align:center; background:#2299ee" href="javascript:void(0)">删除</a>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div style="width:100%; height:1px; clear:both"></div>-->
+<!--                            </volist>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+
 				<div class="layui-form-item">
 					<div class="layui-input-block">
 						<button class="layui-btn" lay-submit="" id="demo1" lay-filter="demo1">立即提交</button>
@@ -123,8 +162,8 @@
 <script type="text/javascript">
  var fi=1;
 function addlunbo(){
-	
-	var str=' <div id="lunbo_'+fi+'">'+  
+
+	var str=' <div id="lunbo_'+fi+'">'+
                             '<div style="float:left">'+
                             '<input type="text" name="imgsrc[]"  lay-verify="required"  class="layui-input " value=""  style="width:250px; " >'+
                             '</div>'+
@@ -133,7 +172,7 @@ function addlunbo(){
                            ' </div>'+
                         ' </div>'+
 						'<div style="width:100%; height:1px; clear:both"></div>';
-	fi++;		
+	fi++;
 	$('#lunbo').append(str);
 }
 function dellunbo(fiid){
@@ -141,65 +180,78 @@ function dellunbo(fiid){
 }
 </script>
 <script type="text/javascript">
- 
+
 	layui.use(['form','upload'],function(){
          var form = layui.form();
-         //自定义验证规则 
-		 form.verify({  
-				name: function(value){  
-				  if(value==''){  
-					return '章节名称不能为空';  
-				  }  
+         //自定义验证规则
+		 form.verify({
+				name: function(value){
+				  if(value==''){
+					return '章节名称不能为空';
+				  }
 				}
-				
+
 		  });
-		  var type=$('#typeall').val(); 
-		  form.on('radio(type)', function (data) { 
+		  var type=$('#typeall').val();
+		  form.on('radio(type)', function (data) {
 		 		if(data.value==2){
 					type=2;
 				}else{
 					type=1;
 				}
 		   });
-		  
-		   //监听提交  
-		  form.on('submit(demo1)', function(data){ 
-		  	var pid=[];
-		    $.each($('input[name="imgsrc[]"]').serializeArray(), function(i, field){
-				pid.push(field.value);
-			});
-		  
+
+		   //监听提交
+		  form.on('submit(demo1)', function(data){
+		  	// var pid=[];
+		    // $.each($('input[name="imgsrc[]"]').serializeArray(), function(i, field){
+			// 	pid.push(field.value);
+			// });
+
 			 //$("#demo1").attr('disabled',true);
 			// $("#demo1").css("background", "#ccc");
 			$.ajax({
 				 type: "post",
 				 url: "{:U('cartoon/zjdoadd')}",
-				 data: {name:$('#name').val(),classid:$('#classid').val(),type:type,pic:$('#spic').val(),'picall':pid,id:$('#upid').val(),pg:$('#pg').val()},
+				 data: {
+				     name:$('#name').val(),
+                     classid:$('#classid').val(),
+                     type:type,
+                     pic:$('#spic').val(),
+                     id:$('#upid').val(),
+                     pg:$('#pg').val(),
+                     hostName:$('#hostName').val(),
+                     folderName:$('#folderName').val(),
+                     ctdNum:$('#ctdNum').val(),
+                     startPage:$('#startPage').val(),
+                     endPage:$('#endPage').val(),
+                     fileSuffix:$('input:radio[name="fileSuffix"]:checked').val()
+                 },
 				 dataType: "json",
 				 async:false,
 				 success: function(data){
-					 
+
 					layer.msg(data.msg);
 					if(data.error!=1){
 						setTimeout(function() {
 							window.location =data.href;
 						}, 1200);
 					}
-						
-					
+
+
 				 }
-							
+
 			 });
-				 return false;  
-			
-		  }); 
+				 return false;
+
+		  });
 	});
 </script>
 <script type="text/javascript">
 	layui.use(['form','upload'],function(){
          var form = layui.form();
-         //自定义验证规则  
-		layui.upload({ 
+         //自定义验证规则
+		layui.upload({
 		  	 elem: '#pic',
              url: "{:U('login/upload')}" ,//上传接口
 			 data:{name:'pic'},
@@ -211,10 +263,10 @@ function dellunbo(fiid){
                 var img='<img src="/'+res.img+'"  width="120px">';
 				img+='<input type="hidden" name="spic" id="spic" value="'+res.img+'">';
 				$('#pical').html(img);
-            } 
+            }
          });
-		 
-		 
+
+
 	});
 </script>
 </body>

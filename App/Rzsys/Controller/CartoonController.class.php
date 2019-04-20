@@ -236,37 +236,55 @@ class CartoonController extends AllowController
       $this->assign('data',$data);
 		$this->display(); // 输出模板
 	}
-	 function zjdoadd(){
-		
-		//获取请求参数
-		$id=$_POST['id'];
-		$pg=$_POST['pg'];
-		$data['CT_ID']=$_POST['classid'];
-		$data['CTD_TITLE']=$_POST['name'];
-		
-		$data['CTD_TYPE']=$_POST['type'];
-		$data['CTD_PHOTO_URL']=$_POST['pic'];
-		//$data['CTD_PHOTO_LIST']=$_POST['content'];
-		$data['CTD_PHOTO_LIST']=json_encode($_POST['picall']);
-		//var_dump($data);
-		if(isset($id)&&$id!=0){
-			$data['GMT_MODIFED']=date('Y-m-d H:i:s',time());
-			M('mv_cartoon_detail')->where("ID=$id")->save($data);
-			$da['msg']="修改成功";
-			$this->addlog('2','漫画章节修改');
-			$da['href']=U("cartoon/zhangjie")."?p=$pg&type=$data[CT_ID]";
-		}else{
-				
-				$data['GMT_CREATE']=date('Y-m-d H:i:s',time());
-				M('mv_cartoon_detail')->add($data);
-				$this->addlog('1','漫画章节添加');
-				$da['msg']="添加成功";
-				$da['href']=U("cartoon/zhangjie")."?p=$pg&type=$data[CT_ID]";
-		}
-		
-		echo json_encode($da);
-		 
-	}
+
+    function zjdoadd()
+    {
+
+        //获取请求参数
+        $id = $_POST['id'];
+        $pg = $_POST['pg'];
+        $data['CT_ID'] = $_POST['classid'];
+        $data['CTD_TITLE'] = $_POST['name'];
+
+        $data['CTD_TYPE'] = $_POST['type'];
+        $data['CTD_PHOTO_URL'] = $_POST['pic'];
+        //$data['CTD_PHOTO_LIST']=$_POST['content'];
+//		$data['CTD_PHOTO_LIST']=json_encode($_POST['picall']);
+        //var_dump($data);
+
+        // 拼装图片地址
+        $hostName = $_POST['hostName'];
+        $folderName = $_POST['folderName'];
+        $ctdNum = $_POST['ctdNum'];
+        $startPage = $_POST['startPage'];
+        $endPage = $_POST['endPage'];
+        $fileSuffix = $_POST['fileSuffix'];
+
+        $picArr = array();
+        for ($i = $startPage; $i <= $endPage; $i++) {
+            $url = $hostName . "/" . $folderName . "/" . $ctdNum . "-" . $i . "." . $fileSuffix;
+            array_push($picArr, $url);
+        }
+        $data['CTD_PHOTO_LIST']=json_encode($picArr);
+
+        if (isset($id) && $id != 0) {
+            $data['GMT_MODIFED'] = date('Y-m-d H:i:s', time());
+            M('mv_cartoon_detail')->where("ID=$id")->save($data);
+            $da['msg'] = "修改成功";
+            $this->addlog('2', '漫画章节修改');
+            $da['href'] = U("cartoon/zhangjie") . "?p=$pg&type=$data[CT_ID]";
+        } else {
+
+            $data['GMT_CREATE'] = date('Y-m-d H:i:s', time());
+            M('mv_cartoon_detail')->add($data);
+            $this->addlog('1', '漫画章节添加');
+            $da['msg'] = "添加成功";
+            $da['href'] = U("cartoon/zhangjie") . "?p=$pg&type=$data[CT_ID]";
+        }
+
+        echo json_encode($da);
+
+    }
 	function zjdel(){
 		//获取请求参数
 		$id =$_GET['id'];
