@@ -206,7 +206,7 @@ class CartoonController extends AllowController
 		$manhua=M('mv_cartoon')->where('IS_DEL=0')->select();
 		$this->assign('manhua',$manhua);
 		//漫画
-		$mh='';
+		$mh = array();
 		if(!empty($manhua)){
 			foreach($manhua as $val){
 				$mh[$val['ID']]=$val['CT_NAME'];
