@@ -537,10 +537,10 @@ class AppController extends Controller
 		
 		$this->returnjson('0','成功！',$data);
 	}
-	function signurl($urlw){
+	function signurl($yurl){
 		
-		$yurl=$urlw;
-		$urlw=parse_url($urlw);
+//		$yurl=$urlw;
+		$urlw=parse_url($yurl);
 		$file=substr($urlw['path'],1,strlen($urlw['path']));
 		//echo $file;die();
 		$host=$urlw['host'];
@@ -1700,6 +1700,10 @@ function request_post($url = '', $post_data = array()) {
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
     curl_setopt($ch, CURLOPT_POST, 1);
     curl_setopt($ch, CURLOPT_POSTFIELDS, $post_string);
+    // 在尝试连接时等待的秒数
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT , 5);
+    // 最大执行时间
+    curl_setopt($ch, CURLOPT_TIMEOUT, 5);
     // String data =  curl_exec($ch);//运行curl
     //qapple返回的json数组
     $response = curl_exec($ch);
