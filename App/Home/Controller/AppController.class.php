@@ -336,20 +336,33 @@ class AppController extends Controller
 	//获取ip位置
 	public function ipaddress(){
 		$ip=$_GET['ip'];
-		$lang = file_get_contents("http://ip.taobao.com/service/getIpInfo.php?ip=$ip");
-		if(!empty($lang)){
-			$lang=json_decode($lang);
-			//var_dump($lang);die();
-			//echo $lang['data']->country_id;die();
-			$da=$lang->data;
-			if($da->country_id!='CN'){
-				$cn=2;
-			}else{
-				$cn=1;
-			}
-		}else{
-			$cn=2;
-		}
+//		$lang = file_get_contents("http://ip.taobao.com/service/getIpInfo.php?ip=$ip");
+//		if(!empty($lang)){
+//			$lang=json_decode($lang);
+//			//var_dump($lang);die();
+//			//echo $lang['data']->country_id;die();
+//			$da=$lang->data;
+//			if($da->country_id!='CN'){
+//				$cn=2;
+//			}else{
+//				$cn=1;
+//			}
+//		}else{
+//			$cn=2;
+//		}
+
+        $file = @file_get_contents("china_ip.txt");
+        $arr = explode("\n", $file);
+
+        $cn = 2;
+
+        for ($i = 0; $i < count($arr); $i++) {
+            if (judge($ip, $arr[$i])) {
+                $cn = 1;
+                break;
+            }
+        }
+
 		$this->returnjson('0','成功！',$cn);
 	}
 	//视频详情
@@ -1710,4 +1723,24 @@ function request_post($url = '', $post_data = array()) {
     //var_dump($response);
     return $response;
 }
+
+    /**
+     * 给定一个ip 一个网段 判断该ip是否属于该网段
+     * @param $ip
+     * @param $networkRange
+     * @return bool 属于返回true 不属于返回false
+     */
+    function judge($ip, $networkRange)
+    {
+        $ip_temp = (double)(sprintf("%u", ip2long($ip)));
+        $s = explode('/', $networkRange);
+        $network_start = (double)(sprintf("%u", ip2long($s[0])));
+        $network_len = pow(2, 32 - $s[1]);
+        $network_end = $network_start + $network_len - 1;
+        if ($ip_temp >= $network_start && $ip_temp <= $network_end) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
