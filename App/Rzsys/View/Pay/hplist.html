@@ -28,43 +28,55 @@
 		         <!-- 操作日志 -->
                 <div class="layui-tab-item layui-field-box layui-show">
                      <table class="layui-table table-hover" lay-even="" lay-skin="nob">
-                          <thead>
-                              <tr>
-                                  <th><input type="checkbox" id="selected-all"></th>
-                                  <th>ID</th>
-                                  <th>商户号</th>
-                                   <th>密钥/商家私钥公钥</th>
-                                    <th>平台公钥</th>
-                                   <th>最高限额</th>
-                                   <th>当前金额</th>
-                                   <th>支付平台</th>
-                                  <th>添加时间</th>
-								   <th width="300px">操作</th>
-                              </tr>
-                          </thead>
-                          <tbody>
-                           <volist name="ad" id="data" > 
-                            <tr>
-                                            <td><input type="checkbox"></td>
-                                            <td>{$data['ID']}</td>
-                                            <td>{$data['HU_APPID']}</td>
-                                          	<td><div style="width:300px; overflow:hidden">{$data['HU_APP_SECRET']}</div></td>
-                                            <td><div style="width:300px; overflow:hidden">{$data['HU_APP_GONG']}</div></td>
-                                            <td>{$data['MAX_MONEY']}</td>
-                                            <td>{$data['NOW_MONEY']}</td>
-                                             <td>{$data['GMT_CREATE']}</td>
-                                            <if  condition="$data['HU_TYPE']==1 ">
-                                             <td>宝付</td>
-                                            </if>
-                                             <if  condition="$data['HU_TYPE']==2 ">
-                                             <td>青苹果</td>
-                                            </if>
-                                        <td><a href="javascript:void(0)" class="layui-btn layui-btn-small" onclick="return delall({$data['ID']},{$pg})"><i class="iconfont icon-shanchu1"></i>删除</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="{:U('Pay/hpadd')}?id={$data['ID']}&pg={$pg}" class="layui-btn layui-btn-small"><i class="iconfont icon-shanchu1"></i>编辑</a></td>
-                                         
-											</tr>
-                            </volist>
-                              
-                          </tbody>
+                         <thead>
+                             <tr>
+                                 <th><input type="checkbox" id="selected-all"></th>
+                                 <th>ID</th>
+                                 <th>支付通道名称</th>
+                                 <th>商户号</th>
+                                 <th>密钥/商家私钥公钥</th>
+                                 <th>平台公钥</th>
+                                 <th>最高限额</th>
+                                 <th>当前金额</th>
+                                 <th>支付平台</th>
+                                 <th>添加时间</th>
+                                 <th>排列序号</th>
+                                 <th width="300px">操作</th>
+                             </tr>
+                         </thead>
+                         <tbody>
+                             <volist name="ad" id="data">
+                                 <tr>
+                                     <td><input type="checkbox"></td>
+                                     <td>{$data['ID']}</td>
+                                     <td>{$data['HU_NAME']}</td>
+                                     <td>{$data['HU_APPID']}</td>
+                                     <td>
+                                         <div style="width:300px; overflow:hidden">{$data['HU_APP_SECRET']}</div>
+                                     </td>
+                                     <td>
+                                         <div style="width:300px; overflow:hidden">{$data['HU_APP_GONG']}</div>
+                                     </td>
+                                     <td>{$data['MAX_MONEY']}</td>
+                                     <td>{$data['NOW_MONEY']}</td>
+                                     <td>{$data['GMT_CREATE']}</td>
+                                     <td>
+                                         <if condition="$data['HU_TYPE']==1 ">
+                                             宝付
+                                         </if>
+                                         <if condition="$data['HU_TYPE']==2 ">
+                                             青苹果
+                                         </if>
+                                     </td>
+                                     <td>{$data['SORT_NUM']}</td>
+                                     <td>
+                                         <a href="javascript:void(0)" class="layui-btn layui-btn-small" onclick="return delall({$data['ID']},{$pg})"><i class="iconfont icon-shanchu1"></i>删除</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                         <a href="{:U('Pay/hpadd')}?id={$data['ID']}&pg={$pg}" class="layui-btn layui-btn-small"><i class="iconfont icon-shanchu1"></i>编辑</a>
+                                     </td>
+                                 </tr>
+                             </volist>
+
+                         </tbody>
                      </table>
                       <div class="larry-table-page clearfix">
                          

@@ -51,7 +51,7 @@ class AppController extends Controller
 		}
 		$ad=M('mv_user')->add($data);
 		$id= M('mv_user')->getLastInsID();
-		$up['TOKEN']=md5($id.time());
+		$up['TOKEN']=$this->getToken($id);
 		$str='';
 		for($i=0;$i<6;$i++){
 			$str.=chr(rand(65,90));
@@ -59,7 +59,7 @@ class AppController extends Controller
 		$up['EXTENSION_CODE']='ID'.$id.$str;
 		M('mv_user')->where("ID=$id")->save($up);
 		$da['uid']=$id;
-		$da['token']=$token;
+		$da['token']=md5($id.time());
 		$this->returnjson('0','成功！',$da);
 	}
 	//注册密保问题
@@ -103,7 +103,7 @@ class AppController extends Controller
 				$ad['question']=1;
 			}
 			//修改token
-			$up['TOKEN']=md5($id.time());
+			$up['TOKEN']=$this->getToken($ad['ID']);
 			M('mv_user')->where("ID=$ad[ID]")->save($up);
 			$ad['TOKEN']=$up['TOKEN'];
 			$this->returnjson('0','成功！',$ad);
@@ -1196,6 +1196,15 @@ class AppController extends Controller
 		$this->returnjson('0','成功！',$da);
 		
 	}
+
+    /**
+     * 支付通道
+     */
+    function payChannel() {
+        $data = M('mage_hupijiao')->field('ID, HU_NAME, HU_TYPE, SORT_NUM')->where("IS_DEL=0")->order('SORT_NUM')->select();
+        $this->returnjson('0', '成功！', $data);
+    }
+
 	//购买
 	function  pay(){
 		$uid=$_GET['uid'];
@@ -1730,8 +1739,7 @@ function request_post($url = '', $post_data = array()) {
      * @param $networkRange
      * @return bool 属于返回true 不属于返回false
      */
-    function judge($ip, $networkRange)
-    {
+    function judge($ip, $networkRange) {
         if (!isset($ip) || !isset($networkRange)) {
             return false;
         }
@@ -1745,5 +1753,14 @@ function request_post($url = '', $post_data = array()) {
         } else {
             return false;
         }
+    }
+
+    /**
+     * 返回 token
+     * @param $uid
+     * @return string
+     */
+    function getToken($uid) {
+        return md5($uid . time());
     }
 }

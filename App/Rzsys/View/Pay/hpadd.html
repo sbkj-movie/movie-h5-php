@@ -25,6 +25,12 @@
 			<form class="layui-form col-lg-5" method="post" >
              <input type="hidden" name="id" id="upid" value="{$data['ID']?$data['ID']:''}">
             <input type="hidden" name="pg" id="pg" value="{$data['pg']?$data['pg']:'1'}">
+				<div class="layui-form-item">
+					<label class="layui-form-label">支付通道名称</label>
+					<div class="layui-input-block">
+						<input type="text" name="name" id="name" required class="layui-input " value="{$data['HU_NAME']?$data['HU_NAME']:''}"  >
+					</div>
+				</div>
            	    <div class="layui-form-item">
 					<label class="layui-form-label">商户号</label>
 					<div class="layui-input-block">  
@@ -60,6 +66,14 @@
 						<input type="text" name="money" id="money" required class="layui-input " value="{$data['MAX_MONEY']?$data['MAX_MONEY']:''}"  >
 					</div>
 				</div>
+
+				<div class="layui-form-item">
+					<label class="layui-form-label">展示排序</label>
+					<div class="layui-input-block">
+						<input type="text" name=" sortnum" id="sortnum" required class="layui-input " value="{$data['SORT_NUM']?$data['SORT_NUM']:'99'}"  >
+					</div>
+				</div>
+
 				<div class="layui-form-item">
 					<div class="layui-input-block">
 						<button class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>

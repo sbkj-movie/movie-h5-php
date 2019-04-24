@@ -22,7 +22,7 @@ class PayController extends AllowController
 			if($pay==2){
 				$pay=0;
 			}
-			$wheres.=" and IS_PAY=$pay";
+			$where.=" and IS_PAY=$pay";
 		}
 		if(!empty($date1)){
 			$ds=date('Y-m-d',strtotime($date1));
@@ -39,7 +39,7 @@ class PayController extends AllowController
 		}
 		
 	
-		$list = $User->where($where.$wheres)->order('ID desc')->page("$p,25")->select();
+		$list = $User->where($where)->order('ID desc')->page("$p,25")->select();
 		//echo $User->getlastsql();die();
 		if(!empty($list)){
 			foreach($list as $key=>$val){
@@ -135,7 +135,7 @@ class PayController extends AllowController
 				//修改用户金额
 				$money=$user['NO_PRICE']+$tixian['PF_PRICE'];
 				$fmoney=$user['IS_PRICE']-$tixian['PF_PRICE'];
-				M('mv_user')->where("ID=$uid")->save(['NO_PRICE'=>$money,'IS_PRICE'=>$fmoney]);
+				M('mv_user')->where("ID=$user[ID];")->save(['NO_PRICE'=>$money,'IS_PRICE'=>$fmoney]);
 			}
 			M('mv_put_forward')->where("ID=$id")->save(['PF_STATUS'=>$state,'PF_COMMENT'=>$desc]);
 			   $da['msg']="成功";
@@ -190,11 +190,13 @@ class PayController extends AllowController
 		//获取请求参数
 		$id=$_POST['id'];
 		$pg=$_POST['pg'];
+        $data['HU_NAME']=$_POST['name'];
 		$data['HU_APPID']=$_POST['appid'];
 		$data['HU_TYPE']=$_POST['type'];
 		$data['HU_APP_SECRET']=$_POST['appsecret'];
 		$data['HU_APP_GONG']=$_POST['appgong'];
 		$data['MAX_MONEY']=$_POST['money'];
+        $data['SORT_NUM']=$_POST['sortnum'];
 		if(isset($id)&&$id!=0){
 			$data['GMT_MODIFED']=date('Y-m-d H:i:s',time());
 			M('mage_hupijiao')->where("ID=$id")->save($data);
