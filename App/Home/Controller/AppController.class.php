@@ -351,13 +351,13 @@ class AppController extends Controller
 //			$cn=2;
 //		}
 
-        $file = @file_get_contents("china_ip.txt");
+        $file = @file_get_contents(dirname(__FILE__)."/china_ip.txt");
         $arr = explode("\n", $file);
 
         $cn = 2;
 
         for ($i = 0; $i < count($arr); $i++) {
-            if (judge($ip, $arr[$i])) {
+            if ($this->judge($ip, $arr[$i])) {
                 $cn = 1;
                 break;
             }
@@ -1732,6 +1732,9 @@ function request_post($url = '', $post_data = array()) {
      */
     function judge($ip, $networkRange)
     {
+        if (!isset($ip) || !isset($networkRange)) {
+            return false;
+        }
         $ip_temp = (double)(sprintf("%u", ip2long($ip)));
         $s = explode('/', $networkRange);
         $network_start = (double)(sprintf("%u", ip2long($s[0])));
