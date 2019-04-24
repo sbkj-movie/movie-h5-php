@@ -41,7 +41,7 @@
                                  <th>支付平台</th>
                                  <th>添加时间</th>
                                  <th>排列序号</th>
-                                 <th width="300px">操作</th>
+                                 <th width="170px">操作</th>
                              </tr>
                          </thead>
                          <tbody>
@@ -62,10 +62,13 @@
                                      <td>{$data['GMT_CREATE']}</td>
                                      <td>
                                          <if condition="$data['HU_TYPE']==1 ">
-                                             宝付
+                                             支付宝扫码
                                          </if>
                                          <if condition="$data['HU_TYPE']==2 ">
                                              青苹果
+                                         </if>
+                                         <if condition="$data['HU_TYPE']==3 ">
+                                             微信扫码
                                          </if>
                                      </td>
                                      <td>{$data['SORT_NUM']}</td>

@@ -25,6 +25,12 @@
 			<form class="layui-form col-lg-5" method="post" >
              <input type="hidden" name="id" id="upid" value="<?php echo ($data['ID']?$data['ID']:''); ?>">
             <input type="hidden" name="pg" id="pg" value="<?php echo ($data['pg']?$data['pg']:'1'); ?>">
+				<div class="layui-form-item">
+					<label class="layui-form-label">支付通道名称</label>
+					<div class="layui-input-block">
+						<input type="text" name="name" id="name" required class="layui-input " value="<?php echo ($data['HU_NAME']?$data['HU_NAME']:''); ?>"  >
+					</div>
+				</div>
            	    <div class="layui-form-item">
 					<label class="layui-form-label">商户号</label>
 					<div class="layui-input-block">  
@@ -35,9 +41,9 @@
 					<label class="layui-form-label">支付平台</label>
                      <input type="hidden" id="typeall" value="<?php echo ($data['HU_TYPE']?$data['HU_TYPE']:'1'); ?>">
 					<div class="layui-input-block">
-						<input type="radio" name="type" value="1" lay-filter="type"  title="宝付"  <?php if(isset($data['HU_TYPE'])&&$data['HU_TYPE']==1 ): ?>checked="checked"<?php endif; ?> <?php if(!isset($data['HU_TYPE'])): ?>checked="checked"<?php endif; ?>>
-                        <div class="layui-unselect layui-form-radio layui-form-radioed"><i class="layui-anim layui-icon"></i><span>宝付</span></div>
+						<input type="radio" name="type" value="1" lay-filter="type"  title="支付宝扫码"  <?php if(isset($data['HU_TYPE'])&&$data['HU_TYPE']==1 ): ?>checked="checked"<?php endif; ?> <?php if(!isset($data['HU_TYPE'])): ?>checked="checked"<?php endif; ?>><div class="layui-unselect layui-form-radio layui-form-radioed"><i class="layui-anim layui-icon"></i><span>支付宝扫码</span></div>
 						<input type="radio" name="type" value="2" lay-filter="type"  title="青苹果" <?php if(isset($data['HU_TYPE'])&&$data['HU_TYPE']==2): ?>checked="checked"<?php endif; ?>><div class="layui-unselect layui-form-radio"><i class="layui-anim layui-icon"></i><span>青苹果</span></div>
+						<input type="radio" name="type" value="3" lay-filter="type"  title="微信扫描"  <?php if(isset($data['HU_TYPE'])&&$data['HU_TYPE']==3 ): ?>checked="checked"<?php endif; ?> <?php if(!isset($data['HU_TYPE'])): ?>checked="checked"<?php endif; ?>><div class="layui-unselect layui-form-radio layui-form-radioed"><i class="layui-anim layui-icon"></i><span>微信扫码</span></div>
 					</div>
 				</div>
                  <div class="layui-form-item">
@@ -60,6 +66,14 @@
 						<input type="text" name="money" id="money" required class="layui-input " value="<?php echo ($data['MAX_MONEY']?$data['MAX_MONEY']:''); ?>"  >
 					</div>
 				</div>
+
+				<div class="layui-form-item">
+					<label class="layui-form-label">展示排序</label>
+					<div class="layui-input-block">
+						<input type="text" name=" sortnum" id="sortnum" required class="layui-input " value="<?php echo ($data['SORT_NUM']?$data['SORT_NUM']:'99'); ?>"  >
+					</div>
+				</div>
+
 				<div class="layui-form-item">
 					<div class="layui-input-block">
 						<button class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>

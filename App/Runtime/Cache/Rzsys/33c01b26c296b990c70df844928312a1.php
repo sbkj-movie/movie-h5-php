@@ -28,37 +28,50 @@
 		         <!-- 操作日志 -->
                 <div class="layui-tab-item layui-field-box layui-show">
                      <table class="layui-table table-hover" lay-even="" lay-skin="nob">
-                          <thead>
-                              <tr>
-                                  <th><input type="checkbox" id="selected-all"></th>
-                                  <th>ID</th>
-                                  <th>商户号</th>
-                                   <th>密钥/商家私钥公钥</th>
-                                    <th>平台公钥</th>
-                                   <th>最高限额</th>
-                                   <th>当前金额</th>
-                                   <th>支付平台</th>
-                                  <th>添加时间</th>
-								   <th width="300px">操作</th>
-                              </tr>
-                          </thead>
-                          <tbody>
-                           <?php if(is_array($ad)): $i = 0; $__LIST__ = $ad;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$data): $mod = ($i % 2 );++$i;?><tr>
-                                            <td><input type="checkbox"></td>
-                                            <td><?php echo ($data['ID']); ?></td>
-                                            <td><?php echo ($data['HU_APPID']); ?></td>
-                                          	<td><div style="width:300px; overflow:hidden"><?php echo ($data['HU_APP_SECRET']); ?></div></td>
-                                            <td><div style="width:300px; overflow:hidden"><?php echo ($data['HU_APP_GONG']); ?></div></td>
-                                            <td><?php echo ($data['MAX_MONEY']); ?></td>
-                                            <td><?php echo ($data['NOW_MONEY']); ?></td>
-                                             <td><?php echo ($data['GMT_CREATE']); ?></td>
-                                            <?php if($data['HU_TYPE']==1 ): ?><td>宝付</td><?php endif; ?>
-                                             <?php if($data['HU_TYPE']==2 ): ?><td>青苹果</td><?php endif; ?>
-                                        <td><a href="javascript:void(0)" class="layui-btn layui-btn-small" onclick="return delall(<?php echo ($data['ID']); ?>,<?php echo ($pg); ?>)"><i class="iconfont icon-shanchu1"></i>删除</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="<?php echo U('Pay/hpadd');?>?id=<?php echo ($data['ID']); ?>&pg=<?php echo ($pg); ?>" class="layui-btn layui-btn-small"><i class="iconfont icon-shanchu1"></i>编辑</a></td>
-                                         
-											</tr><?php endforeach; endif; else: echo "" ;endif; ?>
-                              
-                          </tbody>
+                         <thead>
+                             <tr>
+                                 <th><input type="checkbox" id="selected-all"></th>
+                                 <th>ID</th>
+                                 <th>支付通道名称</th>
+                                 <th>商户号</th>
+                                 <th>密钥/商家私钥公钥</th>
+                                 <th>平台公钥</th>
+                                 <th>最高限额</th>
+                                 <th>当前金额</th>
+                                 <th>支付平台</th>
+                                 <th>添加时间</th>
+                                 <th>排列序号</th>
+                                 <th width="170px">操作</th>
+                             </tr>
+                         </thead>
+                         <tbody>
+                             <?php if(is_array($ad)): $i = 0; $__LIST__ = $ad;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$data): $mod = ($i % 2 );++$i;?><tr>
+                                     <td><input type="checkbox"></td>
+                                     <td><?php echo ($data['ID']); ?></td>
+                                     <td><?php echo ($data['HU_NAME']); ?></td>
+                                     <td><?php echo ($data['HU_APPID']); ?></td>
+                                     <td>
+                                         <div style="width:300px; overflow:hidden"><?php echo ($data['HU_APP_SECRET']); ?></div>
+                                     </td>
+                                     <td>
+                                         <div style="width:300px; overflow:hidden"><?php echo ($data['HU_APP_GONG']); ?></div>
+                                     </td>
+                                     <td><?php echo ($data['MAX_MONEY']); ?></td>
+                                     <td><?php echo ($data['NOW_MONEY']); ?></td>
+                                     <td><?php echo ($data['GMT_CREATE']); ?></td>
+                                     <td>
+                                         <?php if($data['HU_TYPE']==1 ): ?>支付宝扫码<?php endif; ?>
+                                         <?php if($data['HU_TYPE']==2 ): ?>青苹果<?php endif; ?>
+                                         <?php if($data['HU_TYPE']==3 ): ?>微信扫码<?php endif; ?>
+                                     </td>
+                                     <td><?php echo ($data['SORT_NUM']); ?></td>
+                                     <td>
+                                         <a href="javascript:void(0)" class="layui-btn layui-btn-small" onclick="return delall(<?php echo ($data['ID']); ?>,<?php echo ($pg); ?>)"><i class="iconfont icon-shanchu1"></i>删除</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                         <a href="<?php echo U('Pay/hpadd');?>?id=<?php echo ($data['ID']); ?>&pg=<?php echo ($pg); ?>" class="layui-btn layui-btn-small"><i class="iconfont icon-shanchu1"></i>编辑</a>
+                                     </td>
+                                 </tr><?php endforeach; endif; else: echo "" ;endif; ?>
+
+                         </tbody>
                      </table>
                       <div class="larry-table-page clearfix">
                          

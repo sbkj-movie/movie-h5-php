@@ -1205,170 +1205,172 @@ class AppController extends Controller
         $this->returnjson('0', '成功！', $data);
     }
 
-	//购买
-	function  pay(){
-		$uid=$_GET['uid'];
-		$token=$_GET['token'];
-		if(empty($uid)||empty($token)){
-			//$this->returnjson('1','用户参数错误！','');
-		}
-		$this->checktoken($token,$uid);
-		//$WxData = new \Org\Common\XH_Payment_Api();
-		$type=$_GET['type'];//1：青苹果支付，2：宝付支付
-		
-		$title='VIP会员购买';
-		if(empty($type)){
-			$this->returnjson('1','支付方式和支付金额不能为空！','');
-		}
-		
-		$tid=$_GET['tid'];//套餐id
-		$domain=$_GET['domain'];//域名
-		if(empty($tid)){
-			$this->returnjson('1','购买套餐不能为空！','');
-		}
-		
-		//套餐
-		$movies=M('mage_shop')->field('ID,SP_NAME,SP_PRICE,SP_END_TIME')->where("IS_DEL=0 and ID=$tid")->order('ID desc')->find();
-		$money=$movies['SP_PRICE'];
-		//支付虎皮椒账号
-		if($type==1){
-			$type=2;
-			if($money<10){
-				$this->returnjson('1','最小金额为10元！','');
-			}
-		}else{
-			$type=1;
-		}
-		
-		$hupijiao=M('mage_hupijiao')->where("IS_DEL=0 and `MAX_MONEY`>(`NOW_MONEY`+$money) and HU_TYPE=$type")->order('rand()')->find();
-		
-		if(empty($hupijiao)){
-			$this->returnjson('1','暂时不能支付，请联系管理员！','');
-		}
-		
-		//是否有效套餐
-		$stime=date('Y-m-d H:i:s',time());
-		$istaocan=M('mv_shop_history')->where("SH_USERID=$uid and IS_PAY=1 and SH_END>'$stime'")->order('ID desc')->find();
-		//添加订单
-		$order['SH_USERID']=$uid;
-		$order['SHID']=$tid;
-		$order['HPID']=$hupijiao['ID'];
-		$order['SH_NAME']=$movies['SP_NAME'];
-		$order['SH_PRICE']=$movies['SP_PRICE'];
-		$order['SH_PAY']=$money;
-		if(!empty($istaocan)){
-			$order['SH_END']=date('Y-m-d H:i:s',(strtotime($istaocan['SH_END'])+$movies['SP_END_TIME']*24*3600));
-		}else{
-			$order['SH_END']=date('Y-m-d H:i:s',(time()+$movies['SP_END_TIME']*24*3600));
-		}
-		
-		$order['GMT_CREATE']=date('Y-m-d H:i:s',time());
+    //购买
+    function pay() {
+        $uid = $_GET['uid'];
+        $token = $_GET['token'];
+        if (empty($uid) || empty($token)) {
+            //$this->returnjson('1','用户参数错误！','');
+        }
+        $this->checktoken($token, $uid);
+        //$WxData = new \Org\Common\XH_Payment_Api();
+        $type = $_GET['type'];//1：青苹果支付，2：宝付支付
 
-		$ad=M('mv_shop_history')->add($order);
-		$oid= M('mv_shop_history')->getLastInsID();
-		
-		if(!empty($oid)){
-			$up['SH_ORDER']=$uid.'-'.$oid.'-'.time();
-			M('mv_shop_history')->where("ID=$oid")->save($up);
-			
-		
-			$trade_order_id = $up['SH_ORDER'];//商户网站内部ID，此处time()是演示数据
-			$appid              = $hupijiao['HU_APPID'];//测试账户，
-			$appsecret          = $hupijiao['HU_APP_SECRET'];//测试账户，
-			$my_plugin_id ='my-plugins-id';
-			if($_GET['f']&&$_GET['f']==1){
-				$return_url= $domain.'/users/appPaySuccess.html';
-				$callback_url=$domain.'/users/appPayerr.html';
-			}else{
-				$return_url= $domain.'/users/webPaySuccess.html';
-				$callback_url=$domain.'/users/webPayerr.html';
-			}
-			
-			if($type=='1'){
-				
-				$type=2;
-				$paytype='21';
-				$data = [
-					"orderAmount"=>$money, //金额
-					"orderId"=>$trade_order_id,//订单号
-					"merchant"=>$appid, //商户号
-					'payMethod'=>$type,//支付方式可选值，1：微信支付，2：支付宝支付
-					"payType"=>$paytype,//payType 11微信扫码支付，21支付宝扫码支付，22支付宝PC扫码，23支付宝手机wap
-					"signType"=>"MD5",
-					"version"=>"1.0",
-					"outcome"=>"no",
-				];
-				$key = $appsecret; //key
-				ksort($data);//函数对关联数组按照键名进行升序排序。
-				$postString = http_build_query($data);//返回一个 URL 编码后的字符串。
-				
-				$signMyself = strtoupper(md5($postString.$key));
-				$data["sign"] = $signMyself;
-				$data['productName'] = '会员充值';
-				$data['productDesc'] = '订单'.$trade_order_id;
-				$data['createTime'] = time();
-				$data['returnUrl'] = $return_url;
-				$data['notifyUrl'] = 'http://'.$_SERVER['SERVER_NAME'].'/index.php/app/notify.html';
-				$postString = http_build_query($data);
-				$url = "http://api.hypay.xyz/index.php/Api/Index/createOrder?".$postString;
-				$pay_url =$url;
-				$this->returnjson('4','成功！',$pay_url);
-			}
-			if($type==2){
-				
-						$user=M('mv_user')->where("ID='{$uid}'")->find();
-						
-						 $param_arr = array(
-							'outTradeNo' =>$trade_order_id,  // 每个outTradeNo只能用一次，否则会因为订单重复而失败
-							'orderAmountRmb' => $money,
-							'merchantName' => $appid,
-							'vipName' => $user['USERNAME'],
-							'subject' => 'VIP会员购买',
-							'body' => 'VIP会员购买',
-							'notifyUrl' => 'http://'.$_SERVER['SERVER_NAME'].'/index.php/app/receive_message.html',//具体的回调地址
-							'signType' => 'RSA'
-						   
-						);
-						//var_dump($param_arr);die();
-						ksort($param_arr);
-						$str_to_sign = $this->make_json_join_str($param_arr);
-						
-						$str_signed = $this->sign($str_to_sign, $appsecret);
-						$param_arr['sign'] = $str_signed;
-						$pre_pay_url ="http://api.qapple.io/v2/api/merchant/merchantcenter/pay/prePay";
-						$response_str = $this->request_post($pre_pay_url, $param_arr);
-						$response = json_decode($response_str, true);	
-						if ( $response['code'] != 200 ){
-							//echo 'request failed, server returns: '.$response_str;die();
-							$this->returnjson('1','失败！','request failed, server returns: '.$response_str);
-						} else {
-							$request_data = $response['data'];
-							$request_signed = $request_data['sign'];
-							unset($request_data['sign']);
-							ksort($request_data);
-							$request_unsigned = $this->make_json_join_str($request_data);
-					
-							$check_sign = $this->do_check($request_unsigned, $request_signed, $hupijiao['HU_APP_GONG']);  // 这里使用response的数据
-							if ($check_sign){
-								$pay_url=$request_data['returnUrl'];
-								$this->returnjson('4','成功！',$pay_url);
-							} else{
-								$this->returnjson('1','验签失败！');
-							}
-						}
-					
-			}
-			
-			
-			
-			
-		}else{
-			
-			$this->returnjson('1','订单错误，请重新提交！','');
-		}
-		
-		
-	}
+//		$title='VIP会员购买';
+        if (empty($type)) {
+            $this->returnjson('1', '支付方式和支付金额不能为空！', '');
+        }
+
+        $tid = $_GET['tid'];//套餐id
+        $domain = $_GET['domain'];//域名
+        if (empty($tid)) {
+            $this->returnjson('1', '购买套餐不能为空！', '');
+        }
+
+        //套餐
+        $movies = M('mage_shop')->field('ID,SP_NAME,SP_PRICE,SP_END_TIME')->where("IS_DEL=0 and ID=$tid")->order('ID desc')->find();
+        $money = $movies['SP_PRICE'];
+        //支付虎皮椒账号
+        if ($type == 1) {
+            $type = 2;
+            if ($money < 10) {
+                $this->returnjson('1', '最小金额为10元！', '');
+            }
+        } else {
+            $type = 1;
+        }
+
+        $hupijiao = M('mage_hupijiao')->where("IS_DEL=0 and `MAX_MONEY`>(`NOW_MONEY`+$money) and HU_TYPE=$type")->order('rand()')->find();
+
+        if (empty($hupijiao)) {
+            $this->returnjson('1', '暂时不能支付，请联系管理员！', '');
+        }
+
+        //是否有效套餐
+        $stime = date('Y-m-d H:i:s', time());
+        $istaocan = M('mv_shop_history')->where("SH_USERID=$uid and IS_PAY=1 and SH_END>'$stime'")->order('ID desc')->find();
+        //添加订单
+        $order['SH_USERID'] = $uid;
+        $order['SHID'] = $tid;
+        $order['HPID'] = $hupijiao['ID'];
+        $order['SH_NAME'] = $movies['SP_NAME'];
+        $order['SH_PRICE'] = $movies['SP_PRICE'];
+        $order['SH_PAY'] = $money;
+        if (!empty($istaocan)) {
+            $order['SH_END'] = date('Y-m-d H:i:s', (strtotime($istaocan['SH_END']) + $movies['SP_END_TIME'] * 24 * 3600));
+        } else {
+            $order['SH_END'] = date('Y-m-d H:i:s', (time() + $movies['SP_END_TIME'] * 24 * 3600));
+        }
+
+        $order['GMT_CREATE'] = date('Y-m-d H:i:s', time());
+
+        $ad = M('mv_shop_history')->add($order);
+        $oid = M('mv_shop_history')->getLastInsID();
+
+        if (!empty($oid)) {
+            $up['SH_ORDER'] = $uid . '-' . $oid . '-' . time();
+            M('mv_shop_history')->where("ID=$oid")->save($up);
+
+
+            $trade_order_id = $up['SH_ORDER'];//商户网站内部ID，此处time()是演示数据
+            $appid = $hupijiao['HU_APPID'];//测试账户，
+            $appsecret = $hupijiao['HU_APP_SECRET'];//测试账户，
+//            $my_plugin_id = 'my-plugins-id';
+            if ($_GET['f'] && $_GET['f'] == 1) {
+                $return_url = $domain . '/users/appPaySuccess.html';
+//				$callback_url=$domain.'/users/appPayerr.html';
+            } else {
+                $return_url = $domain . '/users/webPaySuccess.html';
+//				$callback_url=$domain.'/users/webPayerr.html';
+            }
+
+            if ($type == 1 || $type == 3) {
+
+                $payMethod = 2;
+                $paytype = '21';
+
+                if ($type == 3) {
+                    $payMethod = 1;
+                    $paytype = 11;
+                }
+
+                $data = [
+                    "orderAmount" => $money, //金额
+                    "orderId" => $trade_order_id,//订单号
+                    "merchant" => $appid, //商户号
+                    "payMethod" => $payMethod,//支付方式可选值，1：微信支付，2：支付宝支付
+                    "payType" => $paytype,//payType 11微信扫码支付，21支付宝扫码支付，22支付宝PC扫码，23支付宝手机wap
+                    "signType" => "MD5",
+                    "version" => "1.0",
+                    "outcome" => "no",
+                ];
+                $key = $appsecret; //key
+                ksort($data);//函数对关联数组按照键名进行升序排序。
+                $postString = http_build_query($data);//返回一个 URL 编码后的字符串。
+
+                $signMyself = strtoupper(md5($postString . $key));
+                $data["sign"] = $signMyself;
+                $data['productName'] = '会员充值';
+                $data['productDesc'] = '订单' . $trade_order_id;
+                $data['createTime'] = time();
+                $data['returnUrl'] = $return_url;
+                $data['notifyUrl'] = 'http://' . $_SERVER['SERVER_NAME'] . '/index.php/app/notify.html';
+                $postString = http_build_query($data);
+                $url = "http://api.hypay.xyz/index.php/Api/Index/createOrder?" . $postString;
+                $pay_url = $url;
+                $this->returnjson('4', '成功！', $pay_url);
+            } elseif ($type == 2) {
+
+                $user = M('mv_user')->where("ID='{$uid}'")->find();
+
+                $param_arr = array(
+                    'outTradeNo' => $trade_order_id,  // 每个outTradeNo只能用一次，否则会因为订单重复而失败
+                    'orderAmountRmb' => $money,
+                    'merchantName' => $appid,
+                    'vipName' => $user['USERNAME'],
+                    'subject' => 'VIP会员购买',
+                    'body' => 'VIP会员购买',
+                    'notifyUrl' => 'http://' . $_SERVER['SERVER_NAME'] . '/index.php/app/receive_message.html',//具体的回调地址
+                    'signType' => 'RSA'
+
+                );
+                //var_dump($param_arr);die();
+                ksort($param_arr);
+                $str_to_sign = $this->make_json_join_str($param_arr);
+
+                $str_signed = $this->sign($str_to_sign, $appsecret);
+                $param_arr['sign'] = $str_signed;
+                $pre_pay_url = "http://api.qapple.io/v2/api/merchant/merchantcenter/pay/prePay";
+                $response_str = $this->request_post($pre_pay_url, $param_arr);
+                $response = json_decode($response_str, true);
+                if ($response['code'] != 200) {
+                    //echo 'request failed, server returns: '.$response_str;die();
+                    $this->returnjson('1', '失败！', 'request failed, server returns: ' . $response_str);
+                } else {
+                    $request_data = $response['data'];
+                    $request_signed = $request_data['sign'];
+                    unset($request_data['sign']);
+                    ksort($request_data);
+                    $request_unsigned = $this->make_json_join_str($request_data);
+
+                    $check_sign = $this->do_check($request_unsigned, $request_signed, $hupijiao['HU_APP_GONG']);  // 这里使用response的数据
+                    if ($check_sign) {
+                        $pay_url = $request_data['returnUrl'];
+                        $this->returnjson('4', '成功！', $pay_url);
+                    } else {
+                        $this->returnjson('1', '验签失败！');
+                    }
+                }
+            } else {
+                $this->returnjson('1', '订单错误，请重新提交！', '');
+            }
+
+        } else {
+            $this->returnjson('1', '订单错误，请重新提交！', '');
+        }
+
+    }
+
 	//青苹果支付通知
 	function receive_message() {
         //获取request body里面的内容
