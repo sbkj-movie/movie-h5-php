@@ -1201,7 +1201,7 @@ class AppController extends Controller
      * 支付通道
      */
     function payChannel() {
-        $data = M('mage_hupijiao')->field('ID, HU_NAME, HU_TYPE, SORT_NUM')->where("IS_DEL=0")->order('SORT_NUM')->select();
+        $data = M('mage_hupijiao')->field('ID as id, HU_NAME as name, HU_TYPE as type, SORT_NUM as sort')->where("IS_DEL=0")->order('SORT_NUM')->select();
         $this->returnjson('0', '成功！', $data);
     }
 
@@ -1230,14 +1230,9 @@ class AppController extends Controller
         //套餐
         $movies = M('mage_shop')->field('ID,SP_NAME,SP_PRICE,SP_END_TIME')->where("IS_DEL=0 and ID=$tid")->order('ID desc')->find();
         $money = $movies['SP_PRICE'];
-        //支付虎皮椒账号
-        if ($type == 1) {
-            $type = 2;
-            if ($money < 10) {
-                $this->returnjson('1', '最小金额为10元！', '');
-            }
-        } else {
-            $type = 1;
+
+        if ($money < 10) {
+            $this->returnjson('1', '最小金额为10元！', '');
         }
 
         $hupijiao = M('mage_hupijiao')->where("IS_DEL=0 and `MAX_MONEY`>(`NOW_MONEY`+$money) and HU_TYPE=$type")->order('rand()')->find();
