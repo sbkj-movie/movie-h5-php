@@ -58,10 +58,11 @@
       <div class="btn" v-on:click="goumai">立即购买</div>
           <div id="popover" class="mui-popover">
 			<div class="mui-popover-arrow"></div>
-			<div class="popvcont">
+			<div id="payChannelHtml" class="popvcont">
                 <span id="quxiao" class="mui-icon mui-icon-close" @click="quxiao()" style="display: flex;flex-direction: row-reverse;font-size: 30px"></span>
-                <div class="box" :class="{acts:s==1}" @click="act(1)">支付通道一</div>
-                <div class="box" :class="{acts:s==2}" @click="act(2)">支付通道二</div>
+                <span v-for="item in payChannelList">
+                  <div class="box" :class="{acts:s==item.type}" @click="act(item.type)">{{item.name}}</div>
+                </span>
                 <div class="btn" @click="buy">确定</div>
             </div>
 		</div>
@@ -87,10 +88,23 @@
             tcid: 0,
             hyid: 0,
             token:0,
-            listData:''
+            listData:'',
+            payChannelList:''
         },
         created: function () {
-            this.getInfo()
+            this.getInfo();
+            var that = this;
+            axget('/payChannel', {}).then((res) => {
+                  if (res.code == "0") {
+                      if(res.data){
+                        that.payChannelList = res.data;
+                        document.getElementById("popover").style.height = "auto";
+                      }
+                  } else {
+                      mui.toast(res.msg);
+                  }
+                  this.loading = false;
+              })
         },
         methods: {
             getInfo() {
