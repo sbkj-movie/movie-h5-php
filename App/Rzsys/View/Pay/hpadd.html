@@ -87,38 +87,49 @@
 <script type="text/javascript" src="/Public/admin/js/jquery-1.9.0.min.js"></script>
 <script type="text/javascript" src="/Public/admin/common/layui/layui.js"></script>
 <script type="text/javascript">
-	layui.use(['form','upload'],function(){
-         var form = layui.form();
-         //自定义验证规则 
-		  var type=$('#typeall').val(); 
-		  form.on('radio(type)', function (data) { 
-		 		if(data.value==2){
-					type=2;
-					$('#gongyao').show();
-				}else{
-					type=1;
-					$('#gongyao').hide();
-				}
-		   });
-		form.on('submit(demo1)', function(data){  
-		
-				$.ajax({
-				 type: "post",
-				 url: "{:U('pay/hpdoadd')}",
-				 data: {appid:$('#appid').val(),type:type,appgong:$('#appgong').val(),appsecret:$('#appsecret').val(),money:$('#money').val(),id:$('#upid').val(),pg:$('#pg').val(),},
-				 dataType: "json",
-				 async:false,
-				 success: function(data){
+	layui.use(['form', 'upload'], function () {
+		var form = layui.form();
+		//自定义验证规则
+		var type = $('#typeall').val();
+		form.on('radio(type)', function (data) {
+			if (data.value == 2) {
+				type = 2;
+				$('#gongyao').show();
+			} else {
+				type = 1;
+				$('#gongyao').hide();
+			}
+			type = data.value;
+		});
+		form.on('submit(demo1)', function (data) {
+
+			$.ajax({
+				type: "post",
+				url: "{:U('pay/hpdoadd')}",
+				data: {
+					name: $('#name').val(),
+					appid: $('#appid').val(),
+					type: type,
+					appgong: $('#appgong').val(),
+					appsecret: $('#appsecret').val(),
+					money: $('#money').val(),
+					id: $('#upid').val(),
+					pg: $('#pg').val(),
+					sortnum: $('#sortnum').val(),
+				},
+				dataType: "json",
+				async: false,
+				success: function (data) {
 					layer.msg(data.msg);
-						setTimeout(function() {
-							window.location =data.href;
-						}, 1200);
-					
-				 }
-							
-			 });
-				 return false;  
-		  }); 
+					setTimeout(function () {
+						window.location = data.href;
+					}, 1200);
+
+				}
+
+			});
+			return false;
+		});
 	});
 </script>
 </body>
