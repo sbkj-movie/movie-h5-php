@@ -577,12 +577,30 @@
             },
             updated() {
                 var urls = this.videoInfo.url;
-                // var a=urls.indexOf('.m3u8');
+                // let xhr = new XMLHttpRequest()
+                // xhr.open('GET', urls, true)
+                // xhr.responseType = 'blob'
+                // xhr.onload = function (e) {
+                //     if (this.status === 200) {
+                //         // 获取blob对象
+                //         let blob = this.response
+                //         console.log(blob)
+                //         // 获取blob对象地址，并把值赋给容器
+                //         $("#video-s").attr("src", URL.createObjectURL(blob));
+                //     }
+                // }
+                // xhr.send()
+                // setTimeout(function () {
+                //     var myPlayer = videojs('video');
+                //     videojs("video").ready(function () {
+                //         var myPlayer = this;
+                //         myPlayer.play();
+                //     });
+                // }, 1000);
+
+
                 if (true) {
-                    // var myPlayer = videojs('video');
-                    //      videojs("video").ready(function () {
-                    //        var myPlayer = this;
-                    //        myPlayer.play();
+
                     var video = document.querySelector('video');
                     var assetURL = urls;
                     var mimeCodec = 'video/mp4; codecs="avc1.42E01E, mp4a.40.2"';
@@ -600,9 +618,9 @@
                         var sourceBuffer = mediaSource.addSourceBuffer(mimeCodec);
                         fetchAB(assetURL, function (buf) {
                             console.log(buf);
-                            
+
                             sourceBuffer.addEventListener('updateend', function (_) {
-                                if(this.readyState!='open')return;
+                                if (mediaSource.readyState != 'open') return;
                                 mediaSource.endOfStream();
                                 if (video.networkState == 2) {
                                     var times = setInterval(function () {
@@ -616,7 +634,7 @@
                                     }, 1000)
                                 } else {
                                     video.play();
-                                }2
+                                }
                             });
                             sourceBuffer.appendBuffer(buf);
                         })

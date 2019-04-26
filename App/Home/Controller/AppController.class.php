@@ -551,7 +551,7 @@ class AppController extends Controller
 		$this->returnjson('0','成功！',$data);
 	}
 	function signurl($yurl){
-		
+		return $yurl;
 //		$yurl=$urlw;
 		$urlw=parse_url($yurl);
 		$file=substr($urlw['path'],1,strlen($urlw['path']));
