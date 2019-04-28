@@ -1,445 +1,613 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
+
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,initial-scale=1.0,user-scalable=no" />
-<meta name="apple-mobile-web-app-capable" content="yes" />
-<meta name="apple-mobile-web-app-status-bar-style" content="black" />
-<link rel="stylesheet" href="/css/mui.min.css">
-<link rel="stylesheet" href="/css/style.css">
-<link rel="stylesheet" href="/css/icons-extra.css">
-<link rel="stylesheet" type="text/css" href="/css/iconfont.css" />
-  <script src="/js/phone.js"></script>
-<script type="text/javascript" src="/ckplayer/ckplayer.js" charset="UTF-8"></script>
-<title>视频详情</title>
-<style type="text/css">
-.list{display:flex;justify-content:space-between;flex-wrap:wrap;}
- .video{width: 100%; height:250px;}
- .video-info-box{margin:10px 3%;color:#A0A0A0;font-size:15px;position:relative;}
- .video-info-box .v-title{font-size:18px;color:#000;}
- .video-info-box .v-type{display:flex;justify-content:space-between;margin-top:5px;}
- .video-info-box .v-summary{margin-top:5px;height:40px;overflow:hidden;}
-  .sum-btn{width:100%;color:#333;font-size:15px;text-align:center;padding:5px;}
-  .zhankai{display:block;}
-  .shouqi{display:none;}
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport"
+        content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,initial-scale=1.0,user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <link rel="stylesheet" href="/css/mui.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/icons-extra.css">
+    <link rel="stylesheet" href="/css/video-js.min.css">
 
-.shikan{width:100%;height:45px;margin:0px;padding:0px;line-height:45px;text-align: center;color: #fff;background-color:#ff6a00;font-size:12px;display:none;}
-.s{display:block;}
-.mui-popover{height:200px;position:fixed; top:40%;width:80%;left:10%;background:#fff;}
-.mui-popover .mui-popover-arrow:after {width: 0px;}
-.mui-popover .popvcont{padding:10px;}
 
-.txtare{height:80px;width:100%;padding:5px;border:0px;background:#f6f6f6;font-size:15px;color:#333;margin-top:10px;margin-bottom:0px;}
-.num-desc{display:flex;justify-content:flex-end;color:#A0A0A0;font-size:12px;}
-.btnpl{width:50%;margin:0 auto;text-align:center;font-size:15px;color:#fff;background:#333;padding:5px;border-radius:20px;border:0px;left:25%;}
-.mgtop90{margin-top:90px;}
-.mgtop50{margin-top:50px;}
-</style>
+
+    <link rel="stylesheet" type="text/css" href="/css/iconfont.css" />
+    <script src="/js/phone.js"></script>
+    <script type="text/javascript" src="/ckplayer/ckplayer.js" charset="UTF-8"></script>
+    <title>视频详情</title>
+    <style type="text/css">
+        .list {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .video {
+            width: 100%;
+            height: 250px;
+        }
+
+        .video-info-box {
+            margin: 10px 3%;
+            color: #A0A0A0;
+            font-size: 15px;
+            position: relative;
+        }
+
+        .video-info-box .v-title {
+            font-size: 18px;
+            color: #000;
+        }
+
+        .video-info-box .v-type {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 5px;
+        }
+
+        .video-info-box .v-summary {
+            margin-top: 5px;
+            height: 40px;
+            overflow: hidden;
+        }
+
+        .sum-btn {
+            width: 100%;
+            color: #333;
+            font-size: 15px;
+            text-align: center;
+            padding: 5px;
+        }
+
+        .zhankai {
+            display: block;
+        }
+
+        .shouqi {
+            display: none;
+        }
+
+        .shikan {
+            width: 100%;
+            height: 45px;
+            margin: 0px;
+            padding: 0px;
+            line-height: 45px;
+            text-align: center;
+            color: #fff;
+            background-color: #ff6a00;
+            font-size: 12px;
+            display: none;
+        }
+
+        .s {
+            display: block;
+        }
+
+        .mui-popover {
+            height: 200px;
+            position: fixed;
+            top: 40%;
+            width: 80%;
+            left: 10%;
+            background: #fff;
+        }
+
+        .mui-popover .mui-popover-arrow:after {
+            width: 0px;
+        }
+
+        .mui-popover .popvcont {
+            padding: 10px;
+        }
+
+        .txtare {
+            height: 80px;
+            width: 100%;
+            padding: 5px;
+            border: 0px;
+            background: #f6f6f6;
+            font-size: 15px;
+            color: #333;
+            margin-top: 10px;
+            margin-bottom: 0px;
+        }
+
+        .num-desc {
+            display: flex;
+            justify-content: flex-end;
+            color: #A0A0A0;
+            font-size: 12px;
+        }
+
+        .btnpl {
+            width: 50%;
+            margin: 0 auto;
+            text-align: center;
+            font-size: 15px;
+            color: #fff;
+            background: #333;
+            padding: 5px;
+            border-radius: 20px;
+            border: 0px;
+            left: 25%;
+        }
+
+        .mgtop90 {
+            margin-top: 90px;
+        }
+
+        .mgtop50 {
+            margin-top: 50px;
+        }
+    </style>
 </head>
-<body>
- <div id="app" style="margin-bottom: 100px;">
-    <div v-if="loading" class="loading">
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-     </div>
-    <div v-else>
-  <div class="down" :class="{'downs':app}">
-     <div class="d-logo"><span class="mui-icon mui-icon-close" v-on:click="closeAPP"></span>&nbsp;<img src="/images/logo.png" style="width:100px;" /></div>
-     <div class="d-app"><a href="/download.html">下载APP</a></div>
-  </div>
-  <div class="header" :class="{'headers':app}">
-          <div class="hnav">
-           <div class="logo-box">
-               <a :href="'/users/qiehuanxianlu.html'">地址列表</a>
-           </div>
-           <ul class="menu">
-               <li><a href="/index.html">精选</a></li>
-               <li><a href="/shipin.html">视频</a></li>
-               <li><a href="/yingpian.html">影片</a></li>
-               <li><a href="/manhua.html">漫画</a></li>
-           </ul>
-           <div class="search"><a :href="'/search.html'"><span class="mui-icon mui-icon-search"></span></a></div>
-          </div>
-   </div>
-  <div class="mgtop90" :class="{'mgtop50':app}">
-       <div class="shikan" :class="{s:isShikan==1}">{{shikantxt}}</div>
-  </div>
-  <div id="video" class="video"></div>
-  <div class="video-info-box">
-      <div class="v-title">{{videoInfo.MV_NAME}}</div>
-      <div class="v-type"><span>{{videoInfo.MV_CATEGORY}}</span><span>简介</span></div>
-      <div class="v-summary">
-          {{videoInfo.MV_CONTENT}}
-      </div>
-      <div class="sum-btn zhankai" v-on:click="zhankai" v-if="videoInfo.MV_CONTENT.length>30">展开全文</div>
-      <div class="sum-btn shouqi" v-on:click="shouqi">收起</div>
-  </div>
-  <div class="share-box">
-      <div class="s_cm"><a :href="'/shipin_pl.html?id='+sp_id"><span class="iconfont icon-yuanfucengpinglun"></span>{{comment}}热评</a></div>
-      <div class="s_share"><span class="iconfont icon-shoucang" v-if="isShoucang==0" v-on:click="shoucang"></span><span class="iconfont icon-wodeshoucang" v-else style="color:#d41717;" v-on:click="shoucang"></span><span class="iconfont icon-fenxiang2" style="margin-left:10px;" v-on:click="fnfenxiang"></span></div>
-  </div>
-    <div id="fxpopover" class="mui-popover fx">
-		<div class="mui-popover-arrow"></div>
-		 <div class="fx-popvcont">
-             <div class="fx-title">分享</div>
-             <div id="copyUrl" class="fx-cont" data-clipboard-action="copy" data-clipboard-text="">
-                 <div class="url-icon"><img src="/images/copyurl.png" /></div>
-                 <div class="i-tit">复制链接</div>
-             </div>
-         </div>
-	 </div>
-  <!--推荐-->
-  <div class="red-box">
-      <div class="r-title">相关推荐</div>
-      <div class="list">
-           <div class="item" v-for="(item,index) of tuijian" :key="item.ID">
-               <a :href="'shipin_show.html?id='+item.ID" title="item.MV_NAME">
-                <img :src="item.MV_PHOTO_URL" class="img"/>
-                <div class="bd"><span class="titles">{{item.MV_NAME}}</span></div>
-                </a>
-            </div>
-       </div>
-  </div>
-  <!--评论-->
-  <div class="comment-box">
-      <div class="c-title">全部评论({{comment}})<span v-on:click="xiepinlun" style="float:right;color:#333;">写评论</span></div>
-      <div id="popover" class="mui-popover">
-			<div class="mui-popover-arrow"></div>
-			<div class="popvcont">
-               <div class="star" v-if="stars===1">
-               <i class="iconfont icon-wodeshoucang pf" @click="pf(1)"></i><i class="iconfont icon-wodeshoucang" @click="pf(2)"></i><i class="iconfont icon-wodeshoucang" @click="pf(3)"></i><i class="iconfont icon-wodeshoucang" @click="pf(4)"></i><i class="iconfont icon-wodeshoucang" @click="pf(5)"></i></div>
-            <div class="star" v-else-if="stars==2">
-               <i class="iconfont icon-wodeshoucang pf" @click="pf(1)"></i><i class="iconfont icon-wodeshoucang pf" @click="pf(2)"></i><i class="iconfont icon-wodeshoucang" @click="pf(3)"></i><i class="iconfont icon-wodeshoucang" @click="pf(4)"></i><i class="iconfont icon-wodeshoucang" @click="pf(5)"></i></div>
-            <div class="star" v-else-if="stars===3">
-               <i class="iconfont icon-wodeshoucang pf" @click="pf(1)"></i><i class="iconfont icon-wodeshoucang pf" @click="pf(2)"></i><i class="iconfont icon-wodeshoucang pf" @click="pf(3)"></i><i class="iconfont icon-wodeshoucang" @click="pf(4)"></i><i class="iconfont icon-wodeshoucang" @click="pf(5)"></i></div>
-             <div class="star" v-else-if="stars==4">
-               <i class="iconfont icon-wodeshoucang pf" @click="pf(1)"></i><i class="iconfont icon-wodeshoucang pf" @click="pf(2)"></i><i class="iconfont icon-wodeshoucang pf" @click="pf(3)"></i><i class="iconfont icon-wodeshoucang pf" @click="pf(4)"></i><i class="iconfont icon-wodeshoucang" @click="pf(5)"></i></div>
-            <div class="star" v-else-if="stars==5">
-               <i class="iconfont icon-wodeshoucang pf" @click="pf(1)"></i><i class="iconfont icon-wodeshoucang pf" @click="pf(2)"></i><i class="iconfont icon-wodeshoucang pf" @click="pf(3)"></i><i class="iconfont icon-wodeshoucang pf" @click="pf(4)"></i><i class="iconfont icon-wodeshoucang pf" @click="pf(5)"></i></div>
-                <textarea id="txtpinglun" name="txtpinglun" v-bind:maxlength="100" @input="descArea" v-model="introduct"  class="txtare" placeholder="在这里可以发布自己的评论"></textarea>
-                <span class="num-desc">{{Surplus}}/100</span>
-                <button class="btnpl" @click="tijiaopinglun" :disabled="isDisabled">提交评论</button>
-            </div>
-		</div>
-      <div class="comment-item" v-for="(item,index) of commentList" :key="index">
-          <div class="hd">
-            <div class="u-info">
-                <div class="headpic"><img :src="siteadd+item.CM_HEADIMG"/></div>
-                <div class="nicheng"><div class="name">{{item.CM_USERNAME}}</div><div class="time">{{item.GMT_CREATE}}</div></div>
-            </div>
-            <div class="star" v-if="item.CM_STAR==1">
-               <i class="iconfont icon-wodeshoucang pf"></i><i class="iconfont icon-wodeshoucang"></i><i class="iconfont icon-wodeshoucang"></i><i class="iconfont icon-wodeshoucang"></i><i class="iconfont icon-wodeshoucang"></i></div>
-            <div class="star" v-else-if="item.CM_STAR==2">
-               <i class="iconfont icon-wodeshoucang pf"></i><i class="iconfont icon-wodeshoucang pf"></i><i class="iconfont icon-wodeshoucang"></i><i class="iconfont icon-wodeshoucang"></i><i class="iconfont icon-wodeshoucang"></i></div>
-            <div class="star" v-else-if="item.CM_STAR==3">
-               <i class="iconfont icon-wodeshoucang pf"></i><i class="iconfont icon-wodeshoucang pf"></i><i class="iconfont icon-wodeshoucang pf"></i><i class="iconfont icon-wodeshoucang"></i><i class="iconfont icon-wodeshoucang"></i></div>
-             <div class="star" v-else-if="item.CM_STAR==4">
-               <i class="iconfont icon-wodeshoucang pf"></i><i class="iconfont icon-wodeshoucang pf"></i><i class="iconfont icon-wodeshoucang pf"></i><i class="iconfont icon-wodeshoucang pf"></i><i class="iconfont icon-wodeshoucang"></i></div>
-            <div class="star" v-else-if="item.CM_STAR==5">
-               <i class="iconfont icon-wodeshoucang pf"></i><i class="iconfont icon-wodeshoucang pf"></i><i class="iconfont icon-wodeshoucang pf"></i><i class="iconfont icon-wodeshoucang pf"></i><i class="iconfont icon-wodeshoucang pf"></i></div>
-          </div>
-          <div class="bd">
-              <span>{{item.CM_CONTENT}}</span>
-          </div>
-        </div>
-            <div v-if="comment>=10" style="margin-top:5px;text-align:center;font-size:15px;color:#333;" :href="'shipin_pl.html?id='+sp_id">查看全部</div>
-            <div v-else-if="comment==0" style="margin-top:15px;text-align:center;font-size:15px;color:#333;">暂无评论!</div>
-    </div>
 
-  </div>
-  <nav class="mui-bar mui-bar-tab">
-			<a @tap="foot_bar(1)" class="mui-tab-item mui-active" href="#index">
-				<span class="mui-icon mui-icon-home"></span>
-				<span class="mui-tab-label">首页</span>
-			</a>
-			<a @tap="foot_bar(2)" class="mui-tab-item" href="#tabbar-with-chat">
-				<span class="mui-icon mui-icon-extra mui-icon-extra-class"></span>
-				<span class="mui-tab-label">分类</span>
-			</a>
-			<a @tap="foot_bar(3)" class="mui-tab-item" href="#usercenter">
-				<span class="mui-icon mui-icon-contact"></span>
-				<span class="mui-tab-label">个人中心</span>
-			</a>
-	</nav>
-</div>
-<script src="/js/vue.js"></script>
- <script src="/js/mui.min.js"></script>
-<script src="/js/api.js"></script>
-<script src="/js/axios.js"></script>
-<script src="/js/clipboard.js"></script>
-<script type="text/javascript" charset="utf-8">
-    mui.init();
-     var clipboard = new ClipboardJS('.fx-cont');
-		clipboard.on('success', function(e) {
+<body>
+    <div id="app" style="margin-bottom: 100px;">
+        <div v-if="loading" class="loading">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div v-else>
+            <div class="down" :class="{'downs':app}">
+                <div class="d-logo"><span class="mui-icon mui-icon-close" v-on:click="closeAPP"></span>&nbsp;<img
+                        src="/images/logo.png" style="width:100px;" /></div>
+                <div class="d-app"><a href="/download.html">下载APP</a></div>
+            </div>
+            <div class="header" :class="{'headers':app}">
+                <div class="hnav">
+                    <div class="logo-box">
+                        <a :href="'/users/qiehuanxianlu.html'">地址列表</a>
+                    </div>
+                    <ul class="menu">
+                        <li><a href="/index.html">精选</a></li>
+                        <li><a href="/shipin.html">视频</a></li>
+                        <li><a href="/yingpian.html">影片</a></li>
+                        <li><a href="/manhua.html">漫画</a></li>
+                    </ul>
+                    <div class="search"><a :href="'/search.html'"><span class="mui-icon mui-icon-search"></span></a>
+                    </div>
+                </div>
+            </div>
+            <div class="mgtop90" :class="{'mgtop50':app}">
+                <div class="shikan" :class="{s:isShikan==1}">{{shikantxt}}</div>
+            </div>
+            <div style="display:none" id="video" class="video"></div>
+            <video id="my-player" class="video-js" controls preload="auto" muted width="960"
+                style="width:380px;height:250px">
+                <source id="video-s" type="application/x-mpegURL" />
+            </video>
+            <div class="video-info-box">
+                <div class="v-title">{{videoInfo.MV_NAME}}</div>
+                <div class="v-type"><span>{{videoInfo.MV_CATEGORY}}</span><span>简介</span></div>
+                <div class="v-summary">
+                    {{videoInfo.MV_CONTENT}}
+                </div>
+                <div class="sum-btn zhankai" v-on:click="zhankai" v-if="videoInfo.MV_CONTENT.length>30">展开全文</div>
+                <div class="sum-btn shouqi" v-on:click="shouqi">收起</div>
+            </div>
+            <div class="share-box">
+                <div class="s_cm"><a :href="'/shipin_pl.html?id='+sp_id"><span
+                            class="iconfont icon-yuanfucengpinglun"></span>{{comment}}热评</a></div>
+                <div class="s_share"><span class="iconfont icon-shoucang" v-if="isShoucang==0"
+                        v-on:click="shoucang"></span><span class="iconfont icon-wodeshoucang" v-else
+                        style="color:#d41717;" v-on:click="shoucang"></span><span class="iconfont icon-fenxiang2"
+                        style="margin-left:10px;" v-on:click="fnfenxiang"></span></div>
+            </div>
+            <div id="fxpopover" class="mui-popover fx">
+                <div class="mui-popover-arrow"></div>
+                <div class="fx-popvcont">
+                    <div class="fx-title">分享</div>
+                    <div id="copyUrl" class="fx-cont" data-clipboard-action="copy" data-clipboard-text="">
+                        <div class="url-icon"><img src="/images/copyurl.png" /></div>
+                        <div class="i-tit">复制链接</div>
+                    </div>
+                </div>
+            </div>
+            <!--推荐-->
+            <div class="red-box">
+                <div class="r-title">相关推荐</div>
+                <div class="list">
+                    <div class="item" v-for="(item,index) of tuijian" :key="item.ID">
+                        <a :href="'shipin_show.html?id='+item.ID" title="item.MV_NAME">
+                            <img :src="item.MV_PHOTO_URL" class="img" />
+                            <div class="bd"><span class="titles">{{item.MV_NAME}}</span></div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <!--评论-->
+            <div class="comment-box">
+                <div class="c-title">全部评论({{comment}})<span v-on:click="xiepinlun"
+                        style="float:right;color:#333;">写评论</span></div>
+                <div id="popover" class="mui-popover">
+                    <div class="mui-popover-arrow"></div>
+                    <div class="popvcont">
+                        <div class="star" v-if="stars===1">
+                            <i class="iconfont icon-wodeshoucang pf" @click="pf(1)"></i><i
+                                class="iconfont icon-wodeshoucang" @click="pf(2)"></i><i
+                                class="iconfont icon-wodeshoucang" @click="pf(3)"></i><i
+                                class="iconfont icon-wodeshoucang" @click="pf(4)"></i><i
+                                class="iconfont icon-wodeshoucang" @click="pf(5)"></i></div>
+                        <div class="star" v-else-if="stars==2">
+                            <i class="iconfont icon-wodeshoucang pf" @click="pf(1)"></i><i
+                                class="iconfont icon-wodeshoucang pf" @click="pf(2)"></i><i
+                                class="iconfont icon-wodeshoucang" @click="pf(3)"></i><i
+                                class="iconfont icon-wodeshoucang" @click="pf(4)"></i><i
+                                class="iconfont icon-wodeshoucang" @click="pf(5)"></i></div>
+                        <div class="star" v-else-if="stars===3">
+                            <i class="iconfont icon-wodeshoucang pf" @click="pf(1)"></i><i
+                                class="iconfont icon-wodeshoucang pf" @click="pf(2)"></i><i
+                                class="iconfont icon-wodeshoucang pf" @click="pf(3)"></i><i
+                                class="iconfont icon-wodeshoucang" @click="pf(4)"></i><i
+                                class="iconfont icon-wodeshoucang" @click="pf(5)"></i></div>
+                        <div class="star" v-else-if="stars==4">
+                            <i class="iconfont icon-wodeshoucang pf" @click="pf(1)"></i><i
+                                class="iconfont icon-wodeshoucang pf" @click="pf(2)"></i><i
+                                class="iconfont icon-wodeshoucang pf" @click="pf(3)"></i><i
+                                class="iconfont icon-wodeshoucang pf" @click="pf(4)"></i><i
+                                class="iconfont icon-wodeshoucang" @click="pf(5)"></i></div>
+                        <div class="star" v-else-if="stars==5">
+                            <i class="iconfont icon-wodeshoucang pf" @click="pf(1)"></i><i
+                                class="iconfont icon-wodeshoucang pf" @click="pf(2)"></i><i
+                                class="iconfont icon-wodeshoucang pf" @click="pf(3)"></i><i
+                                class="iconfont icon-wodeshoucang pf" @click="pf(4)"></i><i
+                                class="iconfont icon-wodeshoucang pf" @click="pf(5)"></i></div>
+                        <textarea id="txtpinglun" name="txtpinglun" v-bind:maxlength="100" @input="descArea"
+                            v-model="introduct" class="txtare" placeholder="在这里可以发布自己的评论"></textarea>
+                        <span class="num-desc">{{Surplus}}/100</span>
+                        <button class="btnpl" @click="tijiaopinglun" :disabled="isDisabled">提交评论</button>
+                    </div>
+                </div>
+                <div class="comment-item" v-for="(item,index) of commentList" :key="index">
+                    <div class="hd">
+                        <div class="u-info">
+                            <div class="headpic"><img :src="siteadd+item.CM_HEADIMG" /></div>
+                            <div class="nicheng">
+                                <div class="name">{{item.CM_USERNAME}}</div>
+                                <div class="time">{{item.GMT_CREATE}}</div>
+                            </div>
+                        </div>
+                        <div class="star" v-if="item.CM_STAR==1">
+                            <i class="iconfont icon-wodeshoucang pf"></i><i class="iconfont icon-wodeshoucang"></i><i
+                                class="iconfont icon-wodeshoucang"></i><i class="iconfont icon-wodeshoucang"></i><i
+                                class="iconfont icon-wodeshoucang"></i></div>
+                        <div class="star" v-else-if="item.CM_STAR==2">
+                            <i class="iconfont icon-wodeshoucang pf"></i><i class="iconfont icon-wodeshoucang pf"></i><i
+                                class="iconfont icon-wodeshoucang"></i><i class="iconfont icon-wodeshoucang"></i><i
+                                class="iconfont icon-wodeshoucang"></i></div>
+                        <div class="star" v-else-if="item.CM_STAR==3">
+                            <i class="iconfont icon-wodeshoucang pf"></i><i class="iconfont icon-wodeshoucang pf"></i><i
+                                class="iconfont icon-wodeshoucang pf"></i><i class="iconfont icon-wodeshoucang"></i><i
+                                class="iconfont icon-wodeshoucang"></i></div>
+                        <div class="star" v-else-if="item.CM_STAR==4">
+                            <i class="iconfont icon-wodeshoucang pf"></i><i class="iconfont icon-wodeshoucang pf"></i><i
+                                class="iconfont icon-wodeshoucang pf"></i><i
+                                class="iconfont icon-wodeshoucang pf"></i><i class="iconfont icon-wodeshoucang"></i>
+                        </div>
+                        <div class="star" v-else-if="item.CM_STAR==5">
+                            <i class="iconfont icon-wodeshoucang pf"></i><i class="iconfont icon-wodeshoucang pf"></i><i
+                                class="iconfont icon-wodeshoucang pf"></i><i
+                                class="iconfont icon-wodeshoucang pf"></i><i class="iconfont icon-wodeshoucang pf"></i>
+                        </div>
+                    </div>
+                    <div class="bd">
+                        <span>{{item.CM_CONTENT}}</span>
+                    </div>
+                </div>
+                <div v-if="comment>=10" style="margin-top:5px;text-align:center;font-size:15px;color:#333;"
+                    :href="'shipin_pl.html?id='+sp_id">查看全部</div>
+                <div v-else-if="comment==0" style="margin-top:15px;text-align:center;font-size:15px;color:#333;">暂无评论!
+                </div>
+            </div>
+
+        </div>
+        <nav class="mui-bar mui-bar-tab">
+            <a @tap="foot_bar(1)" class="mui-tab-item mui-active" href="#index">
+                <span class="mui-icon mui-icon-home"></span>
+                <span class="mui-tab-label">首页</span>
+            </a>
+            <a @tap="foot_bar(2)" class="mui-tab-item" href="#tabbar-with-chat">
+                <span class="mui-icon mui-icon-extra mui-icon-extra-class"></span>
+                <span class="mui-tab-label">分类</span>
+            </a>
+            <a @tap="foot_bar(3)" class="mui-tab-item" href="#usercenter">
+                <span class="mui-icon mui-icon-contact"></span>
+                <span class="mui-tab-label">个人中心</span>
+            </a>
+        </nav>
+    </div>
+    <script src="/js/vue.js"></script>
+    <script src="/js/mui.min.js"></script>
+    <script src="/js/api.js"></script>
+    <script src="/js/axios.js"></script>
+    <script src="/js/clipboard.js"></script>
+    <script src="js/video.min.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        mui.init();
+        var clipboard = new ClipboardJS('.fx-cont');
+        clipboard.on('success', function (e) {
             alert("复制成功");
         });
-        clipboard.on('error', function(e) {
-           alert("复制失败,请手动复制");
-		});
-     new Vue({
-        el: '#app',
-        data: {
-            loading: true,
-            app:false,
-            sp_id: 0,//视频ID
-            isShikan:0,//是否试看
-			shikantxt:'此为试看地址,如需观看完整内容请登录!',
-            isShoucang:0,//是否收藏
-            siteadd: "",//站点地址
-            videoInfo: '',//视频信息
-            comment: 0,//评论总数
-            commentList:'',//评论列表
-            tuijian: '',//相关推荐
-            stars: 1,//星星评分
-            Surplus: 100,//评论字数
-            introduct: '',//评论内容,
-            isDisabled: false
-        },
-        created: function () {
-            this.siteadd = globalData.siteadd;//站点地址
-            this.getData();//获取数据
-        },
-        methods: {
-             //获取数据
-            getData: function () {
-                var self = this;
-                debugger
-                var spid = getQueryString("id");//视频ID
-                var pid = getQueryString("pid");//推荐人ID
-                if (pid != 0 && pid != 'undefined' && pid != null && pid != '') {
-                    localStorage.setItem("pid",pid);
-                }
-                if (spid != 0 && spid != 'undefined' && spid != null && spid != '') {
-                    self.sp_id = spid;
-                    var hyid = localStorage.getItem("hyid");//获取用户ID
-                    var token = localStorage.getItem("token");//获取token
-                   if ( typeof(hyid) != undefined && typeof(hyid) != 'undefined' && hyid != null) {
-						self.shikantxt="此为试看地址,如需观看完整内容请充值!";
-                    }else{
-						hyid = 0;
-                        token = 0;
-					    self.shikantxt="此为试看地址,如需观看完整内容请登录!";
-					}
-					//console.log(hyid);
-					var cn = localStorage.getItem("cn");
-                    if (cn == 0 && cn == 'undefined' && cn == null && cn == '') {
-                        cn = 1;
-                        var ips = localStorage.getItem("ips");
-                        axget('/ipaddress', { ip: ips }).then((res) => {
-                            if (res.code == 0) {
-                                localStorage.setItem("cn", res.data);
+        clipboard.on('error', function (e) {
+            alert("复制失败,请手动复制");
+        });
+        new Vue({
+            el: '#app',
+            data: {
+                loading: true,
+                app: false,
+                sp_id: 0,//视频ID
+                isShikan: 0,//是否试看
+                shikantxt: '此为试看地址,如需观看完整内容请登录!',
+                isShoucang: 0,//是否收藏
+                siteadd: "",//站点地址
+                videoInfo: '',//视频信息
+                comment: 0,//评论总数
+                commentList: '',//评论列表
+                tuijian: '',//相关推荐
+                stars: 1,//星星评分
+                Surplus: 100,//评论字数
+                introduct: '',//评论内容,
+                isDisabled: false
+            },
+            created: function () {
+                this.siteadd = globalData.siteadd;//站点地址
+                this.getData();//获取数据
+            },
+            methods: {
+                //获取数据
+                getData: function () {
+                    var self = this;
+                    var spid = getQueryString("id");//视频ID
+                    var pid = getQueryString("pid");//推荐人ID
+                    if (pid != 0 && pid != 'undefined' && pid != null && pid != '') {
+                        localStorage.setItem("pid", pid);
+                    }
+                    if (spid != 0 && spid != 'undefined' && spid != null && spid != '') {
+                        self.sp_id = spid;
+                        var hyid = localStorage.getItem("hyid");//获取用户ID
+                        var token = localStorage.getItem("token");//获取token
+                        if (typeof (hyid) != undefined && typeof (hyid) != 'undefined' && hyid != null) {
+                            self.shikantxt = "此为试看地址,如需观看完整内容请充值!";
+                        } else {
+                            hyid = 0;
+                            token = 0;
+                            self.shikantxt = "此为试看地址,如需观看完整内容请登录!";
+                        }
+                        //console.log(hyid);
+                        var cn = localStorage.getItem("cn");
+                        if (cn == 0 && cn == 'undefined' && cn == null && cn == '') {
+                            cn = 1;
+                            var ips = localStorage.getItem("ips");
+                            axget('/ipaddress', { ip: ips }).then((res) => {
+                                if (res.code == 0) {
+                                    localStorage.setItem("cn", res.data);
+                                }
+                            })
+                        }
+                        //获取视频信息
+                        axget('/moviedec', { id: spid, uid: hyid, token: token, cn: cn }).then((res) => {
+                            if (res.code == "0") {
+                                self.videoInfo = res.data.movie;//获取视频信息
+                                self.tuijian = res.data.tuijian;//获取推荐
+                                self.isShoucang = res.data.shoucang;
+                                self.comment = res.data.comment;//获取评论数量
+                                self.isShikan = res.data.movie.shikan;
+                                //获取评论列表
+                                axget('/commentlist', { id: spid, pagesize: 10, pageindex: 0, type: 1 }).then((r) => {
+                                    //console.log(r);
+                                    if (r.code == 0) {
+                                        self.commentList = r.data;
+                                    }
+                                })
+                                self.loading = false;
+                            } else if (res.code == 3) {
+                                self.loading = false;
+                                console.log(res.data);
+                                var btnArray = ['否', '是'];
+                                mui.confirm('此为试看地址，如需观看完整内容请充值！', '', btnArray, function (e) {
+                                    if (e.index == 1) {
+                                        location.href = "/users/taocan.html"
+                                    } else {
+                                        self.videoInfo = res.data.movie;//获取视频信息
+                                        self.tuijian = res.data.tuijian;//获取推荐
+                                        self.isShoucang = res.data.shoucang;
+                                        self.comment = res.data.comment;//获取评论数量
+                                        self.isShikan = res.data.movie.shikan;
+                                        //获取评论列表
+                                        axget('/commentlist', { id: spid, pagesize: 10, pageindex: 0, type: 1 }).then((r) => {
+                                            //console.log(r);
+                                            if (r.code == 0) {
+                                                self.commentList = r.data;
+                                            }
+                                        })
+                                        self.loading = false;
+                                    }
+                                })
+                            } else if (res.code == 2) {
+                                self.loading = false;
+                                localStorage.clear();
+                                mui.alert(res.msg, ' ', function () {
+                                    location.href = "/index.html"
+                                });
+                            } else {
+                                self.loading = false;
+                                mui.alert("未获取到视频数据", ' ', function () {
+                                    location.href = "/index.html"
+                                });
                             }
                         })
+                    } else {
+                        location.href = "/index.html"
                     }
-                    //获取视频信息
-                    axget('/moviedec', { id: spid, uid: hyid, token: token,cn:cn}).then((res) => {
-                        if (res.code == "0") {
-                           
-                            self.videoInfo = res.data.movie;//获取视频信息
-                            self.tuijian = res.data.tuijian;//获取推荐
-                            self.isShoucang = res.data.shoucang;
-                            self.comment = res.data.comment;//获取评论数量
-                            self.isShikan = res.data.movie.shikan;
-                            //获取评论列表
-                             axget('/commentlist', { id: spid, pagesize:10, pageindex: 0, type: 1 }).then((r) => {
-                                //console.log(r);
-                                 if (r.code == 0) {
-                                    self.commentList = r.data;
-                                 }
-                             })
-							  self.loading = false;
-                        } else if (res.code == 3) {
-                            self.loading = false;
-							console.log(res.data);
-                            var btnArray = ['否', '是'];
-                            mui.confirm('此为试看地址，如需观看完整内容请充值！', '', btnArray, function (e) {
-                                if (e.index == 1) {
-                                    location.href = "/users/taocan.html"
-                                }else {
-									self.videoInfo = res.data.movie;//获取视频信息
-									self.tuijian = res.data.tuijian;//获取推荐
-									self.isShoucang = res.data.shoucang;
-									self.comment = res.data.comment;//获取评论数量
-									self.isShikan = res.data.movie.shikan;
-									//获取评论列表
-									 axget('/commentlist', { id: spid, pagesize:10, pageindex: 0, type: 1 }).then((r) => {
-										//console.log(r);
-										 if (r.code == 0) {
-											self.commentList = r.data;
-										 }
-									 })
-									  self.loading = false;								   
-                               }
-                            })
-                        } else if (res.code == 2) {
-                            self.loading = false;
-                            localStorage.clear();
-                            mui.alert(res.msg, ' ', function() {
-					          location.href="/index.html"
-				            });
-                        } else {
-                            self.loading = false;
-                            mui.alert("未获取到视频数据", ' ', function() {
-					          location.href="/index.html"
-				            });
-                        }
-                     })
-                } else {
-                    location.href="/index.html"
-                }
-            },
-            zhankai() {//展开简介
-                var summary = document.querySelector(".v-summary");
-                var hid = document.querySelector(".zhankai");
-                var shouqi = document.querySelector(".shouqi");
-                hid.style.display = "none";//隐藏查看全部
-                summary.style.height = "100px";//设置简介高度
-                summary.style.overflow = "scroll";//显示滚动条
-                shouqi.style.display = "block";//显示收起按钮
-            },
-            shouqi() {//收起简介
-               var summary = document.querySelector(".v-summary");
-                var hid = document.querySelector(".zhankai");
-                var shouqi = document.querySelector(".shouqi");
-                hid.style.display = "block";//隐藏查看全部
-                summary.style.height = "40px";//设置简介高度
-                summary.style.overflow = "hidden";//显示滚动条
-                shouqi.style.display = "none";//显示收起按钮
-            },
-            xiepinlun() {//弹出评论框
-                var hyid = localStorage.getItem("hyid");//获取用户ID
-                if (hyid != 0 && hyid != 'undefined' && hyid != null && hyid != '') {
-                    mui("#popover").popover('toggle', document.getElementById("div"));
-                } else {
-                    location.href="/login.html"
-                }
-            },
-            pf(index) {//星星评分
-                var that = this;
-                that.stars =index;
-            },
-            descArea() {
-                var that = this;
-                var textVal = that.introduct.length;
-                that.Surplus = 100 - textVal;
-            },
-            tijiaopinglun() {//提交评论
-                var that = this;
-                var plcount = that.introduct;
-                var star = that.stars;
-                var spid = that.sp_id;
-                var hyid = localStorage.getItem("hyid");//获取用户ID
-                var token = localStorage.getItem("token");
-                if (isNull(plcount)) {
-                    mui.toast("请输入评论内容");
-                    return;
-                }
-                if (hyid != 0 && hyid != 'undefined' && hyid != null && hyid != '') {
-                    that.isDisabled = true;
-                    axget('/addcomment', { uid:hyid,token:token,xing:star,content:plcount,id:spid,type:1}).then((res) => {
-                        if (res.code == 0) {
-                            mui.toast(res.msg);
-                            axget('/commentlist', { id: spid, pagesize: 10, pageindex: 0, type: 1 }).then((res) => {
-                                if (res.code == 0) {
-                                    that.commentList = res.data;
-                                    that.comment = res.data.length;
-                                    that.introduct = "";
-                                    mui("#popover").popover("hide");
+                },
+                zhankai() {//展开简介
+                    var summary = document.querySelector(".v-summary");
+                    var hid = document.querySelector(".zhankai");
+                    var shouqi = document.querySelector(".shouqi");
+                    hid.style.display = "none";//隐藏查看全部
+                    summary.style.height = "100px";//设置简介高度
+                    summary.style.overflow = "scroll";//显示滚动条
+                    shouqi.style.display = "block";//显示收起按钮
+                },
+                shouqi() {//收起简介
+                    var summary = document.querySelector(".v-summary");
+                    var hid = document.querySelector(".zhankai");
+                    var shouqi = document.querySelector(".shouqi");
+                    hid.style.display = "block";//隐藏查看全部
+                    summary.style.height = "40px";//设置简介高度
+                    summary.style.overflow = "hidden";//显示滚动条
+                    shouqi.style.display = "none";//显示收起按钮
+                },
+                xiepinlun() {//弹出评论框
+                    var hyid = localStorage.getItem("hyid");//获取用户ID
+                    if (hyid != 0 && hyid != 'undefined' && hyid != null && hyid != '') {
+                        mui("#popover").popover('toggle', document.getElementById("div"));
+                    } else {
+                        location.href = "/login.html"
+                    }
+                },
+                pf(index) {//星星评分
+                    var that = this;
+                    that.stars = index;
+                },
+                descArea() {
+                    var that = this;
+                    var textVal = that.introduct.length;
+                    that.Surplus = 100 - textVal;
+                },
+                tijiaopinglun() {//提交评论
+                    var that = this;
+                    var plcount = that.introduct;
+                    var star = that.stars;
+                    var spid = that.sp_id;
+                    var hyid = localStorage.getItem("hyid");//获取用户ID
+                    var token = localStorage.getItem("token");
+                    if (isNull(plcount)) {
+                        mui.toast("请输入评论内容");
+                        return;
+                    }
+                    if (hyid != 0 && hyid != 'undefined' && hyid != null && hyid != '') {
+                        that.isDisabled = true;
+                        axget('/addcomment', { uid: hyid, token: token, xing: star, content: plcount, id: spid, type: 1 }).then((res) => {
+                            if (res.code == 0) {
+                                mui.toast(res.msg);
+                                axget('/commentlist', { id: spid, pagesize: 10, pageindex: 0, type: 1 }).then((res) => {
+                                    if (res.code == 0) {
+                                        that.commentList = res.data;
+                                        that.comment = res.data.length;
+                                        that.introduct = "";
+                                        mui("#popover").popover("hide");
+                                    } else {
+                                        mui.toast(res.msg);
+                                    }
+                                })
+                            } else if (res.code == 2) {
+                                mui.alert('账号在别处登录,您已被迫下线！', ' ', function () {
+                                    localStorage.clear();
+                                    location.href = "/login.html"
+                                });
+                            } else {
+                                mui.toast(res.msg);
+                            }
+                            that.isDisabled = false;
+                        })
+                    } else {
+                        location.href = "/login.html"
+                    }
+                },
+                shoucang() {
+                    var that = this;
+                    var spid = that.sp_id;
+                    var hyid = localStorage.getItem("hyid");//获取用户ID
+                    var token = localStorage.getItem("token");
+                    if (hyid != 0 && hyid != 'undefined' && hyid != null && hyid != '') {
+                        if (spid != 0 && spid != 'undefined' && spid != null && spid != '') {
+                            axget('/shoucang', { uid: hyid, token: token, id: spid, type: 1 }).then((res) => {
+                                if (res.code == "0") {
+                                    mui.toast(res.msg);
+                                    that.isShoucang = res.data.shoucang;
+                                } else if (res.code == "2") {
+                                    mui.alert('账号在别处登录,您已被迫下线！', ' ', function () {
+                                        localStorage.clear();
+                                        location.href = "/login.html"
+                                    });
                                 } else {
                                     mui.toast(res.msg);
                                 }
                             })
-                        }else if (res.code ==2) {
-                            mui.alert('账号在别处登录,您已被迫下线！', ' ', function() {
-					           localStorage.clear();
-                               location.href="/login.html"
-				              });
-                        }else {
-                           mui.toast(res.msg);
+                        } else {
+                            mui.toast("未获取到视频ID！");
                         }
-                        that.isDisabled = false;
-                    })
-                } else {
-                    location.href="/login.html"
-                }
-            },
-            shoucang() {
-                var that = this;
-                var spid = that.sp_id;
-                var hyid = localStorage.getItem("hyid");//获取用户ID
-                var token = localStorage.getItem("token");
-                if (hyid != 0 && hyid != 'undefined' && hyid != null && hyid != '') {
-                    if (spid != 0 && spid != 'undefined' && spid != null && spid != '') {
-                        axget('/shoucang', { uid:hyid,token:token,id:spid,type:1}).then((res) => {
-                          if (res.code == "0") {
-                                mui.toast(res.msg);
-                                that.isShoucang=res.data.shoucang;
-                            }else if (res.code == "2") {
-                                mui.alert('账号在别处登录,您已被迫下线！', ' ', function() {
-					            localStorage.clear();
-                               location.href="/login.html"
-				                });
-                            }else {
-                                mui.toast(res.msg);
-                            }
-                        })
                     } else {
-                        mui.toast("未获取到视频ID！");
+                        mui.toast("你还没有登录！");
                     }
-                } else {
-                    mui.toast("你还没有登录！");
-                }
-            }, fnfenxiang() {
-                var that = this;
-                var hyid = localStorage.getItem("hyid");//获取用户ID
-                mui("#fxpopover").popover('toggle', document.getElementById("div"));
-                var u = document.getElementById("copyUrl");
-                var ym = document.domain;//当前域名
-                if (hyid != 0 && hyid != 'undefined' && hyid != null && hyid != '') {
-                    u = u.attributes["data-clipboard-text"].value ="http://"+ ym + "/shipin_show.html?id=" + that.sp_id + "&pid=" + hyid;
-                } else {
-                    u = u.attributes["data-clipboard-text"].value ="http://"+ ym + "/shipin_show.html?id=" +  that.sp_id;
-                }
-                 
-                
-            }, closeAPP() {
-                this.app = true;
-            },
-			foot_bar(i) {
-                switch (i)
-                {
-                    case 1: break;
-                    case 2: location.href = "/fenlei.html";break;
-                    case 3: location.href = "/users/index.html"; break;
-                    default:
-                        location.href = "/index.html";
-                        break;
-                }
-            }, closeAPP() {
-                this.app = true;
-            }
-         },
-         updated() {
-			
-			var urls=URLencode(this.videoInfo.url);
-           /*播放器*/
-            var videoObject = {
-				container: '#video', //容器的ID或className
-                variable: 'player',//播放函数名称，
-                duration: 1,//显示总时间
-                poster: this.videoInfo.MV_PHOTO_URL,//封面图片
-                video:urls//视频地址
-			   };
-             var player = new ckplayer(videoObject);
-            }
-         })
-		 function URLencode(sStr){
-			return escape(sStr).replace(/\+/g,'%2B');
-		 }
-</script>
-</body>
-</html>
+                }, fnfenxiang() {
+                    var that = this;
+                    var hyid = localStorage.getItem("hyid");//获取用户ID
+                    mui("#fxpopover").popover('toggle', document.getElementById("div"));
+                    var u = document.getElementById("copyUrl");
+                    var ym = document.domain;//当前域名
+                    if (hyid != 0 && hyid != 'undefined' && hyid != null && hyid != '') {
+                        u = u.attributes["data-clipboard-text"].value = "http://" + ym + "/shipin_show.html?id=" + that.sp_id + "&pid=" + hyid;
+                    } else {
+                        u = u.attributes["data-clipboard-text"].value = "http://" + ym + "/shipin_show.html?id=" + that.sp_id;
+                    }
 
+
+                }, closeAPP() {
+                    this.app = true;
+                },
+                foot_bar(i) {
+                    switch (i) {
+                        case 1: break;
+                        case 2: location.href = "/fenlei.html"; break;
+                        case 3: location.href = "/users/index.html"; break;
+                        default:
+                            location.href = "/index.html";
+                            break;
+                    }
+                }, closeAPP() {
+                    this.app = true;
+                }
+            },
+            updated() {
+                var urls = this.videoInfo.url;
+                if (urls.indexOf('.m3u8') != -1) {
+                    document.getElementById("video-s").src = urls;
+                    var myPlayer = videojs('my-player');
+                    videojs("my-player").ready(function () {
+                        var myPlayer = this;
+                        myPlayer.play();
+                        document.getElementById("video-s").src = "";
+                    });
+                } else {
+                    urls = URLencode(urls);
+                    var videoObject = {
+                        container: '#video', //容器的ID或className
+                        variable: 'player',//播放函数名称，
+                        duration: 1,//显示总时间
+                        poster: this.videoInfo.MV_PHOTO_URL,//封面图片
+                        video: urls//视频地址
+                    };
+                    var player = new ckplayer(videoObject);
+                    document.getElementById("video").style.display = "";
+                    document.getElementById("my-player").style.display = "none";
+                }
+            }
+        })
+        function URLencode(sStr) {
+            return escape(sStr).replace(/\+/g, '%2B');
+        }
+    </script>
+</body>
+
+</html>
