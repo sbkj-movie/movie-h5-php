@@ -39,11 +39,10 @@
 				</div>
                 <div class="layui-form-item">
 					<label class="layui-form-label">支付平台</label>
-                     <input type="hidden" id="typeall" value="{$data['HU_TYPE']?$data['HU_TYPE']:'1'}">
 					<div class="layui-input-block">
-						<input type="radio" name="type" value="1" lay-filter="type"  title="支付宝扫码"  <if  condition="isset($data['HU_TYPE'])&&$data['HU_TYPE']==1 ">  checked="checked"</if> <if condition="!isset($data['HU_TYPE'])"> checked="checked"</if>><div class="layui-unselect layui-form-radio layui-form-radioed"><i class="layui-anim layui-icon"></i><span>支付宝扫码</span></div>
-						<input type="radio" name="type" value="2" lay-filter="type"  title="青苹果" <if  condition="isset($data['HU_TYPE'])&&$data['HU_TYPE']==2">  checked="checked"</if>><div class="layui-unselect layui-form-radio"><i class="layui-anim layui-icon"></i><span>青苹果</span></div>
-						<input type="radio" name="type" value="3" lay-filter="type"  title="微信扫描"  <if  condition="isset($data['HU_TYPE'])&&$data['HU_TYPE']==3 ">  checked="checked"</if> <if condition="!isset($data['HU_TYPE'])"> checked="checked"</if>><div class="layui-unselect layui-form-radio layui-form-radioed"><i class="layui-anim layui-icon"></i><span>微信扫码</span></div>
+						<input type="radio" name="type" value="2" lay-filter="type"  title="青苹果" <if  condition="isset($data['HU_TYPE'])&&$data['HU_TYPE']==2">  checked="checked"</if><if condition="!isset($data['HU_TYPE'])"> checked="checked"</if>><div class="layui-unselect layui-form-radio"><i class="layui-anim layui-icon"></i><span>青苹果</span></div>
+						<input type="radio" name="type" value="1" lay-filter="type"  title="支付宝扫码"  <if  condition="isset($data['HU_TYPE'])&&$data['HU_TYPE']==1 ">  checked="checked"</if>><div class="layui-unselect layui-form-radio layui-form-radioed"><i class="layui-anim layui-icon"></i><span>支付宝扫码</span></div>
+						<input type="radio" name="type" value="3" lay-filter="type"  title="微信扫描"  <if  condition="isset($data['HU_TYPE'])&&$data['HU_TYPE']==3 ">  checked="checked"</if>><div class="layui-unselect layui-form-radio layui-form-radioed"><i class="layui-anim layui-icon"></i><span>微信扫码</span></div>
 					</div>
 				</div>
                  <div class="layui-form-item">
@@ -52,7 +51,7 @@
 						<input type="text" name="appsecret" id="appsecret" required class="layui-input " value="{$data['HU_APP_SECRET']?$data['HU_APP_SECRET']:''}"  >
 					</div>
 				</div>
-                <div class="layui-form-item" id="gongyao" <if  condition="isset($data['HU_TYPE'])&&$data['HU_TYPE']==1 "> style="display:none"</if>>
+                <div class="layui-form-item" id="gongyao" <if  condition="isset($data['HU_TYPE'])&&($data['HU_TYPE']==1 || $data['HU_TYPE']==3)"> style="display:none"</if>>
 					<label class="layui-form-label">平台公钥</label>
 					<div class="layui-input-block">  
 						<input type="text" name="appgong" id="appgong" required class="layui-input " value="{$data['HU_APP_GONG']?$data['HU_APP_GONG']:''}"  >
@@ -90,14 +89,13 @@
 	layui.use(['form', 'upload'], function () {
 		var form = layui.form();
 		//自定义验证规则
-		var type = $('#typeall').val();
+		var type = $('input:radio[name="type"]:checked').val();
 		form.on('radio(type)', function (data) {
 			if (data.value == 2) {
-				type = 2;
 				$('#gongyao').show();
 			} else {
-				type = 1;
 				$('#gongyao').hide();
+				$('#appgong').val('');
 			}
 			type = data.value;
 		});
