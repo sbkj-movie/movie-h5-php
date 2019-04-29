@@ -152,13 +152,13 @@ class UserController extends AllowController {
 		$data=array();
 		$data['ques']='';
 		if(isset($id)&&$id!=0){
-			$data=M('mv_user')->find($id);
-			//套餐id
-				$shid=M('mv_shop_history')->where("SH_USERID=$id and IS_PAY=1")->order('ID desc')->find();
-				
-				if(!empty($shid)){
-					$data['SHID']=$shid['SHID'];
-				}
+            $data = M('mv_user')->find($id);
+            //有效套餐id
+            $shid = M('mv_shop_history')->where("SH_USERID=$id and IS_PAY=1 and SH_END > '".date('Y-m-d h:i:s', time())."'")->order('ID desc')->find();
+
+            if (!empty($shid)) {
+                $data['SHID'] = $shid['SHID'];
+            }
 			if(!empty($data['SECURITY_QUESTION'])){
 				$que=json_decode($data['SECURITY_QUESTION']);
 				$ques=[];
@@ -204,6 +204,7 @@ class UserController extends AllowController {
 		$ques[3]['answer']=$_POST['answer3'];
 		$data['SECURITY_QUESTION']=json_encode($ques);
 		$data['PARENT_CODE']=$_POST['pid'];
+		$is_vip = $_POST['is_vip'];
 		
 		
 		if($data['PARENT_CODE']==0){
@@ -229,7 +230,7 @@ class UserController extends AllowController {
 			//修改购买记录
 			//添加套餐购买记录
 			$user=M('mv_user')->find($id);
-			if($SPID!=0&&$user['USER_TYPE']==1){
+			if($SPID!=0&&$is_vip==0){
 				$tc_buy=[];
 				$tc_buy['SH_USERID']=$id;
 				$tc_buy['SHID']=$SPID;
@@ -261,11 +262,12 @@ class UserController extends AllowController {
 				
 				M('mv_user')->add($data);
 				$id= M('mv_user')->getLastInsID();
-				if($SPID!=0){
+                if($SPID!=0&&$is_vip==0){
 					$tc_buy=[];
 					$tc_buy['SH_USERID']=$id;
 					$tc_buy['SHID']=$SPID;
 					$tc_buy['SH_NAME']=$taocan['SP_NAME'];
+                    $tc_buy['SH_PRICE']=$taocan['SP_PRICE'];
 					$tc_buy['SH_PAY']=0;
 					$tc_buy['SH_END']=$endtime;
 					$tc_buy['IS_PAY']=1;

@@ -25,6 +25,7 @@
 			<form class="layui-form col-lg-5"  method="post"  >
             <input type="hidden" name="id" id="upid" value="{$data['ID']?$data['ID']:''}">
             <input type="hidden" name="pg" id="pg" value="{$data['pg']?$data['pg']:'1'}">
+			<input type="hidden" name="is_vip" id="is_vip" value="{$data['SHID']?1:0}">
            	    <div class="layui-form-item">
 					<label class="layui-form-label">用户名</label>
 					<div class="layui-input-block">  
@@ -54,7 +55,7 @@
                       <label class="layui-form-label">套餐</label>
                       <div class="layui-input-block">  
                      
-                       <select name="tid"  lay-filter="tid"  id="tid"  required class="layui-select ">
+                       <select name="tid"  lay-filter="tid"  id="tid"  required class="layui-select " <if condition="isset($data['SHID'])">disabled</if>>
                             <option value="0">普通会员</option>
 								<volist name="data.taocan" id="da" >
                                 
@@ -158,30 +159,45 @@
 				}
 				
 		  });
-		  
-		  //监听提交  
-		  form.on('submit(demo1)', function(data){  
-				
-				$.ajax({
-				 type: "post",
-				 url: "/admin.php/user/doadd",
-				 data: {name:$('#name').val(),password:$('#password').val(),fenxiao:$('#fenxiao').val(),tid:$('#tid').val(),question1:$('#question1').val(),answer1:$('#answer1').val(),question2:$('#question2').val(),answer2:$('#answer2').val(),question3:$('#question3').val(),answer3:$('#answer3').val(),pid:$('#pid').val(),id:$('#upid').val(),pg:$('#pg').val(),},
-				 dataType: "json",
-				 async:false,
-				 success: function(data){
+
+		//监听提交
+		form.on('submit(demo1)', function (data) {
+
+			$.ajax({
+				type: "post",
+				url: "/admin.php/user/doadd",
+				data: {
+					name: $('#name').val(),
+					password: $('#password').val(),
+					fenxiao: $('#fenxiao').val(),
+					tid: $('#tid').val(),
+					question1: $('#question1').val(),
+					answer1: $('#answer1').val(),
+					question2: $('#question2').val(),
+					answer2: $('#answer2').val(),
+					question3: $('#question3').val(),
+					answer3: $('#answer3').val(),
+					pid: $('#pid').val(),
+					id: $('#upid').val(),
+					pg: $('#pg').val(),
+					is_vip: $('#is_vip').val()
+				},
+				dataType: "json",
+				async: false,
+				success: function (data) {
 					layer.msg(data.msg);
-						if(data.href!=''){
-							setTimeout(function() {
-								window.location =data.href;
-							}, 1200);
-						}
-						
-					
-				 }
-							
-			 });
-				 return false;  
-		  }); 
+					if (data.href != '') {
+						setTimeout(function () {
+							window.location = data.href;
+						}, 1200);
+					}
+
+
+				}
+
+			});
+			return false;
+		});
 	});
 </script>
 </body>
