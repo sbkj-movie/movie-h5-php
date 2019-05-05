@@ -65,14 +65,14 @@
          <div id="slider" class="mui-slider">
 				<div class="mui-slider-group mui-slider-loop">
 				    <div class="mui-slider-item" :class="{'mui-slider-item-duplicate':!index||index==bannerList.length-1}" v-for="(item,index) in bannerList" :key="index">
-						<a :href="'shipin_show.html?id='+item.BN_TYPE_ID" v-if="item.BN_TYPE_ID!=0">
-                            <img :src="item.BN_URL"/>
-                            <p class="mui-slider-title">{{item.BN_NAME}}</p>
-                        </a>
-                        <a href="#" v-else>
-                            <img :src="item.BN_URL"/>
-                            <p class="mui-slider-title">{{item.BN_NAME}}</p>
-                        </a>
+						  <a :href="'shipin_show.html?id='+item.BN_TYPE_ID" v-if="item.BN_TYPE == 2">
+                  <img :src="item.BN_URL"/>
+                  <p class="mui-slider-title">{{item.BN_NAME}}</p>
+              </a>
+              <a :href="'manhua_list.html?id='+item.BN_TYPE_ID" v-if="item.BN_TYPE == 4">
+                  <img :src="item.BN_URL"/>
+                  <p class="mui-slider-title">{{item.BN_NAME}}</p>
+              </a>
 					</div>
 				</div>
 				<div class="mui-slider-indicator mui-text-right">
@@ -204,14 +204,17 @@
             //获取banner
             getBanner: function () {
                var self = this;
-                axget('/banner', {type:1}).then((res) => {
-                   // console.log(res.data);
+                axget('/banner', {postion:1}).then((res) => {
+                   console.log(res.data);
                     if (res.code == 0) {
                         self.banner = JSON.parse(JSON.stringify(res.data))
-                        var datas = res.data;
-                        datas.push(res.data[0]);//往数组最后面添加一个元素
-                        datas.unshift(datas[datas.length - 2]);//往数组最前面添加一个元素
-                        self.bannerList = datas;
+						if(res.data){
+							var datas = res.data;
+							datas.push(res.data[0]);//往数组最后面添加一个元素
+							datas.unshift(datas[datas.length - 2]);//往数组最前面添加一个元素
+							self.bannerList = datas;
+              console.log()
+						}
                     }
                 })
             },

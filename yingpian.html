@@ -154,7 +154,7 @@
             //获取banner
             getBanner: function () {
                 var self = this;
-                axget('/banner', { type: 3 }).then((res) => {
+                axget('/banner', { postion: 3 }).then((res) => {
                     if (res.code == 0) {
                         if (res.data != 0 && res.data != 'undefined' && res.data != null && res.data != '') {
                             self.banner = JSON.parse(JSON.stringify(res.data))
