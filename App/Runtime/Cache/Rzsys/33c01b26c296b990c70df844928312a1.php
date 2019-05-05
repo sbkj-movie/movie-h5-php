@@ -58,12 +58,12 @@
                                      </td>
                                      <td><?php echo ($data['MAX_MONEY']); ?></td>
                                      <td><?php echo ($data['NOW_MONEY']); ?></td>
-                                     <td><?php echo ($data['GMT_CREATE']); ?></td>
                                      <td>
                                          <?php if($data['HU_TYPE']==1 ): ?>支付宝扫码<?php endif; ?>
                                          <?php if($data['HU_TYPE']==2 ): ?>青苹果<?php endif; ?>
                                          <?php if($data['HU_TYPE']==3 ): ?>微信扫码<?php endif; ?>
                                      </td>
+                                     <td><?php echo ($data['GMT_CREATE']); ?></td>
                                      <td><?php echo ($data['SORT_NUM']); ?></td>
                                      <td>
                                          <a href="javascript:void(0)" class="layui-btn layui-btn-small" onclick="return delall(<?php echo ($data['ID']); ?>,<?php echo ($pg); ?>)"><i class="iconfont icon-shanchu1"></i>删除</a>&nbsp;&nbsp;&nbsp;&nbsp;

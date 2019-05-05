@@ -39,19 +39,30 @@
                         </div>
                        
                     </div>
-               
-                <div class="layui-form-item">
-                      <label class="layui-form-label">分类</label>
-                      <div class="layui-input-block">  
-                      
-                        <select name="modules" id="classid" lay-verify="required" lay-search="">
-                        
-                        	 <volist name="data.class" id="da" >
-                          <option value="{$da.ID}"  <if condition="isset($data['BN_TYPE'])&&($data['BN_TYPE']==$da['ID'])"> selected</if>>{$da.CL_NAME}</option>
-                           </volist>
-                        </select>
-                      </div>
-                    </div>
+
+				<div class="layui-form-item">
+					<label class="layui-form-label">位置</label>
+					<div class="layui-input-block">
+						<select name="postion" id="postion" lay-verify="required" lay-search="">
+							<option value="1" <if condition="isset($data['BN_POSTION'])&&($data['BN_POSTION']==1)"> selected</if>>精选</option>
+							<option value="2" <if condition="isset($data['BN_POSTION'])&&($data['BN_POSTION']==2)"> selected</if>>视频</option>
+							<option value="3" <if condition="isset($data['BN_POSTION'])&&($data['BN_POSTION']==3)"> selected</if>>影片</option>
+							<option value="4" <if condition="isset($data['BN_POSTION'])&&($data['BN_POSTION']==4)"> selected</if>>漫画</option>
+						</select>
+					</div>
+				</div>
+
+				<div class="layui-form-item">
+					<label class="layui-form-label">分类</label>
+					<div class="layui-input-block">
+						<select name="modules" id="classid" lay-verify="required" lay-search="">
+							<volist name="data.class" id="da">
+								<option value="{$da.ID}" <if condition="isset($data['BN_TYPE'])&&($data['BN_TYPE']==$da['ID'])"> selected</if>>{$da.CL_NAME}</option>
+							</volist>
+							<option value="0" <if condition="isset($data['BN_TYPE'])&&($data['BN_TYPE']==0)"> selected</if>>自定义链接</option>
+						</select>
+					</div>
+				</div>
                     
                 <div class="layui-form-item">
 					<label class="layui-form-label">视频/漫画id</label>
@@ -99,26 +110,34 @@
 					type=1;
 				}
 		   });
-		  
-		form.on('submit(demo1)', function(data){  
-		
-				$.ajax({
-				 type: "post",
-				 url: "{:U('banner/doadd')}",
-				 data: {name:$('#name').val(),spic:$('#spic').val(),type:$('#classid').val(),typeid:$('#typeid').val(),id:$('#upid').val(),pg:$('#pg').val(),},
-				 dataType: "json",
-				 async:false,
-				 success: function(data){
+
+		form.on('submit(demo1)', function (data) {
+
+			$.ajax({
+				type: "post",
+				url: "{:U('banner/doadd')}",
+				data: {
+					name: $('#name').val(),
+					spic: $('#spic').val(),
+					postion: $('#postion').val(),
+					type: $('#classid').val(),
+					typeid: $('#typeid').val(),
+					id: $('#upid').val(),
+					pg: $('#pg').val(),
+				},
+				dataType: "json",
+				async: false,
+				success: function (data) {
 					layer.msg(data.msg);
-						setTimeout(function() {
-							window.location =data.href;
-						}, 1200);
-					
-				 }
-							
-			 });
-				 return false;  
-		  }); 
+					setTimeout(function () {
+						window.location = data.href;
+					}, 1200);
+
+				}
+
+			});
+			return false;
+		});
 	});
 </script>
 </body>

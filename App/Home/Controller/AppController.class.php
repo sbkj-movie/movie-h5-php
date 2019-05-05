@@ -204,8 +204,8 @@ class AppController extends Controller
 	}
 	//首页banner
 	public function banner(){
-		$type=$_GET['type']?$_GET['type']:1;
-		$ad=M('mv_banner')->field('ID,BN_NAME,BN_URL,BN_TYPE,BN_TYPE_ID')->where("IS_DEL=0 and BN_TYPE=$type")->select();
+		$postion=$_GET['postion']?$_GET['postion']:1;
+		$ad=M('mv_banner')->field('ID,BN_NAME,BN_URL,BN_TYPE,BN_TYPE_ID')->where("IS_DEL=0 and BN_POSTION=$postion")->select();
 		if(!empty($ad)){
 			foreach($ad as $key=>$value){
 				$ad[$key]['BN_URL']=$this->signurl($value['BN_URL']);

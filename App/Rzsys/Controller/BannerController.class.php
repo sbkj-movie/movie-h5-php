@@ -59,6 +59,7 @@ class BannerController extends AllowController
 		$pg=$_POST['pg'];
 		$data['BN_NAME']=$_POST['name'];
 		$data['BN_URL']=$_POST['spic'];
+        $data['BN_POSTION']=$_POST['postion'];
 		$data['BN_TYPE']=$_POST['type'];
 		$data['BN_TYPE_ID']=$_POST['typeid'];
 	

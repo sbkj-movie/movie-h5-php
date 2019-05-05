@@ -39,17 +39,28 @@
                         </div>
                        
                     </div>
-               
-                <div class="layui-form-item">
-                      <label class="layui-form-label">分类</label>
-                      <div class="layui-input-block">  
-                      
-                        <select name="modules" id="classid" lay-verify="required" lay-search="">
-                        
-                        	 <?php if(is_array($data["class"])): $i = 0; $__LIST__ = $data["class"];if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$da): $mod = ($i % 2 );++$i;?><option value="<?php echo ($da["ID"]); ?>"  <?php if(isset($data['BN_TYPE'])&&($data['BN_TYPE']==$da['ID'])): ?>selected<?php endif; ?>><?php echo ($da["CL_NAME"]); ?></option><?php endforeach; endif; else: echo "" ;endif; ?>
-                        </select>
-                      </div>
-                    </div>
+
+				<div class="layui-form-item">
+					<label class="layui-form-label">位置</label>
+					<div class="layui-input-block">
+						<select name="postion" id="postion" lay-verify="required" lay-search="">
+							<option value="1" <?php if(isset($data['BN_POSTION'])&&($data['BN_POSTION']==1)): ?>selected<?php endif; ?>>精选</option>
+							<option value="2" <?php if(isset($data['BN_POSTION'])&&($data['BN_POSTION']==2)): ?>selected<?php endif; ?>>视频</option>
+							<option value="3" <?php if(isset($data['BN_POSTION'])&&($data['BN_POSTION']==3)): ?>selected<?php endif; ?>>影片</option>
+							<option value="4" <?php if(isset($data['BN_POSTION'])&&($data['BN_POSTION']==4)): ?>selected<?php endif; ?>>漫画</option>
+						</select>
+					</div>
+				</div>
+
+				<div class="layui-form-item">
+					<label class="layui-form-label">分类</label>
+					<div class="layui-input-block">
+						<select name="modules" id="classid" lay-verify="required" lay-search="">
+							<?php if(is_array($data["class"])): $i = 0; $__LIST__ = $data["class"];if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$da): $mod = ($i % 2 );++$i;?><option value="<?php echo ($da["ID"]); ?>" <?php if(isset($data['BN_TYPE'])&&($data['BN_TYPE']==$da['ID'])): ?>selected<?php endif; ?>><?php echo ($da["CL_NAME"]); ?></option><?php endforeach; endif; else: echo "" ;endif; ?>
+							<option value="0" <?php if(isset($data['BN_TYPE'])&&($data['BN_TYPE']==0)): ?>selected<?php endif; ?>>自定义链接</option>
+						</select>
+					</div>
+				</div>
                     
                 <div class="layui-form-item">
 					<label class="layui-form-label">视频/漫画id</label>
@@ -97,26 +108,34 @@
 					type=1;
 				}
 		   });
-		  
-		form.on('submit(demo1)', function(data){  
-		
-				$.ajax({
-				 type: "post",
-				 url: "<?php echo U('banner/doadd');?>",
-				 data: {name:$('#name').val(),spic:$('#spic').val(),type:$('#classid').val(),typeid:$('#typeid').val(),id:$('#upid').val(),pg:$('#pg').val(),},
-				 dataType: "json",
-				 async:false,
-				 success: function(data){
+
+		form.on('submit(demo1)', function (data) {
+
+			$.ajax({
+				type: "post",
+				url: "<?php echo U('banner/doadd');?>",
+				data: {
+					name: $('#name').val(),
+					spic: $('#spic').val(),
+					postion: $('#postion').val(),
+					type: $('#classid').val(),
+					typeid: $('#typeid').val(),
+					id: $('#upid').val(),
+					pg: $('#pg').val(),
+				},
+				dataType: "json",
+				async: false,
+				success: function (data) {
 					layer.msg(data.msg);
-						setTimeout(function() {
-							window.location =data.href;
-						}, 1200);
-					
-				 }
-							
-			 });
-				 return false;  
-		  }); 
+					setTimeout(function () {
+						window.location = data.href;
+					}, 1200);
+
+				}
+
+			});
+			return false;
+		});
 	});
 </script>
 </body>

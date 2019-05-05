@@ -32,30 +32,52 @@
                                   <th><input type="checkbox" id="selected-all"></th>
                                   <th>ID</th>
                                   <th>轮播图名称</th>
-                                   <th>缩略图</th>
+                                  <th>缩略图</th>
+                                  <th>位置</th>
                                   <th>类型</th>
-                                   <th>视频/漫画id</th>
+                                  <th>视频/漫画id</th>
                                   <th>添加时间</th>
                                   <th>操作</th>
                               </tr>
                           </thead>
-                          <tbody>
-                           <volist name="ad" id="data">
-                            <tr>
-                                            <td><input type="checkbox"></td>
-                                            <td>{$data['ID']}</td>
-                                            <td>{$data['BN_NAME']}</td>
-                                            <td><img src="{$data['BN_URL']}" height='80px'></td>
-                                            <td>{$type[$data['BN_TYPE']]}</td>
-                                             <td>{$data['BN_TYPE_ID']}</td>
-                                             <td>{$data['GMT_CREATE']}</td>
-                                              
-                                           
-											<td><a href="javascript:void(0)" class="layui-btn layui-btn-small" onclick="return delall({$data['ID']},{$pg})"><i class="iconfont icon-shanchu1"></i>删除</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="{:U('Banner/add')}?id={$data['ID']}&pg={$pg}" class="layui-btn layui-btn-small"><i class="iconfont icon-shanchu1"></i>编辑</a></td>
-                                          </tr>
-                            </volist>
-                              
-                          </tbody>
+                         <tbody>
+                         <volist name="ad" id="data">
+                             <tr>
+                                 <td><input type="checkbox"></td>
+                                 <td>{$data['ID']}</td>
+                                 <td>{$data['BN_NAME']}</td>
+                                 <td><img src="{$data['BN_URL']}" height='80px'></td>
+                                 <td>
+                                     <if condition="$data['BN_POSTION']==1 ">
+                                         精选
+                                     </if>
+                                     <if condition="$data['BN_POSTION']==2 ">
+                                         视频
+                                     </if>
+                                     <if condition="$data['BN_POSTION']==3 ">
+                                         影片
+                                     </if>
+                                     <if condition="$data['BN_POSTION']==3 ">
+                                         漫画
+                                     </if>
+                                 </td>
+                                 <td>
+                                     <if condition="$data['BN_TYPE']!=0 ">
+                                        {$type[$data['BN_TYPE']]}
+                                      <else />
+                                         自定义链接
+                                     </if>
+                                 </td>
+                                 <td>{$data['BN_TYPE_ID']}</td>
+                                 <td>{$data['GMT_CREATE']}</td>
+                                 <td>
+                                     <a href="javascript:void(0)" class="layui-btn layui-btn-small" onclick="return delall({$data['ID']},{$pg})"><i class="iconfont icon-shanchu1"></i>删除</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                     <a href="{:U('Banner/add')}?id={$data['ID']}&pg={$pg}"  class="layui-btn layui-btn-small"><i class="iconfont icon-shanchu1"></i>编辑</a>
+                                 </td>
+                             </tr>
+                         </volist>
+
+                         </tbody>
                      </table>
                       <div class="larry-table-page clearfix">
                          

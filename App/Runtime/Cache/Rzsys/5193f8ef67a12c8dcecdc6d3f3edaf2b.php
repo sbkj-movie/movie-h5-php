@@ -32,28 +32,40 @@
                                   <th><input type="checkbox" id="selected-all"></th>
                                   <th>ID</th>
                                   <th>轮播图名称</th>
-                                   <th>缩略图</th>
+                                  <th>缩略图</th>
+                                  <th>位置</th>
                                   <th>类型</th>
-                                   <th>视频/漫画id</th>
+                                  <th>视频/漫画id</th>
                                   <th>添加时间</th>
                                   <th>操作</th>
                               </tr>
                           </thead>
-                          <tbody>
-                           <?php if(is_array($ad)): $i = 0; $__LIST__ = $ad;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$data): $mod = ($i % 2 );++$i;?><tr>
-                                            <td><input type="checkbox"></td>
-                                            <td><?php echo ($data['ID']); ?></td>
-                                            <td><?php echo ($data['BN_NAME']); ?></td>
-                                            <td><img src="<?php echo ($data['BN_URL']); ?>" height='80px'></td>
-                                            <td><?php echo ($type[$data['BN_TYPE']]); ?></td>
-                                             <td><?php echo ($data['BN_TYPE_ID']); ?></td>
-                                             <td><?php echo ($data['GMT_CREATE']); ?></td>
-                                              
-                                           
-											<td><a href="javascript:void(0)" class="layui-btn layui-btn-small" onclick="return delall(<?php echo ($data['ID']); ?>,<?php echo ($pg); ?>)"><i class="iconfont icon-shanchu1"></i>删除</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="<?php echo U('Banner/add');?>?id=<?php echo ($data['ID']); ?>&pg=<?php echo ($pg); ?>" class="layui-btn layui-btn-small"><i class="iconfont icon-shanchu1"></i>编辑</a></td>
-                                          </tr><?php endforeach; endif; else: echo "" ;endif; ?>
-                              
-                          </tbody>
+                         <tbody>
+                         <?php if(is_array($ad)): $i = 0; $__LIST__ = $ad;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$data): $mod = ($i % 2 );++$i;?><tr>
+                                 <td><input type="checkbox"></td>
+                                 <td><?php echo ($data['ID']); ?></td>
+                                 <td><?php echo ($data['BN_NAME']); ?></td>
+                                 <td><img src="<?php echo ($data['BN_URL']); ?>" height='80px'></td>
+                                 <td>
+                                     <?php if($data['BN_POSTION']==1 ): ?>精选<?php endif; ?>
+                                     <?php if($data['BN_POSTION']==2 ): ?>视频<?php endif; ?>
+                                     <?php if($data['BN_POSTION']==3 ): ?>影片<?php endif; ?>
+                                     <?php if($data['BN_POSTION']==3 ): ?>漫画<?php endif; ?>
+                                 </td>
+                                 <td>
+                                     <?php if($data['BN_TYPE']!=0 ): echo ($type[$data['BN_TYPE']]); ?>
+                                      <?php else: ?>
+                                         自定义链接<?php endif; ?>
+                                 </td>
+                                 <td><?php echo ($data['BN_TYPE_ID']); ?></td>
+                                 <td><?php echo ($data['GMT_CREATE']); ?></td>
+                                 <td>
+                                     <a href="javascript:void(0)" class="layui-btn layui-btn-small" onclick="return delall(<?php echo ($data['ID']); ?>,<?php echo ($pg); ?>)"><i class="iconfont icon-shanchu1"></i>删除</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                     <a href="<?php echo U('Banner/add');?>?id=<?php echo ($data['ID']); ?>&pg=<?php echo ($pg); ?>"  class="layui-btn layui-btn-small"><i class="iconfont icon-shanchu1"></i>编辑</a>
+                                 </td>
+                             </tr><?php endforeach; endif; else: echo "" ;endif; ?>
+
+                         </tbody>
                      </table>
                       <div class="larry-table-page clearfix">
                          

@@ -59,7 +59,6 @@
                                      </td>
                                      <td>{$data['MAX_MONEY']}</td>
                                      <td>{$data['NOW_MONEY']}</td>
-                                     <td>{$data['GMT_CREATE']}</td>
                                      <td>
                                          <if condition="$data['HU_TYPE']==1 ">
                                              支付宝扫码
@@ -71,6 +70,7 @@
                                              微信扫码
                                          </if>
                                      </td>
+                                     <td>{$data['GMT_CREATE']}</td>
                                      <td>{$data['SORT_NUM']}</td>
                                      <td>
                                          <a href="javascript:void(0)" class="layui-btn layui-btn-small" onclick="return delall({$data['ID']},{$pg})"><i class="iconfont icon-shanchu1"></i>删除</a>&nbsp;&nbsp;&nbsp;&nbsp;
