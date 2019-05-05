@@ -273,6 +273,7 @@ CREATE TABLE `mv_banner` (
   `ID` int(16) NOT NULL COMMENT '主键id',
   `BN_NAME` varchar(16) DEFAULT NULL COMMENT '轮播图名称',
   `BN_URL` text COMMENT '轮播图地址',
+  `BN_POSTION` int(11) DEFAULT NULL COMMENT '位置：1-精选，2-视频，3-影片，4-漫画',
   `BN_TYPE` varchar(16) DEFAULT NULL COMMENT '类型 视频/漫画',
   `BN_TYPE_ID` int(16) DEFAULT NULL COMMENT '对应视频表/漫画表id',
   `GMT_CREATE` datetime DEFAULT NULL COMMENT '创建时间',
