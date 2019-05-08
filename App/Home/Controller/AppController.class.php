@@ -551,8 +551,12 @@ class AppController extends Controller
 		$this->returnjson('0','成功！',$data);
 	}
 	function signurl($yurl){
-		return $yurl;
-//		$yurl=$urlw;
+	    // m8u3的文件不加密
+        $suffix = ".m8u3";
+        if (substr_compare($yurl, $suffix, -strlen($suffix)) === 0) {
+            return $yurl;
+        }
+
 		$urlw=parse_url($yurl);
 		$file=substr($urlw['path'],1,strlen($urlw['path']));
 		//echo $file;die();
