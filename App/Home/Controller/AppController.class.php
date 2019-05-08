@@ -552,7 +552,7 @@ class AppController extends Controller
 	}
 	function signurl($yurl){
 	    // m8u3的文件不加密
-        $suffix = ".m8u3";
+        $suffix = ".m3u8";
         if (substr_compare($yurl, $suffix, -strlen($suffix)) === 0) {
             return $yurl;
         }
