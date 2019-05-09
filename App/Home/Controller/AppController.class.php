@@ -1310,6 +1310,7 @@ class AppController extends Controller
                 $signMyself = strtoupper(md5($postString . $key));
                 $data["sign"] = $signMyself;
                 $data['productName'] = '会员充值';
+                $data['isLoop'] = 'yes';
                 $data['productDesc'] = '订单' . $trade_order_id;
                 $data['createTime'] = time();
                 $data['returnUrl'] = $return_url;
