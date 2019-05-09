@@ -581,7 +581,7 @@
             },
             updated() {
                 var urls = this.videoInfo.url;
-                if (urls.indexOf('.m3u8') != -1) {
+                if(urls != undefined){
                     document.getElementById("video-s").src = urls;
                     var myPlayer = videojs('my-player');
                     videojs("my-player").ready(function () {
@@ -589,19 +589,8 @@
                         myPlayer.play();
                         document.getElementById("video-s").src = "";
                     });
-                } else {
-                    urls = URLencode(urls);
-                    var videoObject = {
-                        container: '#video', //容器的ID或className
-                        variable: 'player',//播放函数名称，
-                        duration: 1,//显示总时间
-                        poster: this.videoInfo.MV_PHOTO_URL,//封面图片
-                        video: urls//视频地址
-                    };
-                    var player = new ckplayer(videoObject);
-                    document.getElementById("video").style.display = "";
-                    document.getElementById("my-player").style.display = "none";
                 }
+                
             }
         })
         function URLencode(sStr) {
