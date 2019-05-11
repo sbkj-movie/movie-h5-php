@@ -552,10 +552,10 @@ class AppController extends Controller
 	}
 	function signurl($yurl){
 	    // m8u3的文件不加密
-        $suffix = ".m3u8";
-        if (substr_compare($yurl, $suffix, -strlen($suffix)) === 0) {
-            return $yurl;
-        }
+        // $suffix = ".m3u8";
+        // if (substr_compare($yurl, $suffix, -strlen($suffix)) === 0) {
+        //     return $yurl;
+        // }
 
 		$urlw=parse_url($yurl);
 		$file=substr($urlw['path'],1,strlen($urlw['path']));
@@ -581,7 +581,7 @@ class AppController extends Controller
 		   $Sign=urlencode($Sign);
 		   $file=urlencode($file);
 		 
-		   $url=$domain.$file."?OSSAccessKeyId=".$ak."&Expires=".$expire."&Signature=".$Sign;
+		   $url=$yurl."?OSSAccessKeyId=".$ak."&Expires=".$expire."&Signature=".$Sign;
 			$url=str_replace("+","%2b",$url);
 			//echo $url;die();
 		  return $url;
