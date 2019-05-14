@@ -1276,10 +1276,10 @@ class AppController extends Controller
             $appsecret = $hupijiao['HU_APP_SECRET'];//测试账户，
 //            $my_plugin_id = 'my-plugins-id';
             if ($_GET['f'] && $_GET['f'] == 1) {
-                $return_url = $domain . '/users/appPaySuccess.html';
+                $return_url = 'http://' . $_SERVER['SERVER_NAME'] . '/users/appPaySuccess.html';
 //				$callback_url=$domain.'/users/appPayerr.html';
             } else {
-                $return_url = $domain . '/users/webPaySuccess.html';
+                $return_url = 'http://' . $_SERVER['SERVER_NAME'] . '/users/webPaySuccess.html';
 //				$callback_url=$domain.'/users/webPayerr.html';
             }
 
