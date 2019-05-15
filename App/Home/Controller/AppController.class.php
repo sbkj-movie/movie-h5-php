@@ -1340,7 +1340,7 @@ class AppController extends Controller
 
                 $str_signed = $this->sign($str_to_sign, $appsecret);
                 $param_arr['sign'] = $str_signed;
-                $pre_pay_url = "http://api.qapple.io/v2/api/merchant/merchantcenter/pay/prePay";
+                $pre_pay_url = "https://api.qapple.io/v2/api/merchant/merchantcenter/pay/prePay";
                 $response_str = $this->request_post($pre_pay_url, $param_arr);
                 $response = json_decode($response_str, true);
                 if ($response['code'] != 200) {
