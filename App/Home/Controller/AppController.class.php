@@ -435,52 +435,68 @@ class AppController extends Controller
 				$vip=M('mv_shop_history')->where("SH_USERID=$uid and SH_END>'$time' and IS_PAY=1")->order('id desc')->find();
 				//不是vip，本月是否推荐会员
 				if(empty($vip)){
-					$user=M('mv_user')->find($uid);
-					$times=date('Y-m-1',time());
-					$lasttime=date('Y-m-1',strtotime('next month'));
-					$son=M('mv_user')->where("PARENT_CODE='$user[EXTENSION_CODE]' and GMT_CREATE>'$times' and GMT_CREATE<'$lasttime'")->select();
-					if(empty($son)){
-						//没有推荐会员，只能看20部
-						//查看今天是否看过这部
-						
-						$totime=date('Y-m-d',time());
-						
-						$islook=M('mv_look_history')->where("LH_PHYLETIC=1 and LH_LOOKID=$id and LH_USERID=$uid and TYPE=1 and GMT_MODIFED>'$totime' and LH_CLASS in($movie[MV_PHYLETIC])")->find();
-						
-						if(empty($islook)){
-							$looknum=M('mv_look_history')->where("LH_TYPE=2 and LH_PHYLETIC=1 and LH_USERID=$uid and TYPE=1 and GMT_MODIFED>'$totime' and LH_CLASS in($movie[MV_PHYLETIC])")->count();
-							//echo $looknum;
-							//echo M('mv_look_history')->getlastsql();die();
-							//分类
-							$class=M('mv_class')->where("ID in ($movie[MV_PHYLETIC])")->sum('CL_NUM');
-							//echo M('mv_class')->getlastsql();die();
-							//echo $looknum;
-							//echo $class;die();
-							if($looknum>=$class){
-								 $movie['shikan']=1;
-								 if($cn==1){
-									unset($movie['MV_HURL']);
-									unset($movie['MV_WURL']);
-									unset($movie['MV_WHURL']);
-									$movie['url']=$movie['MV_SHURL'];
-								 }else{
-									unset($movie['MV_HURL']);
-									unset($movie['MV_WURL']);
-									unset($movie['MV_SHURL']);
-									$movie['url']=$movie['MV_WHURL'];
-								 }
-								 $movie['url']=$this->signurl($movie['url']);
-								 $data['movie']=$movie;
-								if($class==0){
-									$this->returnjson('3','无权观看，请充值或推荐新会员',$data);
-								}else{
-									$this->returnjson('3','您今天已观看'.$class.'部视频，请充值或推荐新会员！',$data);
-								}
-								
-							}
-						}
-						
-					}
+//					$user=M('mv_user')->find($uid);
+//					$times=date('Y-m-1',time());
+//					$lasttime=date('Y-m-1',strtotime('next month'));
+//					$son=M('mv_user')->where("PARENT_CODE='$user[EXTENSION_CODE]' and GMT_CREATE>'$times' and GMT_CREATE<'$lasttime'")->select();
+//					if(empty($son)){
+//						//没有推荐会员，只能看20部
+//						//查看今天是否看过这部
+//
+//						$totime=date('Y-m-d',time());
+//
+//						$islook=M('mv_look_history')->where("LH_PHYLETIC=1 and LH_LOOKID=$id and LH_USERID=$uid and TYPE=1 and GMT_MODIFED>'$totime' and LH_CLASS in($movie[MV_PHYLETIC])")->find();
+//
+//						if(empty($islook)){
+//							$looknum=M('mv_look_history')->where("LH_TYPE=2 and LH_PHYLETIC=1 and LH_USERID=$uid and TYPE=1 and GMT_MODIFED>'$totime' and LH_CLASS in($movie[MV_PHYLETIC])")->count();
+//							//echo $looknum;
+//							//echo M('mv_look_history')->getlastsql();die();
+//							//分类
+//							$class=M('mv_class')->where("ID in ($movie[MV_PHYLETIC])")->sum('CL_NUM');
+//							//echo M('mv_class')->getlastsql();die();
+//							//echo $looknum;
+//							//echo $class;die();
+//							if($looknum>=$class){
+//								 $movie['shikan']=1;
+//								 if($cn==1){
+//									unset($movie['MV_HURL']);
+//									unset($movie['MV_WURL']);
+//									unset($movie['MV_WHURL']);
+//									$movie['url']=$movie['MV_SHURL'];
+//								 }else{
+//									unset($movie['MV_HURL']);
+//									unset($movie['MV_WURL']);
+//									unset($movie['MV_SHURL']);
+//									$movie['url']=$movie['MV_WHURL'];
+//								 }
+//								 $movie['url']=$this->signurl($movie['url']);
+//								 $data['movie']=$movie;
+//								if($class==0){
+//									$this->returnjson('3','无权观看，请充值或推荐新会员',$data);
+//								}else{
+//									$this->returnjson('3','您今天已观看'.$class.'部视频，请充值或推荐新会员！',$data);
+//								}
+//
+//							}
+//						}
+//
+//					}
+
+                    $movie['shikan'] = 1;
+                    if ($cn == 1) {
+                        unset($movie['MV_HURL']);
+                        unset($movie['MV_WURL']);
+                        unset($movie['MV_WHURL']);
+                        $movie['url'] = $movie['MV_SHURL'];
+                    } else {
+                        unset($movie['MV_HURL']);
+                        unset($movie['MV_WURL']);
+                        unset($movie['MV_SHURL']);
+                        $movie['url'] = $movie['MV_WHURL'];
+                    }
+                    $movie['url'] = $this->signurl($movie['url']);
+                    $data['movie'] = $movie;
+                    $this->returnjson('3','无权观看，请充值',$data);
 				}
 			}
 			
