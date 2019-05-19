@@ -1314,7 +1314,7 @@ class AppController extends Controller
                 $data['productDesc'] = '订单' . $trade_order_id;
                 $data['createTime'] = time();
                 $data['returnUrl'] = $return_url;
-                $data['notifyUrl'] = 'http://' . $_SERVER['SERVER_NAME'] . '/index.php/app/notify.html';
+                $data['notifyUrl'] = 'https://' . $_SERVER['SERVER_NAME'] . '/index.php/app/notify.html';
                 $postString = http_build_query($data);
                 $url = "http://api.hypay.xyz/index.php/Api/Index/createOrder?" . $postString;
                 $pay_url = $url;
@@ -1330,7 +1330,7 @@ class AppController extends Controller
                     'vipName' => $user['USERNAME'],
                     'subject' => 'VIP会员购买',
                     'body' => 'VIP会员购买',
-                    'notifyUrl' => 'http://' . $_SERVER['SERVER_NAME'] . '/index.php/app/receive_message.html',//具体的回调地址
+                    'notifyUrl' => 'https://' . $_SERVER['SERVER_NAME'] . '/index.php/app/receive_message.html',//具体的回调地址
                     'signType' => 'RSA'
 
                 );
