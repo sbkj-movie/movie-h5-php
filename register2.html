@@ -37,13 +37,13 @@
    <div class="mui-content">
        <form id='login-form' class="mui-input-group">
 				<div class="mui-input-row">
-					<label>问题1：</label>
+					<label>问题：</label>
 					<input id='question1' type="text" class="mui-input" placeholder="请输入问题">
 				</div>
 				<div class="mui-input-row">
 					<input id='answer1' type="text" class="mui-input inp" placeholder="请输入答案">
 				</div>
-                <div class="mui-input-row">
+                <!--<div class="mui-input-row">
 					<label>问题2：</label>
 					<input id='question2' type="text" class="mui-input" placeholder="请输入问题">
 				</div>
@@ -56,7 +56,7 @@
 				</div>
                 <div class="mui-input-row">
 					<input id='answer3' type="text" class="mui-input inp" placeholder="请输入答案">
-				</div>
+				</div>-->
 			</form>
             <div class="tips">
                 提示：密保只可设置一次，设置成功后无法修改，密保将用作忘记密码修改和忘记支付密码修改的唯一途径，请牢记！
@@ -96,42 +96,42 @@
        var zcid = localStorage.getItem("zcid");
         t = getQueryString("t");
        var que1 = document.querySelector("#question1").value;
-       var que2 = document.querySelector("#question2").value;
-       var que3 = document.querySelector("#question3").value;
+       // var que2 = document.querySelector("#question2").value;
+       // var que3 = document.querySelector("#question3").value;
        var ans1 = document.querySelector("#answer1").value;
-       var ans2 = document.querySelector("#answer2").value;
-       var ans3 = document.querySelector("#answer3").value;
+       // var ans2 = document.querySelector("#answer2").value;
+       // var ans3 = document.querySelector("#answer3").value;
        if (isNull(que1)) {
-            mui.toast("请输入问题1!");
+            mui.toast("请输入问题!");
             return false;
        }
        if (isNull(ans1)) {
-            mui.toast("请输入问题1的答案!");
+            mui.toast("请输入问题的答案!");
             return false;
        }
-       if (isNull(que2)) {
-            mui.toast("请输入问题2!");
-            return false;
-       }
-       if (isNull(ans2)) {
-            mui.toast("请输入问题2的答案!");
-            return false;
-       }
-       if (isNull(que3)) {
-            mui.toast("请输入问题3!");
-            return false;
-       }
-       if (isNull(ans3)) {
-            mui.toast("请输入问题3的答案!");
-            return false;
-       }
+       // if (isNull(que2)) {
+       //      mui.toast("请输入问题2!");
+       //      return false;
+       // }
+       // if (isNull(ans2)) {
+       //      mui.toast("请输入问题2的答案!");
+       //      return false;
+       // }
+       // if (isNull(que3)) {
+       //      mui.toast("请输入问题3!");
+       //      return false;
+       // }
+       // if (isNull(ans3)) {
+       //      mui.toast("请输入问题3的答案!");
+       //      return false;
+       // }
         var btn='';
         btn = document.getElementById("questionSave");
         if (zcid != 0 && zcid != 'undefined' && zcid != null && zcid != '') {
              //ajax提交
              btn.disabled = true;
              btn.innerText = "正在提交，请稍候...";
-             axget('/requestion', { question1: que1, answer1:ans1,question2:que2,answer2:ans2,question3:que3,answer3:ans3,uid:zcid }).then((res) => {
+             axget('/requestion', { question1: que1, answer1:ans1,/** question2:que2,answer2:ans2,question3:que3,answer3:ans3,*/uid:zcid }).then((res) => {
                  if (res.code == "0") {
                      if (t == 0) {
                          mui.toast(res.msg);

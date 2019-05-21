@@ -41,7 +41,7 @@
 				<div class="mui-input-row">
 					<input id='answer1' type="text" class="mui-input inp" placeholder="请输入答案">
 				</div>
-                <div class="mui-input-row">
+                <!--<div class="mui-input-row">
 					<input id='question2' type="text" class="mui-input" disabled="disabled">
 				</div>
                 <div class="mui-input-row">
@@ -52,7 +52,7 @@
 				</div>
                 <div class="mui-input-row">
 					<input id='answer3' type="text" class="mui-input inp" placeholder="请输入答案">
-				</div>
+				</div>-->
 			</form>
 			<div class="mui-content-padded">
 				<button id='next' class="btn-login">验证</button>
@@ -80,8 +80,8 @@
                  //console.log(res);
                 if (res.code == "0") {
                     $$("#question1").val(res.data[0]);
-                    $$("#question2").val(res.data[1]);
-                    $$("#question3").val(res.data[2]);
+                    // $$("#question2").val(res.data[1]);
+                    // $$("#question3").val(res.data[2]);
                  } else {
                      mui.toast(res.msg);
                  }
@@ -92,28 +92,28 @@
     })
     $$("#next").on("click", function () {
        var ans1 = document.querySelector("#answer1").value;
-       var ans2 = document.querySelector("#answer2").value;
-       var ans3 = document.querySelector("#answer3").value;
+       // var ans2 = document.querySelector("#answer2").value;
+       // var ans3 = document.querySelector("#answer3").value;
 
        if (isNull(ans1)) {
             mui.toast("请输入问题1的答案!");
             return false;
        }
-       if (isNull(ans2)) {
-            mui.toast("请输入问题2的答案!");
-            return false;
-       }
-       if (isNull(ans3)) {
-            mui.toast("请输入问题3的答案!");
-            return false;
-       }
+       // if (isNull(ans2)) {
+       //      mui.toast("请输入问题2的答案!");
+       //      return false;
+       // }
+       // if (isNull(ans3)) {
+       //      mui.toast("请输入问题3的答案!");
+       //      return false;
+       // }
         var btn='';
         btn = document.getElementById("next");
         var zhid = localStorage.getItem("zhid");
         if (zhid != 0 && zhid != 'undefined' && zhid != null && zhid != '') {
             btn.disabled = true;
             btn.innerText = "请稍候...";
-            axget('/pwdanswer', {uid:zhid,answer1:ans1,answer2:ans2,answer3:ans3}).then((res) => {
+            axget('/pwdanswer', {uid:zhid,answer1:ans1/**,answer2:ans2,answer3:ans3*/}).then((res) => {
                  //console.log(res);
                  if (res.code == "0") {
                     mui.toast(res.msg);

@@ -79,7 +79,7 @@
 						<input type="text" name="answer1" id="answer1"  class="layui-input " value=""  >
 					</div>
 				</div>
-                <div class="layui-form-item">
+                <!--<div class="layui-form-item">
 					<label class="layui-form-label">问题</label>
 					<div class="layui-input-block">  
 						<input type="text" name="question2" id="question2"  lay-verify="question2" class="layui-input " value="" >
@@ -102,10 +102,10 @@
 					<div class="layui-input-block">  
 						<input type="text" name="answer3" id="answer3"  class="layui-input " value=""  >
 					</div>
-				</div>
+				</div>-->
                 <?php else: ?>
            
-                	<?php if(is_array($data["ques"])): $k = 0; $__LIST__ = $data["ques"];if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$da): $mod = ($k % 2 );++$k;?><div class="layui-form-item">
+                	<?php if(is_array($data["ques"])): $k = 0; $__LIST__ = $data["ques"];if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$da): $mod = ($k % 2 );++$k; if($k==1): ?><div class="layui-form-item">
                             <label class="layui-form-label">问题</label>
                             <div class="layui-input-block">  
                                 <input type="text" name="question<?php echo ($k); ?>" id="question<?php echo ($k); ?>"  lay-verify="question<?php echo ($k); ?>" class="layui-input " value="<?php echo ($da["question"]); ?>" >
@@ -116,7 +116,7 @@
                             <div class="layui-input-block">  
                                 <input type="text" name="answer<?php echo ($k); ?>" id="answer<?php echo ($k); ?>"  class="layui-input " value="<?php echo ($da["answer"]); ?>"  >
                             </div>
-                        </div><?php endforeach; endif; else: echo "" ;endif; endif; ?> 
+                        </div><?php endif; endforeach; endif; else: echo "" ;endif; endif; ?> 
                
                 
               <!-- <div class="layui-form-item">
@@ -163,10 +163,10 @@
 					tid: $('#tid').val(),
 					question1: $('#question1').val(),
 					answer1: $('#answer1').val(),
-					question2: $('#question2').val(),
-					answer2: $('#answer2').val(),
-					question3: $('#question3').val(),
-					answer3: $('#answer3').val(),
+					// question2: $('#question2').val(),
+					// answer2: $('#answer2').val(),
+					// question3: $('#question3').val(),
+					// answer3: $('#answer3').val(),
 					pid: $('#pid').val(),
 					id: $('#upid').val(),
 					pg: $('#pg').val(),

@@ -85,7 +85,7 @@
 						<input type="text" name="answer1" id="answer1"  class="layui-input " value=""  >
 					</div>
 				</div>
-                <div class="layui-form-item">
+                <!--<div class="layui-form-item">
 					<label class="layui-form-label">问题</label>
 					<div class="layui-input-block">  
 						<input type="text" name="question2" id="question2"  lay-verify="question2" class="layui-input " value="" >
@@ -108,12 +108,13 @@
 					<div class="layui-input-block">  
 						<input type="text" name="answer3" id="answer3"  class="layui-input " value=""  >
 					</div>
-				</div>
+				</div>-->
                 <else />
            
                 	<volist name="data.ques" id="da" key="k" >
-                   
-                		 <div class="layui-form-item">
+
+						<if condition="$k==1">
+						<div class="layui-form-item">
                             <label class="layui-form-label">问题</label>
                             <div class="layui-input-block">  
                                 <input type="text" name="question{$k}" id="question{$k}"  lay-verify="question{$k}" class="layui-input " value="{$da.question}" >
@@ -125,6 +126,7 @@
                                 <input type="text" name="answer{$k}" id="answer{$k}"  class="layui-input " value="{$da.answer}"  >
                             </div>
                         </div>
+						</if>
                       </volist>
                 </if> 
                
@@ -173,10 +175,10 @@
 					tid: $('#tid').val(),
 					question1: $('#question1').val(),
 					answer1: $('#answer1').val(),
-					question2: $('#question2').val(),
-					answer2: $('#answer2').val(),
-					question3: $('#question3').val(),
-					answer3: $('#answer3').val(),
+					// question2: $('#question2').val(),
+					// answer2: $('#answer2').val(),
+					// question3: $('#question3').val(),
+					// answer3: $('#answer3').val(),
 					pid: $('#pid').val(),
 					id: $('#upid').val(),
 					pg: $('#pg').val(),
