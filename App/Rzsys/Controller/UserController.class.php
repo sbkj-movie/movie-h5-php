@@ -198,10 +198,10 @@ class UserController extends AllowController {
 		$ques=[];
 		$ques[1]['question']=$_POST['question1'];
 		$ques[1]['answer']=$_POST['answer1'];
-//		$ques[2]['question']=$_POST['question2'];
-//		$ques[2]['answer']=$_POST['answer2'];
-//		$ques[3]['question']=$_POST['question3'];
-//		$ques[3]['answer']=$_POST['answer3'];
+		$ques[2]['question']=$_POST['question2'];
+		$ques[2]['answer']=$_POST['answer2'];
+		$ques[3]['question']=$_POST['question3'];
+		$ques[3]['answer']=$_POST['answer3'];
 		$data['SECURITY_QUESTION']=json_encode($ques);
 		$data['PARENT_CODE']=$_POST['pid'];
 		$is_vip = $_POST['is_vip'];
