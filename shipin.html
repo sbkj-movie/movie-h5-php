@@ -6,13 +6,13 @@
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black" />
 <link rel="stylesheet" href="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/mui.min.css">
-<link rel="stylesheet" href="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/style.css">  
-<link rel="stylesheet" type="text/css" href="/css/icons-extra.css" />
-<link rel="stylesheet" type="text/css" href="/css/iconfont.css" />
+<link rel="stylesheet" href="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/style.css">
+<link rel="stylesheet" type="text/css" href="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/css/icons-extra.css" />
+<link rel="stylesheet" type="text/css" href="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/css/iconfont.css" />
 <script src="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/phone.js"></script>
 <title>视频</title>
 <style type="text/css">
- @font-face {font-family:Muiicons;font-weight:400;font-style:normal;src:url(../fonts/mui.ttf) format('truetype')}
+ @font-face {font-family:Muiicons;font-weight:400;font-style:normal;src:url(https://spp1.oss-cn-hongkong.aliyuncs.com/zl/fonts/mui.ttf) format('truetype')}
     body{ background:#f8f8f8;}
     .mui-content{background:#f8f8f8;margin-top:90px }
     .items{margin:10px 0%;background:#fff;padding:0 0 8px 0px;position:relative;}
@@ -23,7 +23,7 @@
     .items .r .iconfont{font-size:23px;}
     .items .r .fx{margin-left:15px;margin-top:2px;}
     .mfsk{display:inline;position:absolute;top:20px; background:linear-gradient(to right,#4f4f4f,#3c3c3c);font-size:15px; color:#fff;padding:3px 10px;border-radius:0 15px 15px 0px;}
-    .vico{display:inline;position:absolute;top:70px;left:43%;background-image:url(/images/vico.png);width:50px;height:50px;background-repeat:no-repeat;background-size:cover;}
+    .vico{display:inline;position:absolute;top:70px;left:43%;background-image:url(https://spp1.oss-cn-hongkong.aliyuncs.com/zl/images/vico.png);width:50px;height:50px;background-repeat:no-repeat;background-size:cover;}
     .mui-scroll-wrapper{margin-top:80px;margin-bottom:60px;}
     .mgtop50{margin-top:40px;}
 
@@ -33,7 +33,7 @@
   <div id="shipin">
    <div style="margin-bottom:60px;">
       <div class="down" :class="{'downs':app}">
-           <div class="d-logo"><span class="mui-icon mui-icon-close" v-on:click="closeAPP"></span>&nbsp;<img src="/images/logo.png" /></div>
+           <div class="d-logo"><span class="mui-icon mui-icon-close" v-on:click="closeAPP"></span>&nbsp;<img src="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/images/logo.png" /></div>
            <div class="d-app"><a href="/download.html">下载APP</a></div>
        </div>
        <div class="header" :class="{'headers':app}">
@@ -85,7 +85,7 @@
 		 <div class="fx-popvcont">
              <div class="fx-title">分享</div>
              <div id="copyUrl" class="fx-cont" data-clipboard-action="copy" data-clipboard-text="">
-                 <div class="url-icon"><img src="/images/copyurl.png" /></div>
+                 <div class="url-icon"><img src="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/images/copyurl.png" /></div>
                  <div class="i-tit">复制链接</div>
              </div>
          </div>
@@ -109,7 +109,7 @@
 <script src="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/mui.min.js"></script>
 <script src="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/api.js"></script>
 <script src="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/axios.js"></script>
-<script src="/js/clipboard.js"></script>
+<script src="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/js/clipboard.js"></script>
 <!-- <script type="text/javascript" src="https://s96.cnzz.com/z_stat.php?id=1277234795&web_id=1277234795"></script> -->
 <script type="text/javascript" charset="utf-8">
     var clipboard = new ClipboardJS('.fx-cont');
@@ -202,7 +202,7 @@
                     hyid = 0;
                     token = 0;
                 }
-                mui('#refreshContainer').pullRefresh().endPullupToRefresh(self.isNum); 
+                mui('#refreshContainer').pullRefresh().endPullupToRefresh(self.isNum);
                 axget('/jingmovie', {uid:hyid,token:token,pagesize: pgsize, pageindex: pgidx}).then((res) => {
                         if (res.code == 0) {
                             if (res.data.length > 0) {
@@ -256,9 +256,9 @@
                  var ym = document.domain;//当前域名
                  var hyid = localStorage.getItem("hyid");//获取用户ID
                  if (hyid != 0 && hyid != 'undefined' && hyid != null && hyid != '') {
-                      u = u.attributes["data-clipboard-text"].value ="http://"+ym+"/shipin_show.html?id="+ids+"&pid="+hyid;
+                      u = u.attributes["data-clipboard-text"].value ="https://"+ym+"/shipin_show.html?id="+ids+"&pid="+hyid;
                  } else {
-                     u = u.attributes["data-clipboard-text"].value ="http://"+ym+"/shipin_show.html?id="+ids;
+                     u = u.attributes["data-clipboard-text"].value ="https://"+ym+"/shipin_show.html?id="+ids;
                  }
              },
              foot_bar(i) {

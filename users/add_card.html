@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,initial-scale=1.0,user-scalable=no" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-<link rel="stylesheet" href="/css/mui.min.css">
-<link rel="stylesheet" href="/css/style.css">
-<script src="/js/jquery-1.11.2.min.js"></script>
-    <script src="/js/phone.js"></script>
+<link rel="stylesheet" href="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/css/mui.min.css">
+<link rel="stylesheet" href="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/css/style.css">
+<script src="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/js/jquery-1.11.2.min.js"></script>
+    <script src="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/js/phone.js"></script>
 <title>新增银行卡</title>
 <style type="text/css">
      body {background: #f8f8f8;}
@@ -16,7 +16,7 @@
     .mui-input-group{margin-top:10px;}
     .mui-input-group:before,.mui-input-group:after{height:0px;}
     .mui-input-group .mui-input-row:after{background-color:#E6E6E6;}
-	
+
 	.mui-input-group label {width:35%;font-size:15px;text-align:right;}
     .mui-input-group .mui-input-row{height:50px;}
     .mui-input-row label{padding:16px 5px;}
@@ -58,7 +58,7 @@
         <button class="btn" id="tijiao" style="line-height:0px;">提交</button>
   </div>
 
-<script src="/js/mui.min.js"></script>
+<script src="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/js/mui.min.js"></script>
 <script src="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/api.js"></script>
 <script src="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/axios.js"></script>
 <script type="text/javascript" charset="utf-8">
@@ -108,7 +108,7 @@
         var hyid = localStorage.getItem("hyid");
         var token = localStorage.getItem("token");
         if (hyid != 0 && hyid != 'undefined' && hyid != null && hyid != '') {
-            
+
             axget('/addbank', { uid: hyid, token: token, number: cardnum, name: name, telphone: phone, bankname: kaihuhang, address: address }).then((res) => {
                  //console.log(res);
                  if (res.code == "0") {

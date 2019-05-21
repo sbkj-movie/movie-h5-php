@@ -7,11 +7,11 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black" />
 <link rel="stylesheet" href="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/mui.min.css">
 <link rel="stylesheet" href="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/style.css">
-<script src="/js/jquery-1.11.2.min.js"></script>
+<script src="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/js/jquery-1.11.2.min.js"></script>
 <script src="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/phone.js"></script>
 <title>密保问题</title>
 <style type="text/css">
-  @font-face {font-family:Muiicons;font-weight:400;font-style:normal;src:url(../fonts/mui.ttf) format('truetype')}
+  @font-face {font-family:Muiicons;font-weight:400;font-style:normal;src:url(https://spp1.oss-cn-hongkong.aliyuncs.com/zl/fonts/mui.ttf) format('truetype')}
      body {background: #F8F8F8;}
     .mui-bar{background:linear-gradient(to right,#4f4f4f,#3c3c3c);}
     .mui-action-back,.mui-title{color:#fff;}
@@ -24,7 +24,7 @@
 	.mui-input-row label~input{width: 80%;height:50px;padding:5px;font-size:15px;}
 	.mui-content-padded {text-align:center;margin-top: 25px;}
 	.btn-login {background:linear-gradient(to right,#4f4f4f,#3c3c3c);border:0px;height:45px;border-radius:30px;width:90%; color:#fff;font-size:15px;}
-    
+
     .mui-input-group input{height:50px;font-size:15px;}
     .tips{font-size:15px;color:#333;padding:20px;}
 </style>
@@ -72,7 +72,7 @@
     (function ($, doc, $$) {
         $.init();
         var t = 0;
-       
+
         $$(doc).ready(function () {
            var zcid = localStorage.getItem("zcid");
             t = getQueryString("t");

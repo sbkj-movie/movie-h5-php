@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,initial-scale=1.0,user-scalable=no" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-<link rel="stylesheet" href="/css/mui.min.css">
-<link rel="stylesheet" href="/css/style.css">
-<link rel="stylesheet" type="text/css" href="/css/icons-extra.css" />
-<link rel="stylesheet" type="text/css" href="/css/iconfont.css" />
-<script src="/js/phone.js"></script>
+<link rel="stylesheet" href="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/css/mui.min.css">
+<link rel="stylesheet" href="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/css/style.css">
+<link rel="stylesheet" type="text/css" href="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/css/icons-extra.css" />
+<link rel="stylesheet" type="text/css" href="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/css/iconfont.css" />
+<script src="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/js/phone.js"></script>
 <title>分类列表</title>
 <style type="text/css">
     body{ background:#f8f8f8;}
@@ -100,7 +100,7 @@
 		</nav>
    </div>
 <script src="https://cdn.jsdelivr.net/npm/vue"></script>
-<script src="/js/mui.min.js"></script>
+<script src="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/js/mui.min.js"></script>
 <script src="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/api.js"></script>
 <script src="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/axios.js"></script>
 <!-- <script type="text/javascript" src="https://s96.cnzz.com/z_stat.php?id=1277234795&web_id=1277234795"></script> -->
@@ -191,7 +191,7 @@
                 var t = self.type;
                 var typeid = self.typeid;
                 self.pageIndex = pgidx;
-                mui('#refreshContainer').pullRefresh().endPullupToRefresh(self.isNum); 
+                mui('#refreshContainer').pullRefresh().endPullupToRefresh(self.isNum);
                 if (typeid != 0 && typeid != 'undefined' && typeid != null && typeid != '') {
                     axget('/classcont', {pagesize: pgsize, pageindex: pgidx, type: t, cid: typeid}).then((res) => {
                         if (res.code == 0) {

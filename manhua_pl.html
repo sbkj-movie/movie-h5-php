@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,initial-scale=1.0,user-scalable=no" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-<link rel="stylesheet" href="/css/mui.min.css">
-<link rel="stylesheet" href="/css/style.css">
-<link rel="stylesheet" type="text/css" href="/css/iconfont.css" />
-    <script src="/js/phone.js"></script>
+<link rel="stylesheet" href="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/css/mui.min.css">
+<link rel="stylesheet" href="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/css/style.css">
+<link rel="stylesheet" type="text/css" href="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/css/iconfont.css" />
+    <script src="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/js/phone.js"></script>
 <title>漫画评论</title>
 <style type="text/css">
     .mui-bar{background:linear-gradient(to right,#4f4f4f,#3c3c3c);}
@@ -159,7 +159,7 @@
                         }
                         mui('#refreshContainer').pullRefresh().endPulldownToRefresh();
                         mui('#refreshContainer').pullRefresh().refresh(true);
-                       
+
                      })
                 } else {
                     location.href="/manhua.html"
@@ -171,7 +171,7 @@
                 var pgsize = self.pagesize;
                 var pgidx = self.pageindex + 1;
                 self.pageindex = pgidx;
-                mui('#refreshContainer').pullRefresh().endPullupToRefresh(self.isNum); 
+                mui('#refreshContainer').pullRefresh().endPullupToRefresh(self.isNum);
                 if (mhid != 0 && mhid != 'undefined' && mhid != null && mhid != '') {
                     axget('/commentlist', { id: mhid, pagesize: pgsize, pageindex: pgidx, type: 2 }).then((res) => {
                         //console.log(res);

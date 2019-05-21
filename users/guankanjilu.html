@@ -5,13 +5,13 @@
 <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,initial-scale=1.0,user-scalable=no" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-<link rel="stylesheet" href="/css/mui.min.css">
-<link rel="stylesheet" href="/css/style.css">
-<link rel="stylesheet" href="/css/iconfont.css">
-    <script src="/js/phone.js"></script>
+<link rel="stylesheet" href="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/css/mui.min.css">
+<link rel="stylesheet" href="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/css/style.css">
+<link rel="stylesheet" href="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/css/iconfont.css">
+    <script src="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/js/phone.js"></script>
 <title>观看记录</title>
 <style type="text/css">
-    //.mui-content{margin-top:90px;}
+    .mui-content{margin-top:90px;}
     .mui-segmented-control{border:0px;}
     .mui-segmented-control .mui-control-item.mui-active{background:none;color:#3c3c3c;border-bottom:#3c3c3c 1px solid;}
     .mui-segmented-control .mui-control-item{border-left:0px;color:#333;border-bottom:1px solid #E5E5E5;}
@@ -47,7 +47,7 @@
 		 </div>
 	  </div>
   </div>
- 
+
       <div id="item1" class="mui-control-content mui-active">
            <div id="refreshContainer" class="mui-scroll-wrapper" :class="{'mgtop100':app}">
             <div class="mui-scroll">
@@ -97,7 +97,7 @@
            </div>
          </div>
       </div>
-<script src="/js/mui.min.js"></script>
+<script src="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/js/mui.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue"></script>
 <script src="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/api.js"></script>
 <script src="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/axios.js"></script>
@@ -241,12 +241,12 @@
                     pgsize = self.pagesizeS;
                     pgidx = self.pageindexS + 1;
                     self.pageindexS = pgidx;
-                    mui('#refreshContainer').pullRefresh().endPullupToRefresh(self.isNumS); 
+                    mui('#refreshContainer').pullRefresh().endPullupToRefresh(self.isNumS);
                 }else if(t==2){
                     pgsize = self.pagesizeM;
                     pgidx = self.pageindexM + 1;
                     self.pageindexM = pgidx;
-                    mui('#refreshContainerM').pullRefresh().endPullupToRefresh(self.isNumM); 
+                    mui('#refreshContainerM').pullRefresh().endPullupToRefresh(self.isNumM);
                 }
                 if (hyid != 0 && hyid != 'undefined' && hyid != null && hyid != '') {
                     axget('/lookjilu', { uid: hyid, token: token, type:t, looktype: 1, pagesize: pgsize, pageindex: pgidx}).then((res) => {
@@ -312,7 +312,7 @@
                             mui.toast("删除失败,未获取到用户,请重新登录!");
                         }
                     }
-                   
+
                 })
             }, fnOpen(ids, i) {
                 if (i == 1) {
@@ -323,7 +323,7 @@
             }
          }
     })
-    
+
     var vmh = new Vue({
         el: '#item2',
         data: datas,

@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,initial-scale=1.0,user-scalable=no" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-<link rel="stylesheet" href="/css/mui.min.css">
-<link rel="stylesheet" href="/css/style.css">
-<link rel="stylesheet" href="/css/icons-extra.css">
-<link rel="stylesheet" type="text/css" href="/css/iconfont.css" />
-    <script src="/js/phone.js"></script>
+<link rel="stylesheet" href="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/css/mui.min.css">
+<link rel="stylesheet" href="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/css/style.css">
+<link rel="stylesheet" href="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/css/icons-extra.css">
+<link rel="stylesheet" type="text/css" href="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/css/iconfont.css" />
+    <script src="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/js/phone.js"></script>
 <title>漫画章节</title>
 <style type="text/css">
  .manhua-box{height:200px;width:100%;overflow:hidden;margin-top:90px;}
@@ -49,7 +49,7 @@
     </div>
    <div v-else>
     <div class="down" :class="{'downs':app}">
-     <div class="d-logo"><span class="mui-icon mui-icon-close" v-on:click="closeAPP"></span>&nbsp;<img src="/images/logo.png" style="width:100px;" /></div>
+     <div class="d-logo"><span class="mui-icon mui-icon-close" v-on:click="closeAPP"></span>&nbsp;<img src="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/images/logo.png" style="width:100px;" /></div>
      <div class="d-app"><a href="/download.html">下载APP</a></div>
    </div>
    <div class="header" :class="{'headers':app}">
@@ -96,7 +96,7 @@
 		 <div class="fx-popvcont">
              <div class="fx-title">分享</div>
              <div id="copyUrl" class="fx-cont" data-clipboard-action="copy" data-clipboard-text="">
-                 <div class="url-icon"><img src="/images/copyurl.png" /></div>
+                 <div class="url-icon"><img src="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/images/copyurl.png" /></div>
                  <div class="i-tit">复制链接</div>
              </div>
          </div>
@@ -129,14 +129,14 @@
 		</a>
 	</nav>
  </div>
-	
+
 </div>
 
-<script src="/js/vue.js"></script>
-<script src="/js/api.js"></script>
-<script src="/js/axios.js"></script>
-<script src="/js/mui.min.js"></script>
-<script src="/js/clipboard.js"></script>
+<script src="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/js/vue.js"></script>
+<script src="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/js/api.js"></script>
+<script src="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/js/axios.js"></script>
+<script src="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/js/mui.min.js"></script>
+<script src="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/js/clipboard.js"></script>
 <script type="text/javascript" charset="utf-8">
     var clipboard = new ClipboardJS('.fx-cont');
 		clipboard.on('success', function(e) {
@@ -204,7 +204,7 @@
 						 self.loading = false;
                             mui.toast(res.msg);
                         }
-                       
+
                     })
                     var pgsize = self.pagesize;
                     self.pageindex=0;
@@ -305,9 +305,9 @@
                 var u = document.getElementById("copyUrl");
                 var ym = document.domain;//当前域名
                 if (hyid != 0 && hyid != 'undefined' && hyid != null && hyid != '') {
-                    u = u.attributes["data-clipboard-text"].value ="http://"+ym + "/manhua_list.html?id=" + that.mh_id + "&pid=" + hyid;
+                    u = u.attributes["data-clipboard-text"].value ="https://"+ym + "/manhua_list.html?id=" + that.mh_id + "&pid=" + hyid;
                 } else {
-                    u = u.attributes["data-clipboard-text"].value ="http://"+ym + "/manhua_list.html?id=" +  that.mh_id;
+                    u = u.attributes["data-clipboard-text"].value ="https://"+ym + "/manhua_list.html?id=" +  that.mh_id;
                 }
             },
 			foot_bar(i) {

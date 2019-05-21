@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,initial-scale=1.0,user-scalable=no" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-<link rel="stylesheet" href="/css/mui.min.css">
-<link rel="stylesheet" href="/css/style.css">
-    <script src="/js/phone.js"></script>
+<link rel="stylesheet" href="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/css/mui.min.css">
+<link rel="stylesheet" href="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/css/style.css">
+    <script src="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/js/phone.js"></script>
 <title>套餐购买</title>
 <style type="text/css">
  .mui-content{margin-top:20px;padding-top:10px;}
@@ -17,7 +17,7 @@
  .item .t{font-size:18px;}
  .item .price{color:#d41717;margin-top:5px;}
  .item i{font-weight:normal;font-style:initial;font-size:20px;}
- 
+
 .mui-popover{height:230px;position:fixed; top:40%;width:80%;left:10%;background:#fff;}
 .mui-popover .mui-popover-arrow:after {width: 0px;}
 .mui-popover .popvcont{padding:10px;width:100%; text-align:center;margin:0 auto;}
@@ -73,7 +73,7 @@
 <div class="toast-box" id="toast">
 <div class="toast">加载中请稍后...</div>
 </div>
-<script src="/js/mui.min.js"></script>
+<script src="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/js/mui.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue"></script>
 <script src="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/api.js"></script>
 <script src="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/axios.js"></script>
@@ -125,7 +125,7 @@
                 } else {
                    location.href = "/login.html";
                 }
-              
+
             }, active(ids, idx) {
                 this.tcid = ids;
                 this.ins = idx;
@@ -151,7 +151,7 @@
 					axget('/pay', { uid: hyid, token: token, type: s, tid:tcid,domain:yuming,f:0 }).then((res) => {
 						//console.log(res);
 						if (res.code == "0") {
-							 
+
 						} else if (res.code == "2") {
 						  mui.alert('账号在别处登录,您已被迫下线！', ' ', function() {
 							  localStorage.clear();
@@ -169,7 +169,7 @@
 				} else {
 					location.href = "/login.html";
 				}
-                
+
             },closeAPP() {
                 this.app = true;
             }
