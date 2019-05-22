@@ -184,12 +184,15 @@ class AppController extends Controller
 			$anw[$i]=$val->answer;
 			$i++;
 		}
-		
-		for($j=1;$j<4;$j++){
-			if(trim($anw[$j])!=trim($an[$j])){
-					$this->returnjson('1','第'.$j.'个答案错误！','');
-			}
-		}
+
+        if(trim($anw[1])!=trim($an[1])){
+            $this->returnjson('1','答案错误！','');
+        }
+//		for($j=1;$j<4;$j++){
+//			if(trim($anw[$j])!=trim($an[$j])){
+//					$this->returnjson('1','第'.$j.'个答案错误！','');
+//			}
+//		}
 		$pwd=$_GET['pwd'];
 		if($type==1){
 			$data['LOGIN_PSWD']=md5($pwd);
@@ -496,7 +499,7 @@ class AppController extends Controller
                     }
                     $movie['url'] = $this->signurl($movie['url']);
                     $data['movie'] = $movie;
-                    $this->returnjson('3','无权观看，请充值',$data);
+                    $this->returnjson('3','无权观看，请充值 ',$data);
 				}
 			}
 			
