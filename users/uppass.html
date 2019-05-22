@@ -39,10 +39,10 @@
       <div class="qus-box">
           <span id="qus1"></span>
           <input id='answer1' type="text" class="mui-input" placeholder="请输入答案">
-          <span id="qus2"></span>
+         <!--  <span id="qus2"></span>
           <input id='answer2' type="text" class="mui-input" placeholder="请输入答案">
           <span id="qus3"></span>
-          <input id='answer3' type="text" class="mui-input" placeholder="请输入答案">
+          <input id='answer3' type="text" class="mui-input" placeholder="请输入答案"> -->
       </div>
       <div class="mui-input-group">
 			<div class="mui-input-row" style="margin-top:10px;">
@@ -90,22 +90,23 @@
      })
      document.getElementById("btndenglu").addEventListener('tap', function () {
          var ans1 = doc.querySelector("#answer1").value;
-         var ans2 = doc.querySelector("#answer2").value;
-         var ans3 = doc.querySelector("#answer3").value;
+         // var ans2 = doc.querySelector("#answer2").value;
+         // var ans3 = doc.querySelector("#answer3").value;
+         var ans2="",ans3="";
          var pwd = doc.querySelector("#password").value;
          var rpwd = doc.querySelector("#rpassword").value;
          if (isNull(ans1)) {
             mui.toast("请输入问题1的答案");
             return false;
          }
-         if (isNull(ans2)) {
-            mui.toast("请输入问题2的答案");
-            return false;
-         }
-         if (isNull(ans3)) {
-            mui.toast("请输入问题3的答案");
-            return false;
-         }
+         // if (isNull(ans2)) {
+         //    mui.toast("请输入问题2的答案");
+         //    return false;
+         // }
+         // if (isNull(ans3)) {
+         //    mui.toast("请输入问题3的答案");
+         //    return false;
+         // }
          if (isNull(pwd)) {
             mui.toast("请输入新的密码");
             return false;
