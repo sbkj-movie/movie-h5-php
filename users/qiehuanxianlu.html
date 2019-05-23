@@ -57,7 +57,10 @@
         methods: {
             getInfo() {
                 var that = this;
-                var ym = document.domain;//当前域名
+                //var ym = document.domain;//当前域名
+                var url = document.referrer;
+                var arr = url.split('/');
+                var ym = arr[2];
                 axget('/yuminglist', {}).then((res) => {
                     //console.log(res);
                    if (res.code == "0") {
