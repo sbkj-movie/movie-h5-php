@@ -267,7 +267,7 @@ class AppController extends Controller
 		$pagesize=$_GET['pagesize'];
 		$pageindex=$_GET['pageindex'];
 		$pageindex=$pageindex*$pagesize;
-		$ad=M('mv_movies')->field('ID,MV_NAME,MV_PHOTO_URL,MV_TIME,MV_TYPE')->where(" IS_DEL=0 and MV_PHYLETIC like '%3%' and MV_STATUS=1")->order('ID desc')->limit($pageindex,$pagesize)->select();
+		$ad=M('mv_movies')->field('ID,MV_NAME,MV_PHOTO_URL,MV_TIME,MV_TYPE')->where(" IS_DEL=0 and MV_PHYLETIC like '%3%' and MV_STATUS=1")->order('MV_TYPE, GMT_CREATE desc')->limit($pageindex,$pagesize)->select();
 		if(empty($ad)){
 			$ad=0;
 		}else{
@@ -283,7 +283,7 @@ class AppController extends Controller
 		$pagesize=$_GET['pagesize'];
 		$pageindex=$_GET['pageindex'];
 		$pageindex=$pageindex*$pagesize;
-		$ad=M('mv_movies')->field('ID,MV_NAME,MV_PHOTO_URL,MV_TYPE')->where(" IS_DEL=0 and MV_PHYLETIC like '%2%' and MV_STATUS=1")->order('ID desc')->limit($pageindex,$pagesize)->select();
+		$ad=M('mv_movies')->field('ID,MV_NAME,MV_PHOTO_URL,MV_TYPE')->where(" IS_DEL=0 and MV_PHYLETIC like '%2%' and MV_STATUS=1")->order('MV_TYPE, GMT_CREATE desc')->limit($pageindex,$pagesize)->select();
 		if(empty($ad)){
 			$ad=0;
 		}else{
