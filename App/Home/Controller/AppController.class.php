@@ -1394,7 +1394,7 @@ class AppController extends Controller
                     'P_Subject' => 'VIP会员购买',   // 商品名称
                     'P_OrderId' => $trade_order_id, // 商户订单号
                     'P_Description' => 'VIP会员购买',    // 订单描述
-                    'P_Result_URL' => 'https://' . $_SERVER['SERVER_NAME'] . '/index.php/app/ggttu_notify.html',    // 后端通知地址
+                    'P_Result_URL' => 'http://' . $_SERVER['SERVER_NAME'] . '/index.php/app/ggttu_notify.html',    // 后端通知地址
                     'P_Notify_URL' => $return_url,   // 前端跳转地址
                     'P_PayType' => $paytype // 支付方式
                 );
