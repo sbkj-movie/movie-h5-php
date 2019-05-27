@@ -61,13 +61,19 @@
                                      <td>{$data['NOW_MONEY']}</td>
                                      <td>
                                          <if condition="$data['HU_TYPE']==1 ">
-                                             支付宝扫码
+                                             支付宝扫码(1)
                                          </if>
                                          <if condition="$data['HU_TYPE']==2 ">
                                              青苹果
                                          </if>
                                          <if condition="$data['HU_TYPE']==3 ">
-                                             微信扫码
+                                             微信扫码(1)
+                                         </if>
+                                         <if condition="$data['HU_TYPE']==4 ">
+                                             支付宝wap(2)
+                                         </if>
+                                         <if condition="$data['HU_TYPE']==5 ">
+                                             微信wap(2)
                                          </if>
                                      </td>
                                      <td>{$data['GMT_CREATE']}</td>

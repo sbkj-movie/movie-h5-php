@@ -59,9 +59,11 @@
                                      <td><?php echo ($data['MAX_MONEY']); ?></td>
                                      <td><?php echo ($data['NOW_MONEY']); ?></td>
                                      <td>
-                                         <?php if($data['HU_TYPE']==1 ): ?>支付宝扫码<?php endif; ?>
+                                         <?php if($data['HU_TYPE']==1 ): ?>支付宝扫码(1)<?php endif; ?>
                                          <?php if($data['HU_TYPE']==2 ): ?>青苹果<?php endif; ?>
-                                         <?php if($data['HU_TYPE']==3 ): ?>微信扫码<?php endif; ?>
+                                         <?php if($data['HU_TYPE']==3 ): ?>微信扫码(1)<?php endif; ?>
+                                         <?php if($data['HU_TYPE']==4 ): ?>支付宝wap(2)<?php endif; ?>
+                                         <?php if($data['HU_TYPE']==5 ): ?>微信wap(2)<?php endif; ?>
                                      </td>
                                      <td><?php echo ($data['GMT_CREATE']); ?></td>
                                      <td><?php echo ($data['SORT_NUM']); ?></td>

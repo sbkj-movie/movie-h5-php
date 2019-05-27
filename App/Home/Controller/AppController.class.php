@@ -1380,6 +1380,38 @@ class AppController extends Controller
                         $this->returnjson('1', '验签失败！');
                     }
                 }
+            } elseif ($type == 4 || $type = 5) {
+
+                if($type == 4){
+                    $paytype = "AlipayWap";
+                }else{
+                    $paytype = "WxWap";
+                }
+
+                $params= array(
+                    'P_UserId' => $appid, // 商户号
+                    'P_Price' => bcmul($money , 100),  // 单位：分
+                    'P_Subject' => 'VIP会员购买',   // 商品名称
+                    'P_OrderId' => $trade_order_id, // 商户订单号
+                    'P_Description' => 'VIP会员购买',    // 订单描述
+                    'P_Result_URL' => 'https://' . $_SERVER['SERVER_NAME'] . '/index.php/app/ggttu_notify.html',    // 后端通知地址
+                    'P_Notify_URL' => $return_url,   // 前端跳转地址
+                    'P_PayType' => $paytype // 支付方式
+                );
+
+                $signstr2="P_UserId=".$params[P_UserId]."&P_Price=".$params[P_Price].
+                    "&P_Subject=".$params[P_Subject]."&P_OrderId=".$params[P_OrderId].
+                    "&P_Description=".$params[P_Description]."&P_Result_URL=".
+                    $params[P_Result_URL]."&key=".$appsecret;
+
+                $sign = md5($signstr2);
+
+                $params['P_PostKey'] = $sign;
+                $postString = http_build_query($params);
+
+                $pay_url = "http://pay.ggttu.cn/Payapi_Index_Pay.html?".$postString;
+
+                $this->returnjson('4', '成功！', $pay_url);
             } else {
                 $this->returnjson('1', '订单错误，请重新提交！', '');
             }
@@ -1482,6 +1514,33 @@ class AppController extends Controller
 			}
 			
 	}
+
+	function ggttu_notify(){
+        $array=explode('-',$_GET['orderId']);
+//        $uid=$array[0];
+        $oid=$array[1];
+        $order=M('mv_shop_history')->find($oid);
+        $hupijiao=M('mage_hupijiao')->find($order['HPID']);
+
+        $signstr2="P_UserId=".$_GET[P_UserId].
+            "&P_OrderId=".$_GET[P_OrderId].
+            "&P_BillId=".$_GET[P_BillId].
+            "&P_Price=".$_GET[P_Price].
+            "&P_Subject=".$_GET[P_Subject].
+            "&key=".$hupijiao[HU_APP_SECRET];
+        $sign2 = md5($signstr2);
+
+        if($sign2 == $_GET[P_PostKey]){
+            $up['IS_PAY']=1;
+            M('mv_shop_history')->where("ID=$oid")->save($up);
+            //修改最高限额
+            $xiane['NOW_MONEY']=$hupijiao['NOW_MONEY']+$order['SH_PAY'];
+
+            M('mage_hupijiao')->where("ID=$order[HPID]")->save($xiane);
+        }
+
+    }
+
 	 public function upload(){
 		$ajax=$_POST['ajax'];
 		$ajax=json_decode($ajax);
