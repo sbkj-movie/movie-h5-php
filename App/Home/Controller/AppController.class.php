@@ -1566,7 +1566,7 @@ class AppController extends Controller {
     function ggttu_notify() {
         Log::record("GGTTU支付返回：" . json_encode($_GET));
 
-        $array = explode('-', $_GET['orderId']);
+        $array = explode('-', $_GET['P_OrderId']);
         $oid = $array[1];
         $order = M('mv_shop_history')->find($oid);
         $hupijiao = M('mage_hupijiao')->find($order['HPID']);
