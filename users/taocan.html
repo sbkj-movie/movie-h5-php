@@ -158,7 +158,8 @@
 							  location.href="/login.html"
 							});
 						} else if (res.code == 4) {
-							window.location.href = res.data;
+							// window.location = res.data;
+              window.open(res.data);
 						}
 						else {
 							mui.toast(res.msg);
