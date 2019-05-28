@@ -1,6 +1,7 @@
 <?php
 namespace Home\Controller;
 use Think\Controller;
+use Think\Log;
 class AppController extends Controller
 {
 	
@@ -603,9 +604,12 @@ class AppController extends Controller
 		   $url=$yurl."?OSSAccessKeyId=".$ak."&Expires=".$expire."&Signature=".$Sign;
 			$url=str_replace("+","%2b",$url);
 			//echo $url;die();
-		  return $url;
-		
-	   
+
+        if($ak == ""){
+            return $yurl;
+        }else{
+            return $url;
+        }
 	}
 	//评论列表
 	public function commentlist(){
@@ -1394,8 +1398,8 @@ class AppController extends Controller
                     'P_Subject' => 'VIP会员购买',   // 商品名称
                     'P_OrderId' => $trade_order_id, // 商户订单号
                     'P_Description' => 'VIP会员购买',    // 订单描述
-                    'P_Result_URL' => 'http://' . $_SERVER['SERVER_NAME'] . '/index.php/app/ggttu_notify.html',    // 后端通知地址
-                    'P_Notify_URL' => $return_url,   // 前端跳转地址
+                    'P_Notify_URL' => 'http://' . $_SERVER['SERVER_NAME'] . '/index.php/app/ggttu_notify.html',    // 后端通知地址
+                    'P_Result_URL' => $return_url,   // 前端跳转地址
                     'P_PayType' => $paytype // 支付方式
                 );
 
@@ -1516,6 +1520,8 @@ class AppController extends Controller
 	}
 
 	function ggttu_notify(){
+        Log::record("支付返回：".json_encode($_GET));
+
         $array=explode('-',$_GET['orderId']);
 //        $uid=$array[0];
         $oid=$array[1];
