@@ -59,7 +59,7 @@
                 var payUrl = getQueryString("payUrl");
                 document.getElementById("gpPayUrl").href = payUrl;
                 that.loading = false;
-                document.getElementById("price").innerHTML = "￥"+getQueryString("tcid");
+                document.getElementById("price").innerHTML = "￥"+getQueryString("price");
 
             },getQueryString(name) {
                 var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");

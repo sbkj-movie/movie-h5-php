@@ -90,7 +90,8 @@
             hyid: 0,
             token:0,
             listData:'',
-            payChannelList:''
+            payChannelList:'',
+            price:0
         },
         created: function () {
             this.getInfo();
@@ -134,47 +135,48 @@
             },quxiao(){
                  mui("#popover").popover('toggle');
             }, act(idx) {
-				this.s = idx;
+				        this.s = idx;
             }, buy() {
                 var that = this;
                 var s = that.s;//支付方式1支付宝，2微信
-				var tcid = that.tcid;
-				//var zftype = "alipay";
-				//if (s ==2) {
-				   // zftype = "wechat";
-				//}
-				var yuming = globalData.siteadd;
-				var hyid = localStorage.getItem("hyid");
-				var token = localStorage.getItem("token");
-				if (hyid != 0 && hyid != 'undefined' && hyid != null && hyid != '') {
-				document.getElementById("toast").style.display = "block";
-					axget('/pay', { uid: hyid, token: token, type: s, tid:tcid,domain:yuming,f:0 }).then((res) => {
-						//console.log(res);
-						if (res.code == "0") {
+        				var tcid = that.tcid;
+                var price = that.listData[that.ins].SP_PRICE;
+        				//var zftype = "alipay";
+        				//if (s ==2) {
+        				   // zftype = "wechat";
+        				//}
+        				var yuming = globalData.siteadd;
+        				var hyid = localStorage.getItem("hyid");
+        				var token = localStorage.getItem("token");
+        				if (hyid != 0 && hyid != 'undefined' && hyid != null && hyid != '') {
+        				document.getElementById("toast").style.display = "block";
+        					axget('/pay', { uid: hyid, token: token, type: s, tid:tcid,domain:yuming,f:0 }).then((res) => {
+        						//console.log(res);
+        						if (res.code == "0") {
 
-						} else if (res.code == "2") {
-						  mui.alert('账号在别处登录,您已被迫下线！', ' ', function() {
-							  localStorage.clear();
-							  location.href="/login.html"
-							});
-						} else if (res.code == 4) {
-              if(s == 5){
-                // var u = navigator.userAgent;
-                // var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
-                location.href = "payWxStatus.html?payUrl="+res.data+"&tcid="+tcid;
-              }else{
-                window.location = res.data;
-              }              
-						}
-						else {
-							mui.toast(res.msg);
-						}
-						document.getElementById("toast").style.display = "none";
-						that.loading = false;
-					})
-				} else {
-					location.href = "/login.html";
-				}
+        						} else if (res.code == "2") {
+        						  mui.alert('账号在别处登录,您已被迫下线！', ' ', function() {
+        							  localStorage.clear();
+        							  location.href="/login.html"
+        							});
+        						} else if (res.code == 4) {
+                      if(s == 5){
+                        // var u = navigator.userAgent;
+                        // var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+                        location.href = "payWxStatus.html?payUrl="+res.data+"&price="+price;
+                      }else{
+                        window.location = res.data;
+                      }              
+        						}
+        						else {
+        							mui.toast(res.msg);
+        						}
+        						document.getElementById("toast").style.display = "none";
+        						that.loading = false;
+        					})
+        				} else {
+        					location.href = "/login.html";
+        				}
 
             },closeAPP() {
                 this.app = true;
