@@ -57,7 +57,6 @@
           </div>
       </div><div class="clear"></div>
       <div class="btn" v-on:click="goumai">立即购买</div>
-      <a href="http://www.baidu.com" title="我的博客" target="_blank">test</a>
           <div id="popover" class="mui-popover">
 			<div class="mui-popover-arrow"></div>
 			<div id="payChannelHtml" class="popvcont">
@@ -159,9 +158,16 @@
 							  location.href="/login.html"
 							});
 						} else if (res.code == 4) {
-							// window.location = res.data;
-              // window.open(res.data);
-              window.open(res.data, "_blank", "scrollbars=yes,resizable=1,modal=false,alwaysRaised=yes");
+              var a = document.createElement('a');
+              a.setAttribute('href', res.data);
+              a.setAttribute('target', '_blank');
+              a.setAttribute('id', 'startTelMedicine');
+              // 防止反复添加
+              if(document.getElementById('startTelMedicine')) {
+                document.body.removeChild(document.getElementById('startTelMedicine'));
+              }
+              document.body.appendChild(a);
+              a.click();
 						}
 						else {
 							mui.toast(res.msg);
