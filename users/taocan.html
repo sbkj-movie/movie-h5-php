@@ -159,7 +159,8 @@
 							});
 						} else if (res.code == 4) {
 							// window.location = res.data;
-              window.open(res.data);
+              // window.open(res.data);
+              window.open(res.data, "_blank", "scrollbars=yes,resizable=1,modal=false,alwaysRaised=yes");
 						}
 						else {
 							mui.toast(res.msg);
