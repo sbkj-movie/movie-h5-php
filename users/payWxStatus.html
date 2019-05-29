@@ -56,7 +56,7 @@
         methods: {
             getData() {
                 var that = this;
-                var payUrl = getQueryString("payUrl");
+                var payUrl = decodeURIComponent(getQueryString("payUrl"));
                 document.getElementById("gpPayUrl").href = payUrl;
                 that.loading = false;
                 document.getElementById("price").innerHTML = "￥"+getQueryString("price");

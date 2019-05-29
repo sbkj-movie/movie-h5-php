@@ -163,7 +163,7 @@
                       if(s == 5){
                         // var u = navigator.userAgent;
                         // var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
-                        location.href = "payWxStatus.html?payUrl="+res.data+"&price="+price;
+                        location.href = "payWxStatus.html?payUrl="+encodeURIComponent(res.data)+"&price="+price;
                       }else{
                         window.location = res.data;
                       }              
