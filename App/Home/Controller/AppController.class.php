@@ -1424,33 +1424,44 @@ class AppController extends Controller {
             } elseif ($type == 4 || $type = 5) {
 
                 if ($type == 4) {
-                    $paytype = "AlipayWap";
+                    $paytype = "904";
                 } else {
-                    $paytype = "WxWap";
+                    $paytype = "901";
                 }
 
-                $params = array(
-                    'P_UserId' => $appid, // 商户号
-                    'P_Price' => bcmul($money, 100),  // 单位：分
-                    'P_Subject' => 'VIP会员购买',   // 商品名称
-                    'P_OrderId' => $trade_order_id, // 商户订单号
-                    'P_Description' => 'VIP会员购买',    // 订单描述
-                    'P_Result_URL' => $serverHost . '/index.php/app/ggttu_notify.html',    // 后端通知地址
-                    'P_Notify_URL' => $return_url,   // 前端跳转地址
-                    'P_PayType' => $paytype // 支付方式
+
+                $pay_memberid = $appid;   //商户后台API管理获取
+                $pay_orderid = $trade_order_id;    //订单号
+                $pay_amount = $money;    //交易金额
+                $pay_applydate = date("Y-m-d H:i:s");  //订单时间
+                $pay_notifyurl = $serverHost . '/index.php/app/zl_notify.html';   //服务端返回地址
+                $pay_callbackurl = $return_url;  //页面跳转返回地址
+                $Md5key = $appsecret;   //商户后台API管理获取
+                $tjurl = "http://www.hrst211.xyz/Pay_Index.html";   //提交地址
+                $pay_bankcode = $paytype; //支付宝扫码  //商户后台通道费率页 获取银行编码
+                $native = array(
+                    "pay_memberid" => $pay_memberid,
+                    "pay_orderid" => $pay_orderid,
+                    "pay_amount" => $pay_amount,
+                    "pay_applydate" => $pay_applydate,
+                    "pay_bankcode" => $pay_bankcode,
+                    "pay_notifyurl" => $pay_notifyurl,
+                    "pay_callbackurl" => $pay_callbackurl,
                 );
+                ksort($native);
+                $md5str = "";
+                foreach ($native as $key => $val) {
+                    $md5str = $md5str . $key . "=" . $val . "&";
+                }
 
-                $signstr2 = "P_UserId=" . $params[P_UserId] . "&P_Price=" . $params[P_Price] .
-                    "&P_Subject=" . $params[P_Subject] . "&P_OrderId=" . $params[P_OrderId] .
-                    "&P_Description=" . $params[P_Description] . "&P_Result_URL=" .
-                    $params[P_Result_URL] . "&key=" . $appsecret;
+                $sign = strtoupper(md5($md5str . "key=" . $Md5key));
+                $native["pay_md5sign"] = $sign;
+//                $native['pay_attach'] = "1234|456";
+                $native['pay_productname'] = 'VIP会员购买';
 
-                $sign = md5($signstr2);
+                $postString = http_build_query($native);
 
-                $params['P_PostKey'] = $sign;
-                $postString = http_build_query($params);
-
-                $pay_url = "http://pay.ggttu.cn/Payapi_Index_Pay.html?" . $postString;
+                $pay_url = $tjurl . "?" . $postString;
 
                 $this->returnjson('4', '成功！', $pay_url);
             } else {
@@ -1562,35 +1573,46 @@ class AppController extends Controller {
 
     }
 
-    // GGTTU支付回调
-    function ggttu_notify() {
-        Log::record("GGTTU支付返回：" . json_encode($_GET));
+    // 智联支付回调
+    function zl_notify() {
 
-        $array = explode('-', $_GET['P_OrderId']);
-        $oid = $array[1];
-        $order = M('mv_shop_history')->find($oid);
-        $hupijiao = M('mage_hupijiao')->find($order['HPID']);
+        Log::record("ZL支付返回：" . json_encode($_REQUEST));
 
-        $signstr2 = "P_UserId=" . $_GET[P_UserId] .
-            "&P_OrderId=" . $_GET[P_OrderId] .
-            "&P_BillId=" . $_GET[P_BillId] .
-            "&P_Price=" . $_GET[P_Price] .
-            "&P_Subject=" . $_GET[P_Subject] .
-            "&key=" . $hupijiao[HU_APP_SECRET];
-        $sign2 = md5($signstr2);
+        $returnArray = array( // 返回字段
+            "memberid" => $_REQUEST["memberid"], // 商户ID
+            "orderid" => $_REQUEST["orderid"], // 订单号
+            "amount" => $_REQUEST["amount"], // 交易金额
+            "datetime" => $_REQUEST["datetime"], // 交易时间
+            "transaction_id" => $_REQUEST["transaction_id"], // 支付流水号
+            "returncode" => $_REQUEST["returncode"],
+        );
+        $md5key = "t4ig5acnpx4fet4zapshjacjd9o4bhbi";
+        ksort($returnArray);
+        reset($returnArray);
+        $md5str = "";
+        foreach ($returnArray as $key => $val) {
+            $md5str = $md5str . $key . "=" . $val . "&";
+        }
+        $sign = strtoupper(md5($md5str . "key=" . $md5key));
+        if ($sign == $_REQUEST["sign"]) {
+            if ($_REQUEST["returncode"] == "00") {
+                $array = explode('-', $_REQUEST["orderid"]);
+                $oid = $array[1];
+                $order = M('mv_shop_history')->find($oid);
+                $hupijiao = M('mage_hupijiao')->find($order['HPID']);
 
-        if ($sign2 == $_GET[P_PostKey]) {
-            $up['IS_PAY'] = 1;
-            M('mv_shop_history')->where("ID=$oid")->save($up);
-            //修改最高限额
-            $xiane['NOW_MONEY'] = $hupijiao['NOW_MONEY'] + $order['SH_PAY'];
+                $up['IS_PAY'] = 1;
+                M('mv_shop_history')->where("ID=$oid")->save($up);
+                //修改最高限额
+                $xiane['NOW_MONEY'] = $hupijiao['NOW_MONEY'] + $order['SH_PAY'];
 
-            M('mage_hupijiao')->where("ID=$order[HPID]")->save($xiane);
-            echo "success";
-        } else {
-            echo "fail";
+                M('mage_hupijiao')->where("ID=$order[HPID]")->save($xiane);
+                echo "OK";
+                exit();
+            }
         }
 
+        echo "fail";
     }
 
     public function upload() {
