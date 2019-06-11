@@ -1459,7 +1459,7 @@ class AppController extends Controller {
 //                $native['pay_attach'] = "1234|456";
                 $native['pay_productname'] = 'VIP会员购买';
 
-                $postString = http_build_query($native);
+                $postString = http_build_query($native, null, null, PHP_QUERY_RFC3986);
 
                 $pay_url = $tjurl . "?" . $postString;
 
