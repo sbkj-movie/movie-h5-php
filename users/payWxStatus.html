@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
@@ -32,9 +32,13 @@
           <div class="cont" v-html="content"></div>
           <div align="center" style="font-size: 20px;color: #636363;">VIP购买</div><br>
           <div id="price" align="center" style="font-size: 50px;color: #d41717;">--</div>         
-          <a id="gpPayUrl" class="btn" href="" target="_blank">点击此处继续完成支付</a>
-          <a id="gpPayUrl" class="btn" href="taocan.html">返回</a>
-          <a id="gpPayUrl" class="btn" href="index.html" >已完成</a>
+          <!-- <a id="gpPayUrl" class="btn" href="" target="_blank">点击此处继续完成支付</a> -->
+          <a id="gpPayUrl" class="btn" @click="goFormPage()" target="_blank">点击此处继续完成支付</a>
+          <a class="btn" href="taocan.html">返回</a>
+          <a class="btn" href="index.html" >已完成</a>
+          <form action="http://www.hrst211.xyz/Pay_Index.html" id="myform" method="post" style="visibility: hidden">
+            <input type="submit" value="立即支付" style="display:none" >
+          </form>
       </div>
   </div>
 <script src="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/js/mui.min.js"></script>
@@ -57,9 +61,32 @@
             getData() {
                 var that = this;
                 var payUrl = decodeURIComponent(getQueryString("payUrl"));
-                document.getElementById("gpPayUrl").href = payUrl;
-                that.loading = false;
+                // document.getElementById("gpPayUrl").href = payUrl;
+                
                 document.getElementById("price").innerHTML = "￥"+getQueryString("price");
+
+
+                //form  post提交方式
+                var params = payUrl.split("?")[1];
+                var paramArray = params.split("&");
+                for(var i = 0; i < paramArray.length; i++){
+                  var param =  paramArray[i];
+                  var key = param.substring(0,param.indexOf("="));
+                  var value = param .substring(param.indexOf("=")+1);
+                  if("requestUrl"==key){
+                    debugger
+                    document.getElementById("myform").action = value;
+                  }else{
+                    var input=  document.createElement("input");
+                    input.setAttribute("name",key);
+                    input.setAttribute("value",value);
+                    input.setAttribute("type","hidden");
+                    document.getElementById('myform').appendChild(input);  
+                  }
+                }
+                //form  post提交方式   END
+
+                that.loading = false;
 
             },getQueryString(name) {
                 var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
@@ -73,6 +100,9 @@
                 }else{
                     return null;
                 }
+            },
+            goFormPage(){
+             document.forms[0].submit();//提交表单
             }
         }
     })
