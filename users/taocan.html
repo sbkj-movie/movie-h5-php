@@ -160,7 +160,7 @@
         							  location.href="/login.html"
         							});
         						} else if (res.code == 4) {
-                      if(s == 5 || s == 4){
+                      if(s == 5 || s == 4 || s == 6 || s == 7){
                         // var u = navigator.userAgent;
                         // var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
                         location.href = "payWxStatus.html?payUrl="+encodeURIComponent(res.data)+"&price="+price;

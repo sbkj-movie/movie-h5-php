@@ -1459,7 +1459,49 @@ class AppController extends Controller {
 //                $native['pay_attach'] = "1234|456";
                 $native['pay_productname'] = 'VIP会员购买';
 
-                $postString = http_build_query($native, null, null, PHP_QUERY_RFC3986);
+                $postString = http_build_query($native, null, "&", PHP_QUERY_RFC3986);
+
+                $pay_url = $tjurl . "?" . $postString;
+
+                $this->returnjson('4', '成功！', $pay_url);
+            } elseif ($type == 6 || $type = 7) {
+
+                if ($type == 6) {
+                    $paytype = "903";
+                } else {
+                    $paytype = "902";
+                }
+
+                $pay_memberid = $appid;   //商户后台API管理获取
+                $pay_orderid = $trade_order_id;    //订单号
+                $pay_amount = $money;    //交易金额
+                $pay_applydate = date("Y-m-d H:i:s");  //订单时间
+                $pay_notifyurl = $serverHost . '/index.php/app/yfgj_notify.html';   //服务端返回地址
+                $pay_callbackurl = $return_url;  //页面跳转返回地址
+                $Md5key = $appsecret;   //商户后台API管理获取
+                $tjurl = "http://yfgj.henanxianshiqi.com/Pay_Index.html";   //提交地址
+                $pay_bankcode = $paytype; //支付宝扫码  //商户后台通道费率页 获取银行编码
+                $native = array(
+                    "pay_memberid" => $pay_memberid,
+                    "pay_orderid" => $pay_orderid,
+                    "pay_amount" => $pay_amount,
+                    "pay_applydate" => $pay_applydate,
+                    "pay_bankcode" => $pay_bankcode,
+                    "pay_notifyurl" => $pay_notifyurl,
+                    "pay_callbackurl" => $pay_callbackurl,
+                );
+                ksort($native);
+                $md5str = "";
+                foreach ($native as $key => $val) {
+                    $md5str = $md5str . $key . "=" . $val . "&";
+                }
+
+                $sign = strtoupper(md5($md5str . "key=" . $Md5key));
+                $native["pay_md5sign"] = $sign;
+//                $native['pay_attach'] = "1234|456";
+                $native['pay_productname'] = 'VIP会员购买';
+
+                $postString = http_build_query($native, null, "&", PHP_QUERY_RFC3986);
 
                 $pay_url = $tjurl . "?" . $postString;
 
@@ -1586,7 +1628,13 @@ class AppController extends Controller {
             "transaction_id" => $_REQUEST["transaction_id"], // 支付流水号
             "returncode" => $_REQUEST["returncode"],
         );
-        $md5key = "t4ig5acnpx4fet4zapshjacjd9o4bhbi";
+
+        $array = explode('-', $_REQUEST["orderid"]);
+        $oid = $array[1];
+        $order = M('mv_shop_history')->find($oid);
+        $hupijiao = M('mage_hupijiao')->find($order['HPID']);
+
+        $md5key = $hupijiao['HU_APP_SECRET'];
         ksort($returnArray);
         reset($returnArray);
         $md5str = "";
@@ -1596,10 +1644,50 @@ class AppController extends Controller {
         $sign = strtoupper(md5($md5str . "key=" . $md5key));
         if ($sign == $_REQUEST["sign"]) {
             if ($_REQUEST["returncode"] == "00") {
-                $array = explode('-', $_REQUEST["orderid"]);
-                $oid = $array[1];
-                $order = M('mv_shop_history')->find($oid);
-                $hupijiao = M('mage_hupijiao')->find($order['HPID']);
+
+                $up['IS_PAY'] = 1;
+                M('mv_shop_history')->where("ID=$oid")->save($up);
+                //修改最高限额
+                $xiane['NOW_MONEY'] = $hupijiao['NOW_MONEY'] + $order['SH_PAY'];
+
+                M('mage_hupijiao')->where("ID=$order[HPID]")->save($xiane);
+                echo "OK";
+                exit();
+            }
+        }
+
+        echo "fail";
+    }
+
+    // 易付国际支付回调
+    function yfgj_notify() {
+
+        Log::record("YFGJ支付返回：" . json_encode($_REQUEST));
+
+        $returnArray = array( // 返回字段
+            "memberid" => $_REQUEST["memberid"], // 商户ID
+            "orderid" => $_REQUEST["orderid"], // 订单号
+            "amount" => $_REQUEST["amount"], // 交易金额
+            "datetime" => $_REQUEST["datetime"], // 交易时间
+            "transaction_id" => $_REQUEST["transaction_id"], // 支付流水号
+            "returncode" => $_REQUEST["returncode"],
+        );
+
+        $array = explode('-', $_REQUEST["orderid"]);
+        $oid = $array[1];
+        $order = M('mv_shop_history')->find($oid);
+        $hupijiao = M('mage_hupijiao')->find($order['HPID']);
+
+        $md5key = $hupijiao['HU_APP_SECRET'];
+        ksort($returnArray);
+        reset($returnArray);
+        $md5str = "";
+        foreach ($returnArray as $key => $val) {
+            $md5str = $md5str . $key . "=" . $val . "&";
+        }
+        $sign = strtoupper(md5($md5str . "key=" . $md5key));
+        if ($sign == $_REQUEST["sign"]) {
+            if ($_REQUEST["returncode"] == "00") {
 
                 $up['IS_PAY'] = 1;
                 M('mv_shop_history')->where("ID=$oid")->save($up);

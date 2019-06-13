@@ -64,6 +64,8 @@
                                          <?php if($data['HU_TYPE']==3 ): ?>微信扫码(1)<?php endif; ?>
                                          <?php if($data['HU_TYPE']==4 ): ?>支付宝wap(2)<?php endif; ?>
                                          <?php if($data['HU_TYPE']==5 ): ?>微信wap(2)<?php endif; ?>
+                                         <?php if($data['HU_TYPE']==6 ): ?>支付宝扫码(3)<?php endif; ?>
+                                         <?php if($data['HU_TYPE']==7 ): ?>微信扫码(3)<?php endif; ?>
                                      </td>
                                      <td><?php echo ($data['GMT_CREATE']); ?></td>
                                      <td><?php echo ($data['SORT_NUM']); ?></td>
