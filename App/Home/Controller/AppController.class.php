@@ -1323,8 +1323,7 @@ class AppController extends Controller {
         $ad = M('mv_shop_history')->add($order);
         $oid = M('mv_shop_history')->getLastInsID();
 
-//        $serverHost = "https://" . $_SERVER['SERVER_NAME'];// 线上
-        $serverHost = "http://103.29.68.61";// 测试
+        $serverHost = C('SERVER_HOST');
 
         if (!empty($oid)) {
             $up['SH_ORDER'] = $uid . '-' . $oid . '-' . time();
