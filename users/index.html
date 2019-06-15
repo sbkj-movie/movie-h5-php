@@ -69,6 +69,7 @@
        <div class="userinfo" v-if="isLogin">
           <div class="headpic"><img :src="siteadd+headpic" @click="headclick"/></div>
           <div class="nicheng">{{username}}</div>
+           <div class="nicheng">{{password}}</div>
           <div class="time">
             <span v-if="huiyuandata==0">会员有效期:未开通</span><span v-else>会员有效期:{{huiyuandata}}</span>
           </div>
@@ -104,7 +105,7 @@
 		    </ul>
          </div>
 		  <div class="outloginbox" v-if="isLogin">
-          <button class="outlogin" v-on:click="outlogin">退出登录</button>
+          <button class="outlogin" v-on:click="outlogin">切换账号</button>
         </div>
     </div>
     <nav class="mui-bar mui-bar-tab">
@@ -140,6 +141,7 @@
             siteadd: "",//站点地址
             hyid:0,
             username: '',
+            password:"",
             isiOS:false,
             headpic: '',
             huiyuandata:0,
@@ -162,7 +164,12 @@
                     axget('/userinfo', { uid: hyid, token: token }).then((res) => {
                         //console.log(res);
                         if (res.code == "0") {
-                            that.username = res.data.USERNAME;
+                            that.username = localStorage.getItem("userName");
+                            if(localStorage.getItem("randomAccount") == "true"){//等于true代表是第一次的初始密码
+                                that.password = "初始密码："+localStorage.getItem("password");
+                            }else{//等于false代表已经修改了密码
+                                that.password = "";
+                            }
                             that.headpic = res.data.USERIMG;
                             that.huiyuandata = res.data.taocan;
                             that.amount = res.data.NO_PRICE;
@@ -172,7 +179,7 @@
                         } else if (res.code == "2") {
                             mui.alert('账号在别处登录,您已被迫下线！', ' ', function() {
                                 localStorage.clear();
-                                location.href="/login.html"
+                                location.href="../index.html"
 				            });
                         } else {
                             that.loading = false;
@@ -184,7 +191,7 @@
                     this.isLogin = false;
                 }
             }, outlogin() {
-                localStorage.clear();
+                // localStorage.clear();
                 location.href="/login.html"
             },closeAPP() {
                 this.app = true;

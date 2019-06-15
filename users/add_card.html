@@ -118,8 +118,8 @@
                      window.location.href = 'card_list.html';
                  }  else if (res.code == "2") {
                       mui.alert('账号在别处登录,您已被迫下线！', ' ', function() {
-					          localStorage.clear();
-                             location.href="/login.html"
+						localStorage.clear();
+						location.href="../index.html"
 				      });
                   } else {
                      btn.disabled = false;

@@ -35,23 +35,32 @@
   </header>
    <div class="mui-content">
        <form id='login-form' class="mui-input-group">
-				<div class="mui-input-row">
-					<label>账号：</label>
-					<input id='username' type="text" class="mui-input" placeholder="请输入账号">
-				</div>
-				<div class="mui-input-row">
-					<label>密码：</label>
-					<input id='password' type="password" class="mui-input" placeholder="请输入密码">
-				</div>
-                <div class="mui-input-row">
-					<label>确认密码：</label>
-					<input id='rpassword' type="password" class="mui-input" placeholder="请输入确认密码">
-				</div>
-			</form>
-			<div class="mui-content-padded">
-				<button id='register' class="btn-login">立即注册</button>
-				<div class="link-area"><a href="/login.html">去登录</a></div>
+			<div class="mui-input-row">
+				<label>账号：</label>
+				<input id='username' type="text" class="mui-input" placeholder="请输入账号">
 			</div>
+			<div class="mui-input-row">
+				<label>密码：</label>
+				<input id='password' type="password" class="mui-input" placeholder="请输入密码">
+			</div>
+			<div class="mui-input-row">
+				<label>确认密码：</label>
+				<input id='rpassword' type="password" class="mui-input" placeholder="请输入确认密码">
+			</div>
+		</form>
+	   <form class="mui-input-group">
+		   <div class="mui-input-row">
+			   <label>密保问题：</label>
+			   <input id='question1' type="text" class="mui-input" placeholder="请输入密保问题">
+		   </div>
+		   <div class="mui-input-row">
+			   <input id='answer1' type="text" class="mui-input inp" placeholder="请输入密保答案">
+		   </div>
+	   </form>
+		<div class="mui-content-padded">
+			<button id='register' class="btn-login">立即注册</button>
+			<div class="link-area"><a href="/login.html">去登录</a></div>
+		</div>
    </div>
 <script src="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/mui.min.js"></script>
 <script src="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/api.js"></script>
@@ -75,6 +84,9 @@
        var username = document.querySelector("#username").value;
        var pass = document.querySelector("#password").value;
        var rpassword = document.querySelector("#rpassword").value;
+
+		var que1 = document.querySelector("#question1").value;
+		var ans1 = document.querySelector("#answer1").value;
        if (isNull(username)) {
             mui.toast("请输入用户名!");
             return false;
@@ -91,6 +103,14 @@
             mui.toast("两次密码不一致!");
             return false;
         }
+		if (isNull(que1)) {
+			mui.toast("请输入密保问题!");
+			return false;
+		}
+		if (isNull(ans1)) {
+			mui.toast("请输入问题的答案!");
+			return false;
+		}
         var regUser=/^[a-zA-Z][a-zA-Z0-9]{3,15}$/;
         var regPass=/^[a-zA-Z0-9]{4,10}$/;
         if(!regUser.test(username)){
@@ -110,7 +130,21 @@
             //console.log(res);
             if (res.code == "0") {
                 localStorage.setItem("zcid", res.data.uid);
-                window.location.href = '/register2.html';
+				axget('/requestion', { question1: que1, answer1:ans1,/** question2:que2,answer2:ans2,question3:que3,answer3:ans3,*/uid:res.data.uid }).then((res) => {
+					if (res.code == "0") {
+						mui.toast("注册成功，即将跳转登录");
+						setTimeout(function () {
+							localStorage.removeItem("userName");//自动生成的用户名
+							btn.disabled = false;
+							btn.innerText = "保存";
+							window.location.href = '/login.html';
+						},1500)
+					} else {
+						btn.disabled = false;
+						btn.innerText = "保存";
+						mui.toast(res.msg);
+					}
+				})
             } else {
                 btn.disabled = false;
                 btn.innerText = "立即注册";

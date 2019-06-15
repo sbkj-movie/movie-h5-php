@@ -78,7 +78,9 @@
             t = getQueryString("t");
             if (t == 0 && t == 'undefined' && t == null && t == '') {
                 t = 0;
-            }
+            }else{
+				mui.toast("您还没有设置密保问题，请先设置！");
+			}
             if (zcid == 0 && zcid== 'undefined' && zcid == null && zcid == '') {
                window.location.href = '/register.html';
             }
@@ -139,9 +141,10 @@
                          btn.innerText = "保存";
                          window.location.href = '/login.html';
                      } else {
-                         mui.toast("密保问题设置成功，请重新登录！");
+                         mui.toast("密保问题设置成功！");
                          setTimeout(function () {
-                            window.location.href = '/login.html';
+							localStorage.setItem("isQustion", 1);
+							window.location.href = './users/uppass.html';
                          },1500)
                      }
                  } else {

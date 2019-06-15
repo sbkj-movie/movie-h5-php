@@ -65,6 +65,10 @@
       $$(doc).ready(function () {
           var hyid = localStorage.getItem("hyid");
           var token = localStorage.getItem("token");
+          var isQustion = localStorage.getItem("isQustion");
+          if(isQustion == 0 || isQustion == "" || isQustion == null){//没有设置密保，跳转设置密保界面
+              window.location.href = '/register2.html?t=1';
+          }
           if (hyid != 0 && hyid != 'undefined' && hyid != null && hyid != '') {
              axget('/pwdwenti', { uid: hyid,token: token}).then((res) => {
                //console.log(res);
@@ -77,7 +81,7 @@
                }else if (res.code == "2") {
                   mui.alert('账号在别处登录,您已被迫下线！', ' ', function() {
 					  localStorage.clear();
-                      location.href="/login.html"
+                      location.href="../index.html"
 				  });
                } else {
                      mui.toast(res.msg);
@@ -129,14 +133,21 @@
              axget('/editmima', { uid: hyid, answer1: ans1, answer2: ans2, answer3: ans3, pwd: pwd,type:1 }).then((res) => {
                  if (res.code == "0") {
                      mui.toast(res.msg);
-					 localStorage.clear();
-                     location.href="/login.html"
-                     btn.disabled = false;
-                     btn.innerText = "提交修改";
+					 // localStorage.clear();
+                     mui.toast("密码已修改，请重新登录");
+                     setTimeout(function () {
+                         location.href="/login.html"
+                         btn.disabled = false;
+                         if(pwd != "123456"){
+                             localStorage.setItem("randomAccount","false");
+                         }
+                         btn.innerText = "提交修改";
+                     },1500)
+
                  } else if (res.code == "2") {
                     mui.alert('账号在别处登录,您已被迫下线！', ' ', function() {
 					    localStorage.clear();
-                        location.href="/login.html"
+                        location.href="../index.html"
 				    });
                   } else {
                      btn.disabled = false;

@@ -138,8 +138,10 @@
 <script src="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/axios.js"></script>
 <script src="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/mui.min.js"></script>
 <script src="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/js/clipboard.js"></script>
+  <script src="./js/publicLoginUser.js"></script>
 <script type="text/javascript" charset="utf-8">
 	var clipboard = new ClipboardJS('.fx-cont');
+	getUserInfoData();//初始账号信息
 	clipboard.on('success', function(e) {
 		alert("复制成功");
 	});
@@ -204,7 +206,7 @@
 							self.loading = false;
 							mui.alert('账号在别处登录,您已被迫下线！', ' ', function() {
 								localStorage.clear();
-								location.href="/login.html"
+								location.href="/index.html"
 							});
 						} else {
 							self.loading = false;
@@ -290,7 +292,7 @@
 							} else if (res.code == "2") {
 								mui.alert('账号在别处登录,您已被迫下线！', ' ', function() {
 									localStorage.clear();
-									location.href="/login.html"
+									location.href="/index.html"
 								});
 							}else {
 								mui.toast(res.msg);

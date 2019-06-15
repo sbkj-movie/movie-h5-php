@@ -238,7 +238,7 @@
                             that.loading = false;
                             mui.alert('账号在别处登录,您已被迫下线！', ' ', function() {
 					          localStorage.clear();
-                              location.href="/login.html"
+                              location.href="../index.html"
 				            });
                         } else {
                             that.loading = false;
@@ -300,7 +300,7 @@
                         } else if (res.code == 2) {
                             mui.alert('账号在别处登录,您已被迫下线！', ' ', function() {
 					          localStorage.clear();
-                              location.href="/login.html"
+                                location.href="../index.html"
 				            });
                         } else {
                             mui.toast(res.msg);
@@ -328,7 +328,7 @@
                                 } else if (res.code == 2) {
                                     mui.alert('账号在别处登录,您已被迫下线！', ' ', function() {
 					                    localStorage.clear();
-                                        location.href="/login.html"
+                                        location.href="../index.html"
 				                    });
                                 } else {
                                     mui.toast(res.msg);

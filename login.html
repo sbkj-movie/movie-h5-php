@@ -66,6 +66,7 @@
             return false;
         }
     };
+		document.querySelector("#username").value = localStorage.getItem("userName");
 
     $$("#login").on("click", function () {
         var username = document.querySelector("#username").value;
@@ -85,15 +86,20 @@
         btn.innerText = "正在提交，请稍候...";
         axget('/login', { name: username, password: pass }).then((res) => {
             if (res.code == "0") {
-                if (res.data.question == 1) {//如果设置了安全问题则关闭窗口,否则打开安全问题这只页面
+                // if (res.data.question == 1) {//如果设置了安全问题则关闭窗口,否则打开安全问题这只页面
                     localStorage.setItem("hyid", res.data.ID);
+					localStorage.setItem("userName", res.data.USERNAME);
                     localStorage.setItem("token", res.data.TOKEN);
                     localStorage.setItem("isQustion", res.data.question);//是否设置了安全问题
+					localStorage.setItem("zcid", res.data.ID);
+					if(pass != "123456"){
+						localStorage.setItem("randomAccount","false");
+					}
                     window.location.href = '/users/index.html';
-                } else {
-                    localStorage.setItem("zcid", res.data.ID);//记录用户ID为正在注册ID
-                    window.location.href = '/register2.html?t=1';
-                }
+                // } else {
+                //     localStorage.setItem("zcid", res.data.ID);//记录用户ID为正在注册ID
+                //     window.location.href = '/register2.html?t=1';
+                // }
             } else {
                 btn.disabled = false;
                 btn.innerText = "登录";
