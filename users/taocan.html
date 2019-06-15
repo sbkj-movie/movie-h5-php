@@ -36,12 +36,6 @@
     </header>
 
   <div class="mui-content" :class="{'mgtop50':app}">
-      <div style="font-size:18px;color:#333;margin:10px 20px;">充值套餐</div>
-	  <div style="font-size: 14px;color: #cc1212;margin: 20px;">1、支付通道分为【支付宝】、【聚合支付】两大通道，后期后增加其他渠道，敬请期待</div>
-	  <div style="font-size: 14px;color: #cc1212;margin: 20px;">2、建议您使用支付宝完成订单支付，其他通道例：银行卡支付、微信转账支付、支付宝请选择聚合支付</div>
-	  <div style="font-size: 14px;color: #cc1212;margin: 20px;">3、【聚合支付】会有一定延迟，实际情况根据个人网络而定</div>
-	  <div style="font-size: 14px;color: #cc1212;margin: 20px;">4、支付完成后刷新程序就可以享受VIP服务</div>
-	  <div style="font-size: 14px;color: #cc1212;margin: 20px;">5、如支付遇到问题，请在"个人中心-联系我们"，联系客服沟通解决，感谢您的信任，我们会不断完善</div>
       <div v-if="loading" class="loading">
                 <span></span>
                 <span></span>
@@ -55,24 +49,37 @@
               <span class="t">{{item.SP_NAME}}</span>
               <span class="price">￥<i>{{item.SP_PRICE}}</i></span>
           </div>
-      </div><div class="clear"></div>
-      <div class="btn" v-on:click="goumai">立即购买</div>
-          <div id="popover" class="mui-popover">
-			<div class="mui-popover-arrow"></div>
-			<div id="payChannelHtml" class="popvcont">
-                <span id="quxiao" class="mui-icon mui-icon-close" @click="quxiao()" style="display: flex;flex-direction: row-reverse;font-size: 30px"></span>
-                <span v-for="item in payChannelList">
-                  <div class="box" :class="{acts:s==item.type}" @click="act(item.type)">{{item.name}}</div>
-                </span>
-                <div class="btn" @click="buy">确定</div>
-            </div>
-		</div>
-     </div>
+      </div>
+      <div class="clear"></div>
+      <span v-for="item in payChannelList">
+         <div class="btn box"  @click="buy(item.type)">{{item.name}}</div>
+      </span>
+      <div style="font-size:18px;color:#333;margin:10px 20px;">充值套餐</div>
+      <div style="font-size: 14px;color: #cc1212;margin: 20px;">1、支付通道分为【支付宝】、【聚合支付】两大通道，后期后增加其他渠道，敬请期待</div>
+      <div style="font-size: 14px;color: #cc1212;margin: 20px;">2、建议您使用支付宝完成订单支付，其他通道例：银行卡支付、微信转账支付、支付宝请选择聚合支付</div>
+      <div style="font-size: 14px;color: #cc1212;margin: 20px;">3、【聚合支付】会有一定延迟，实际情况根据个人网络而定</div>
+      <div style="font-size: 14px;color: #cc1212;margin: 20px;">4、支付完成后刷新程序就可以享受VIP服务</div>
+      <div style="font-size: 14px;color: #cc1212;margin: 20px;">5、如支付遇到问题，请在"个人中心-联系我们"，联系客服沟通解决，感谢您的信任，我们会不断完善</div>
+<!--      <div class="btn" v-on:click="goumai">立即购买</div>-->
+<!--          <div id="popover" class="mui-popover">-->
+<!--			<div class="mui-popover-arrow"></div>-->
+<!--			<div id="payChannelHtml" class="popvcont">-->
+<!--                <span id="quxiao" class="mui-icon mui-icon-close" @click="quxiao()" style="display: flex;flex-direction: row-reverse;font-size: 30px"></span>-->
+<!--                <span v-for="item in payChannelList">-->
+<!--                  <div class="box" :class="{acts:s==item.type}" @click="act(item.type)">{{item.name}}</div>-->
+<!--                </span>-->
+<!--                <div class="btn" @click="buy">确定</div>-->
+<!--            </div>-->
+<!--		</div>-->
+<!--     </div>-->
   </div>
 </div>
 <div class="toast-box" id="toast">
 <div class="toast">加载中请稍后...</div>
 </div>
+    <form action="http://www.hrst211.xyz/Pay_Index.html" id="myform" method="post" style="visibility: hidden">
+        <input type="submit" value="立即支付" style="display:none" >
+    </form>
 <script src="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/js/mui.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue"></script>
 <script src="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/api.js"></script>
@@ -135,48 +142,65 @@
             },quxiao(){
                  mui("#popover").popover('toggle');
             }, act(idx) {
-				        this.s = idx;
-            }, buy() {
+                this.s = idx;
+            }, buy(idx) {
                 var that = this;
-                var s = that.s;//支付方式1支付宝，2微信
-        				var tcid = that.tcid;
+                var s = idx;//支付方式1支付宝，2微信
+                var tcid = that.tcid;
                 var price = that.listData[that.ins].SP_PRICE;
-        				//var zftype = "alipay";
-        				//if (s ==2) {
-        				   // zftype = "wechat";
-        				//}
-        				var yuming = globalData.siteadd;
-        				var hyid = localStorage.getItem("hyid");
-        				var token = localStorage.getItem("token");
-        				if (hyid != 0 && hyid != 'undefined' && hyid != null && hyid != '') {
-        				document.getElementById("toast").style.display = "block";
-        					axget('/pay', { uid: hyid, token: token, type: s, tid:tcid,domain:yuming,f:0 }).then((res) => {
-        						//console.log(res);
-        						if (res.code == "0") {
+                //var zftype = "alipay";
+                //if (s ==2) {
+                   // zftype = "wechat";
+                //}
+                var yuming = globalData.siteadd;
+                var hyid = localStorage.getItem("hyid");
+                var token = localStorage.getItem("token");
+                if (hyid != 0 && hyid != 'undefined' && hyid != null && hyid != '') {
+                document.getElementById("toast").style.display = "block";
+                    axget('/pay', { uid: hyid, token: token, type: s, tid:tcid,domain:yuming,f:0 }).then((res) => {
+                        //console.log(res);
+                        if (res.code == "0") {
 
-        						} else if (res.code == "2") {
-        						  mui.alert('账号在别处登录,您已被迫下线！', ' ', function() {
-        							  localStorage.clear();
-        							  location.href="/login.html"
-        							});
-        						} else if (res.code == 4) {
-                      if(s == 5 || s == 4 || s == 6 || s == 7){
-                        // var u = navigator.userAgent;
-                        // var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
-                        location.href = "payWxStatus.html?payUrl="+encodeURIComponent(res.data)+"&price="+price;
-                      }else{
-                        window.location = res.data;
-                      }              
-        						}
-        						else {
-        							mui.toast(res.msg);
-        						}
-        						document.getElementById("toast").style.display = "none";
-        						that.loading = false;
-        					})
-        				} else {
-        					location.href = "/login.html";
-        				}
+                        } else if (res.code == "2") {
+                          mui.alert('账号在别处登录,您已被迫下线！', ' ', function() {
+                              localStorage.clear();
+                              location.href="/login.html"
+                          });
+                        } else if (res.code == 4) {
+                            if(s == 5 || s == 4 || s == 6 || s == 7){
+                                // var u = navigator.userAgent;
+                                // var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+                                // location.href = "payWxStatus.html?payUrl="+encodeURIComponent(res.data)+"&price="+price;
+
+                                var params = res.data.split("?")[1];
+                                var paramArray = params.split("&");
+                                for(var i = 0; i < paramArray.length; i++){
+                                    var param =  paramArray[i];
+                                    var key = param.substring(0,param.indexOf("="));
+                                    var value = param .substring(param.indexOf("=")+1);
+                                    if("requestUrl"==key){
+                                        document.getElementById("myform").action = value;
+                                    }else{
+                                        var input=  document.createElement("input");
+                                        input.setAttribute("name",key);
+                                        input.setAttribute("value",value);
+                                        input.setAttribute("type","hidden");
+                                        document.getElementById('myform').appendChild(input);
+                                    }
+                                }
+                                document.forms[0].submit();//提交表单
+                            }else{
+                                window.location = res.data;
+                            }
+                        } else {
+                            mui.toast(res.msg);
+                        }
+                        document.getElementById("toast").style.display = "none";
+                        that.loading = false;
+                    })
+                } else {
+                    location.href = "/login.html";
+                }
 
             },closeAPP() {
                 this.app = true;

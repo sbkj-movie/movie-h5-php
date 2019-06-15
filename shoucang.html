@@ -39,7 +39,7 @@
   <div id="sc">
    <div class="down" :class="{'downs':app}">
             <div class="d-logo"><span class="mui-icon mui-icon-close" v-on:click="closeAPP"></span>&nbsp;<img src="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/logo2.png" style="width:100px;" /></div>
-            <div class="d-app"><a href="/download.html">下载APP</a></div>
+       <div class="d-app"> <a v-if="isiOS === false" href="/download.html">下载APP</a> <a v-if="isiOS === true" href="/users/qiehuanxianlu.html">添加到主屏幕</a>  </div>
    </div>
    <div class="header" :class="{'headers':app}">
           <div class="hnav">
@@ -183,6 +183,7 @@
         mhNum:0,
         pagesizeS: 10,
         pageindexS: 0,
+        isiOS:false,
         isNumS: false,//用于判断是否还有数据
         pagesizeM: 10,
         pageindexM: 0,
@@ -193,6 +194,10 @@
         data: datas,
         created: function () {
             this.getData(1);//获取数据
+            //判断当前环境是否为苹果浏览器
+            var u = navigator.userAgent;
+            var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+            this.isiOS = isiOS;
         },
         methods: {
             getData(t){

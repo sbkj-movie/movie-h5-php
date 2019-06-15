@@ -41,7 +41,7 @@
   <div id="user">
         <div class="down" :class="{'downs':app}">
             <div class="d-logo"><span class="mui-icon mui-icon-close" v-on:click="closeAPP"></span>&nbsp;<img src="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/logo2.png" style="width:100px;" /></div>
-            <div class="d-app"><a href="/download.html">下载APP</a></div>
+            <div class="d-app"> <a v-if="isiOS === false" href="/download.html">下载APP</a> <a v-if="isiOS === true" href="/users/qiehuanxianlu.html">添加到主屏幕</a>  </div>
         </div>
         <div class="header" :class="{'headers':app}">
           <div class="hnav">
@@ -140,6 +140,7 @@
             siteadd: "",//站点地址
             hyid:0,
             username: '',
+            isiOS:false,
             headpic: '',
             huiyuandata:0,
             amount:0,
@@ -147,6 +148,10 @@
         created: function () {
             this.siteadd = globalData.siteadd;//站点地址
             this.getuserInfo()
+            //判断当前环境是否为苹果浏览器
+            var u = navigator.userAgent;
+            var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+            this.isiOS = isiOS;
         },
         methods: {
             getuserInfo() {//获取用户信息

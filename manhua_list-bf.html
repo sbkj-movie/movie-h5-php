@@ -159,11 +159,16 @@
             bannerData:'',
             listData: '',
             dNum: 1,
+			isiOS:false,
             pagesize: 10,
             pageindex:0,
         },
         created: function () {
             this.getData();//获取数据
+			//判断当前环境是否为苹果浏览器
+			var u = navigator.userAgent;
+			var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+			this.isiOS = isiOS;
         },
         methods: {
              //获取数据
