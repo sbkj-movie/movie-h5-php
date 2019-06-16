@@ -77,7 +77,7 @@
 <div class="toast-box" id="toast">
 <div class="toast">加载中请稍后...</div>
 </div>
-    <form action="http://www.hrst211.xyz/Pay_Index.html" id="myform" method="post" style="visibility: hidden">
+    <form action="" id="myform" method="post" style="visibility: hidden">
         <input type="submit" value="立即支付" style="display:none" >
     </form>
 <script src="https://spp1.oss-cn-hongkong.aliyuncs.com/zl/js/mui.min.js"></script>
@@ -171,7 +171,8 @@
                                 // var u = navigator.userAgent;
                                 // var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
                                 // location.href = "payWxStatus.html?payUrl="+encodeURIComponent(res.data)+"&price="+price;
-
+                                res.data = decodeURIComponent(res.data);
+                                document.getElementById("myform").action = res.data.split("?")[0];
                                 var params = res.data.split("?")[1];
                                 var paramArray = params.split("&");
                                 for(var i = 0; i < paramArray.length; i++){
