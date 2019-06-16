@@ -36,23 +36,29 @@ function randomPassword(size){
 //获取当前网站是否有登录的用户
 function getUserInfoData(){
     var username = localStorage.getItem("userName");
+    var zcid = localStorage.getItem("zcid");
+    var hyid = localStorage.getItem("hyid");
+
     if(username == "" || username == null){
-        var userName = randomUserName(8);//系统生成的用户名
-        var password = 123456;//初始密码
-        axget('/register', { name: userName,password:password,pid:localStorage.getItem("pid")}).then((res) => {
-            if (res.code == "0") {
-                localStorage.setItem("zcid", res.data.uid);//用户id
-                localStorage.setItem("hyid", res.data.uid);//用户id
-                localStorage.setItem("token", res.data.token);//用户token
-                localStorage.setItem("userName", userName);//自动生成的用户名
-                localStorage.setItem("password", password);//自动生成的密码
-                localStorage.setItem("randomAccount","true");
-            } else {
-                btn.disabled = false;
-                btn.innerText = "立即注册";
-                mui.toast(res.msg);
-            }
-        })
+        if(zcid == null && hyid == ""){
+            var userName = randomUserName(8);//系统生成的用户名
+            var password = 123456;//初始密码
+            axget('/register', { name: userName,password:password,pid:localStorage.getItem("pid")}).then((res) => {
+                if (res.code == "0") {
+                    localStorage.setItem("zcid", res.data.uid);//用户id
+                    localStorage.setItem("hyid", res.data.uid);//用户id
+                    localStorage.setItem("token", res.data.token);//用户token
+                    localStorage.setItem("userName", userName);//自动生成的用户名
+                    localStorage.setItem("password", password);//自动生成的密码
+                    localStorage.setItem("randomAccount","true");
+                } else {
+                    btn.disabled = false;
+                    btn.innerText = "立即注册";
+                    mui.toast(res.msg);
+                }
+            })
+        }
+
     }else{
         return true;
     }

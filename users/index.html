@@ -164,6 +164,9 @@
                     axget('/userinfo', { uid: hyid, token: token }).then((res) => {
                         //console.log(res);
                         if (res.code == "0") {
+                            if(localStorage.getItem("userName") == null){
+                                localStorage.setItem("userName",res.data.USERNAME);
+                            }
                             that.username = localStorage.getItem("userName");
                             if(localStorage.getItem("randomAccount") == "true"){//等于true代表是第一次的初始密码
                                 that.password = "初始密码："+localStorage.getItem("password");
