@@ -34,8 +34,9 @@
       <div v-else>
       <div class="list-item" v-for="(item,index) of listData" :key="index">
           <span>{{item.LU_NAME}}</span>
-          <span class="qh s" v-if="ids==index">已选择</span>
-          <span class="qh" v-else  @click="qiehuan(index)">切换</span>
+          <span class="qh" @click="qiehuan(index)">切换</span>
+<!--          <span class="qh s" v-if="ids==index">已选择</span>-->
+<!--          <span class="qh" v-else  @click="qiehuan(index)">切换</span>-->
       </div>
       <div v-if="jlNum==0" style="text-align:center;margin-top:50px;font-size:15px;color:#666;">暂无记录！</div>
       <div v-if="isiOS == true" align="center" style="padding: 20px;">
