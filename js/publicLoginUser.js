@@ -19,7 +19,7 @@ function randomUserName(size){
 
 /**
  * 生成由数字组成的密码
- * @param size 位数
+ * @param size 位数1
  * @returns {string|string}
  */
 function randomPassword(size){
