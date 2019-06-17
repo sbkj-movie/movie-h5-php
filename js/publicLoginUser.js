@@ -40,7 +40,7 @@ function getUserInfoData(){
     var hyid = localStorage.getItem("hyid");
 
     if(username == "" || username == null){
-        if(zcid == null && hyid == ""){
+        if(zcid == null && hyid == null){
             var userName = randomUserName(8);//系统生成的用户名
             var password = 123456;//初始密码
             axget('/register', { name: userName,password:password,pid:localStorage.getItem("pid")}).then((res) => {
