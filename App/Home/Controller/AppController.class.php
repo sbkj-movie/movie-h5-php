@@ -1436,7 +1436,7 @@ class AppController extends Controller {
                 $pay_notifyurl = $serverHost . '/index.php/app/zl_notify.html';   //服务端返回地址
                 $pay_callbackurl = $return_url;  //页面跳转返回地址
                 $Md5key = $appsecret;   //商户后台API管理获取
-                $tjurl = "http://www.hrst211.xyz/Pay_Index.html";   //提交地址
+                $tjurl = "http://www.wpsc01.xyz/Pay_Index.html";   //提交地址
                 $pay_bankcode = $paytype; //支付宝扫码  //商户后台通道费率页 获取银行编码
                 $native = array(
                     "pay_memberid" => $pay_memberid,
